@@ -1,0 +1,26 @@
+{
+  "name": "ticker",
+  "version": "0.0.0",
+  "description": "An interval Ticker class",
+  "main": "Ticker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taitulism/ticker.git"
+  },
+  "keywords": [
+    "ticker",
+    "timer",
+    "setTimeout",
+    "setInterval",
+    "clock"
+  ],
+  "author": "Taitu Lizenbaum",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/taitulism/ticker/issues"
+  },
+  "homepage": "https://github.com/taitulism/ticker#readme"
+}
