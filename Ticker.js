@@ -1,33 +1,28 @@
 class Ticker {
 	constructor (interval, callback) {
-		if (interval < 100) {
-			throw new Error('Ticker interval should be at least 100ms');
-		}
+		validateArgs(interval, callback);
 
 		this.interval = interval;
 		this.callback = callback;
 		this.isRunning = false;
 	}
 	
-	start () {
-		const now = Date.now();
-
+	start (now = Date.now()) {
 		this.isRunning = true;
 
-		const targetTime = now + this.interval;
-
-		this.setMetaTick(now, targetTime);
+		this.tick(now);
 	}
 
 	// runs at least 100ms before tick
-	setMetaTick (now, targetTime) {
+	setMetaTick (targetTime) {
+		const now = Date.now();
 		const timeLeft = targetTime - now;
 
 		setTimeout(() => {
-			if (this.isRunning) {
-				this.metaTick(targetTime);
-			}
-		}, timeLeft - 50);
+			if (!this.isRunning) return;
+
+			this.metaTick(targetTime);
+		}, timeLeft - 26);
 	}
 	
 	// runs 50ms before tick
@@ -36,26 +31,19 @@ class Ticker {
 		const timeLeft = targetTime - now;
 
 		if (timeLeft <= 12) {
-			return this.callback(now, targetTime);
+			this.tick(targetTime);
 		}
-
+		
 		setTimeout(() => {
-			if (this.isRunning) {
-				const newTargetTime = targetTime + this.interval;
-				
-				this.tick(targetTime, newTargetTime);
-			}
+			this.isRunning && this.tick(targetTime);
 		}, timeLeft - 5);
 	}
 
-	tick (currentTargetTime, nextTargetTime) {
-		if (this.isRunning) {
-			const now = Date.now();
+	tick (targetTime) {
+		if (!this.isRunning) return;
 
-			this.callback(now, currentTargetTime);
-
-			this.setMetaTick(currentTargetTime, nextTargetTime);
-		}
+		this.setMetaTick(targetTime + this.interval);
+		this.callback(targetTime);
 	}
 
 	pause () {
@@ -66,3 +54,13 @@ class Ticker {
 }
 
 module.exports = Ticker;
+
+function validateArgs (interval, callback) {
+	if (interval < 100) {
+		throw new Error('Ticker interval should be at least 100ms');
+	}
+	
+	if (typeof callback !== 'function') {
+		throw new Error('Ticker callback nust be a function');
+	}
+}

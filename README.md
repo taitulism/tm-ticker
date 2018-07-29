@@ -14,19 +14,18 @@ When you try to create a ticker with a simple recursive `setTimeout` you will ha
 Using `setInterval` raises another issue: when your callback runtime is higher than the interval iteself, the next callback will start running before the previous callback has finished and you'll soon get out of memory.
 
 ### How this Ticker works internally?
-> **Given numbers below will probably change after a deeper research.**
+Ticker uses a "meta tick" before your tick. A meta-tick is timed to **26ms** before each tick. Let's say your interval is 1000ms (1 second). Ticker will set a meta-tick at 974ms. This tick actual timestamp would be greater than 974 (e.g. 986).
 
-Ticker uses a "meta tick" before your tick. A meta-tick is timed to **50ms** before each tick. Let's say your interval is 1000ms (1 second). Ticker will set a meta-tick at 950ms. This tick actual timestamp would be greater than 950 (e.g. 964).
-
-Then Ticker checks the time left to the tick (e.g. 36ms), if it is less than or equal to **12ms** (which means a great delay, unlikely to happen) it will run your callback, considering system is very busy so let's not use extra interval. The human eye will not notice.  
+Then Ticker checks the time left to the tick (e.g. 14ms), if it is less than or equal to **12ms** (which means a great delay, unlikely to happen) it will run your callback, considering system is very busy so let's not use an extra interval. The human eye will not notice.  
 If there is enough time Ticker will set your callback to occure **5ms** before time, taking into account self runtime and a minor expected delay.
 
-In fact, each tick it timed about **5ms** before its original absolute timestamp. This makes the first tick be about ~4ms shorter but the following ticks keeps the same offset so the interval remains accurate (about ~2ms) after the first tick.
+In fact, each tick is timed about **5ms** before its original absolute timestamp. This makes the first tick be about ~4ms shorter but the following ticks keeps the same offset so the interval remains accurate (about ~2ms) after the first tick.
 
 
 
 ```js
 const callback = (nowMs, originalTargetTime) => {
+    // first tick occures immediately on start (no interval)
     console.log(`*** TICK ***`);
 };
 
