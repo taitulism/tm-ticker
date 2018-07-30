@@ -4,27 +4,59 @@ class Ticker {
 
 		this.interval = interval;
 		this.callback = callback;
-		this.isRunning = false;
+		this.ref = null;
+		this.isTicking = false;
 		this.remainToTick = 0;
-		this.isPaused = false;
 	}
 	
-	start (now = Date.now()) {
-		this.isRunning = true;
+	start (now) {
+		if (this.isTicking) return;
 
-		if (this.isPaused) {
-			this.resume(now);
+		now = now || Date.now();
+
+		if (this.remainToTick) {
+			this._resume(now);
 		}
 		else {
+			this.isTicking = true;
 			this.tick(now);
 		}
 	}
 
-	resume (now) {
-		this.isPaused = false;
+	stop (now) {
+		if (!this.isTicking) return;
+
+		now = now || Date.now();
+
+		this.isTicking = false;
 		
+		const fromLastTick = now - this.lastTick;
+		
+		this.remainToTick = this.interval - fromLastTick;
+	}
+
+	reset (now) {
+		clearTimeout(this.ref);
+		this.ref = null;
+		this.remainToTick = 0;
+		
+		if (this.isTicking) {
+			this.isTicking = false;
+			now = now || Date.now();
+			this.start(now);			
+		}
+	}
+
+	_resume (now) {
+		if (this.isTicking) return;
+
+		now = now || Date.now();
+
+		this.isTicking = true;
+		
+		const targetTime = now + this.remainToTick;
+
 		if (this.remainToTick >= 50) {
-			const targetTime = now + this.remainToTick;
 			this.setMetaTick(targetTime);
 		}
 		else {
@@ -38,8 +70,8 @@ class Ticker {
 	setMetaTick (targetTime) {
 		const timeLeft = targetTime - Date.now();
 
-		setTimeout(() => {
-			if (!this.isRunning) return;
+		this.ref = setTimeout(() => {
+			if (!this.isTicking) return;
 
 			this.metaTick(targetTime);
 		}, timeLeft - 26);
@@ -53,37 +85,18 @@ class Ticker {
 			this.tick(targetTime);
 		}
 		
-		setTimeout(() => {
-			this.isRunning && this.tick(targetTime);
+		this.ref = setTimeout(() => {
+			this.isTicking && this.tick(targetTime);
 		}, timeLeft - 5);
 	}
 
 	tick (targetTime) {
-		if (!this.isRunning) return;
+		if (!this.isTicking) return;
 
 		this.lastTick = targetTime;
 
 		this.setMetaTick(targetTime + this.interval);
 		this.callback(targetTime);
-	}
-
-	stop () {
-		this.pause();
-		this.reset();
-	}
-
-	pause () {
-		const fromLastTick = Date.now() - this.lastTick;
-		
-		this.isRunning = false;
-		this.isPaused = true;
-		
-		this.remainToTick = this.interval - fromLastTick;
-	}
-
-	reset () {
-		this.remainToTick = 0;
-		this.isPaused = false;
 	}
 }
 

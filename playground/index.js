@@ -16,17 +16,19 @@ const myTicker = new Ticker(1000, (target) => {
 	console.log(now - target);
 });
 
+const now = Date.now();
 
-myTicker.start();
+myTicker.start(now);
 
 setTimeout(() => {
-	myTicker.pause();
+	myTicker.stop();
+	myTicker.reset();
 	
 	setTimeout(() => {
 		myTicker.start();
 
 		setTimeout(() => {
-			myTicker.pause();
+			myTicker.stop();
 		}, 4000);
-	}, 4400);
+	}, 4000);
 }, 3200);
