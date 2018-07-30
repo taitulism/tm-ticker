@@ -4,12 +4,16 @@ const trunc = function truncateMS (ms) {
 	return (ms + '').substr(8);
 }
 
-const myTicker = new Ticker(1000, (now, target) => {
-	console.log(`*** TICK ***`);
-	console.log(`  actual: ${trunc(now)}`);
-	console.log(`  target: ${trunc(target)}`);
-	console.log(`  diff  : ${target - now}`);
-	console.log('');
+/**
+ * The first tick is on start (no interval)
+ */
+const myTicker = new Ticker(1000, (target) => {
+	const now = Date.now();
+
+	console.log(`*** TICK ***`)
+	console.log(trunc(now));
+	console.log(trunc(target));
+	console.log(now - target);
 });
 
 
@@ -17,4 +21,12 @@ myTicker.start();
 
 setTimeout(() => {
 	myTicker.pause();
-}, 10000);
+	
+	setTimeout(() => {
+		myTicker.start();
+
+		setTimeout(() => {
+			myTicker.pause();
+		}, 4000);
+	}, 4400);
+}, 3200);
