@@ -1,4 +1,4 @@
-const Ticker = require('../Ticker');
+const Ticker = require('../');
 	
 const trunc = function truncateMS (ms) {
 	return (ms + '').substr(8);
@@ -11,9 +11,16 @@ const myTicker = new Ticker(1000, (target) => {
 	const now = Date.now();
 
 	console.log(`*** TICK ***`)
-	console.log(trunc(now));
-	console.log(trunc(target));
-	console.log(now - target);
+	console.log('actual:', trunc(now));
+	console.log('ideal:', trunc(target));
+
+	const diff = now - target;
+	if (diff > 0) {
+		console.log('* diff:', diff, 'delay');
+	}
+	else {
+		console.log('* diff:', diff, 'before');
+	}
 });
 
 const now = Date.now();
@@ -31,4 +38,4 @@ setTimeout(() => {
 			myTicker.stop();
 		}, 4000);
 	}, 4000);
-}, 3200);
+}, 7000);
