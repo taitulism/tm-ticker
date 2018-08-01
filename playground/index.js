@@ -7,21 +7,34 @@ const trunc = function truncateMS (ms) {
 /**
  * The first tick is on start (no interval)
  */
-const myTicker = new Ticker(1000, (target) => {
-	const now = Date.now();
+let firstWas = false;
+let lastTick = 0;
+const myTicker = new Ticker(1000, (ideal, actual = Date.now()) => {
+	let diff, txt;
 
-	console.log(`*** TICK ***`)
-	console.log('actual:', trunc(now));
-	console.log('ideal:', trunc(target));
+	// console.log('sec len:', actual-lastTick);
+	// lastTick = actual;
 
-	const diff = now - target;
-	if (diff > 0) {
-		console.log('* diff:', diff, 'delay');
+	if (actual === ideal) {
+		diff = 0;
+		txt = 'ms PERFECT!!!';
+	}
+	else if (actual < ideal) {
+		diff = ideal - actual;
+		txt = ' before';
 	}
 	else {
-		console.log('* diff:', diff, 'before');
+		diff = actual - ideal;
+		txt = ' delay';
 	}
-});
+	
+	console.log(`{${trunc(ideal)}}`, `>${trunc(actual)}`, `(${diff}${txt})\n`);
+	
+	if (!firstWas) {
+		firstWas = true;
+		console.log('**********');
+	}
+}, true);
 
 const now = Date.now();
 
@@ -38,4 +51,4 @@ setTimeout(() => {
 			myTicker.stop();
 		}, 4000);
 	}, 4000);
-}, 7000);
+}, 16100);

@@ -1,10 +1,11 @@
 const {
 	resume,
 	runTick,
+	setTickAt,
 } = require('./static-methods');
 
 class Ticker {
-	constructor (interval, callback) {
+	constructor (interval, callback, tickOnStart = true) {
 		validateArgs(interval, callback);
 
 		this.interval = interval;
@@ -12,6 +13,8 @@ class Ticker {
 		this.ref = null;
 		this.isActive = false;
 		this.remainToTick = 0;
+		this.tickOnStart = tickOnStart;
+		this.lastTick = 0;
 	}
 	
 	start (now = Date.now()) {
@@ -20,11 +23,17 @@ class Ticker {
 
 		this.isActive = true;
 
-		if (this.remainToTick) {
-			resume(this, now);
+		if (this.remainToTick) { // is paused
+			resume.call(this, now);
 		}
-		else {
-			runTick(this, now);
+		else { // fresh start
+			if (this.tickOnStart) {
+				runTick.call(this, now);
+			}
+			else {
+				const target = now + this.interval;
+				setTickAt.call(this, target);
+			}
 		}
 	}
 
@@ -43,6 +52,7 @@ class Ticker {
 		clearTimeout(this.ref);
 		this.ref = null;
 		this.remainToTick = 0;
+		this.lastTick = 0;
 		
 		if (this.isActive) {
 			this.isActive = false;
@@ -54,8 +64,8 @@ class Ticker {
 module.exports = Ticker;
 
 function validateArgs (interval, callback) {
-	if (interval < 50) {
-		throw new Error('Ticker interval should be at least 50ms');
+	if (interval < 100) {
+		throw new Error('Ticker interval should be at least 100ms');
 	}
 	
 	if (typeof callback !== 'function') {
