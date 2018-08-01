@@ -19,7 +19,6 @@ class Ticker {
 	
 	start (now = Date.now()) {
 		if (this.isActive) return;
-		console.log('start', now);
 
 		this.isActive = true;
 
@@ -39,7 +38,6 @@ class Ticker {
 
 	stop (now = Date.now()) {
 		if (!this.isActive) return;
-		console.log('stop', now);
 
 		this.isActive = false;
 		
