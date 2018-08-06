@@ -2,7 +2,7 @@ const {
 	resume,
 	runTick,
 	setTickAt,
-} = require('./static-methods');
+} = require('./private-methods');
 
 class Ticker {
 	constructor (interval, callback, tickOnStart = true) {
@@ -10,7 +10,7 @@ class Ticker {
 
 		this.interval = interval;
 		this.callback = callback;
-		this.ref = null;
+		this.abort = null;
 		this.isActive = false;
 		this.remainToTick = 0;
 		this.tickOnStart = tickOnStart;
@@ -47,8 +47,8 @@ class Ticker {
 	}
 
 	reset (now = Date.now()) {
-		clearTimeout(this.ref);
-		this.ref = null;
+		this.abort();
+		this.abort = null;
 		this.remainToTick = 0;
 		this.lastTick = 0;
 		
