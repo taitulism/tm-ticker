@@ -15,7 +15,7 @@ Based on a self-fixing `setTimeout` function.
 ```js
 import Ticker from 'Ticker';
 // or
-const Ticker = require('Ticker);
+const Ticker = require('Ticker');
 ```
 
 ## Usage
