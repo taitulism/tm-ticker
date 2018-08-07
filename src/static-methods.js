@@ -16,14 +16,6 @@ function clog (...args) {
 	logCahce.push([...args]);
 }
 
-setTimeout(() => {
-	console.log(logCahce);
-}, 17500);
-
-setTimeout(() => {
-	console.log('bye');
-}, 200000);
-
 function resume (now = Now()) {
 	const targetTime = now + this.remainToTick;
 
@@ -40,9 +32,9 @@ function resume (now = Now()) {
 function onTimeEvent (target, callback) {
 	const now = Now();
 	
-	if (now > target) {
-		throw new Error('onTimeEvent got a target from the past');
-	}
+	// if (now > target) {
+	// 	throw new Error('onTimeEvent got a target from the past');
+	// }
 	
 	const timeLeft = target - now;
 	
