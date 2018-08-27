@@ -1,6 +1,4 @@
-const config = require('set-time-listener');
-
-const setTimeListener = config(true);
+const setTimeListener = require('./set-time-listener');
 
 /** 
 	These are the Ticker class private methods.
@@ -14,28 +12,17 @@ module.exports = {
 
 const Now = Date.now;
 
-const logCahce = [];
-
-function clog (...args) {
-	logCahce.push([...args]);
-}
-
 function resume (now = Now()) {
-	const targetTime = now + this.remainToTick;
+	const targetTime = now + this.remainToNextTick;
 
-	if (this.remainToTick >= 50) {
-		setTickAt(this, targetTime);
-	}
-	else {
-		metaTick(this, targetTime, now);
-	}
+	setTickAt.call(this, targetTime);
 	
-	this.remainToTick = 0;
+	this.remainToNextTick = 0;
 }
 
 function setTickAt (targetTime) {
-	this.abort = setTimeListener(targetTime, (target) => {
-		this.isActive && runTick.call(this, target);
+	this.abort = setTimeListener(targetTime, () => {
+		this.isRunning && runTick.call(this, targetTime);
 	});
 }
 

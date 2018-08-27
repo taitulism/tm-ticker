@@ -11,49 +11,53 @@ class Ticker {
 		this.interval = interval;
 		this.callback = callback;
 		this.abort = null;
-		this.isActive = false;
-		this.remainToTick = 0;
-		this.tickOnStart = tickOnStart;
+		this.isRunning = false;
+		this.remainToNextTick = 0;
+		this.shouldTickOnStart = tickOnStart;
 		this.lastTick = 0;
+	}
+
+	get isPaused () { // paused means: stopped but not reseted
+		return this.remainToNextTick !== 0;
 	}
 	
 	start (now = Date.now()) {
-		if (this.isActive) return;
+		if (this.isRunning) return;
 
-		this.isActive = true;
+		this.isRunning = true;
 
-		if (this.remainToTick) { // is paused
+		if (this.isPaused) {
 			resume.call(this, now);
+			return;
 		}
-		else { // fresh start
-			if (this.tickOnStart) {
-				runTick.call(this, now);
-			}
-			else {
-				const target = now + this.interval;
-				setTickAt.call(this, target);
-			}
+
+		if (this.shouldTickOnStart) {
+			runTick.call(this, now);
+		}
+		else {
+			const target = now + this.interval;
+			setTickAt.call(this, target);
 		}
 	}
 
 	stop (now = Date.now()) {
-		if (!this.isActive) return;
+		if (!this.isRunning) return;
 
-		this.isActive = false;
-		
+		this.isRunning = false;
+
 		const fromLastTick = now - this.lastTick;
 		
-		this.remainToTick = this.interval - fromLastTick;
+		this.remainToNextTick = this.interval - fromLastTick;
 	}
 
 	reset (now = Date.now()) {
 		this.abort();
 		this.abort = null;
-		this.remainToTick = 0;
+		this.remainToNextTick = 0;
 		this.lastTick = 0;
 		
-		if (this.isActive) {
-			this.isActive = false;
+		if (this.isRunning) {
+			this.isRunning = false;
 			this.start(now);			
 		}
 	}
@@ -62,7 +66,7 @@ class Ticker {
 module.exports = Ticker;
 
 function validateArgs (interval, callback) {
-	if (interval < 100) {
+	if (typeof interval !== 'number' || interval < 100) {
 		throw new Error('Ticker interval should be at least 100ms');
 	}
 	

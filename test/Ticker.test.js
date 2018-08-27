@@ -6,57 +6,59 @@ const Ticker = require('../src/Ticker');
 const noop = () => {};
 
 describe('Ticker', () => {
-	describe('Class', () => {
-		it('is a class', () => {
-			expect(Ticker).to.be.a('function');
+	describe('Construction', () => {
+		describe('when constructed with valid interval and callback', () => {
+			it('returns an instance of Ticker', () => {
+				const myTicker = new Ticker(1000, noop);
+
+				expect(myTicker instanceof Ticker).to.be.true;
+			});
 		});
 
-		describe('construction', () => {
-			describe('when constructed properly', () => {
-				it('returns an instance of Ticker', () => {
-					const myTicker = new Ticker(1000, () => {});
+		describe('with an invalid interval or callback', () => {
+			it('throws an error on invalid interval', () => {
+				function wrapper () {
+					new Ticker('not a number', noop);
+				}
 
-					expect(myTicker instanceof Ticker).to.be.true;
-				});
+				expect(wrapper).to.throw(Error);
 			});
-
-			describe('with an invalid interval', () => {
-				it('throws an error', () => {
-					const myTicker = new Ticker('not a number', () => {});
-				});
-			});
+			
+			it('throws an error on invalid callback', () => {
+				function wrapper () {
+					new Ticker(1000, 'not a function');
+				}
 	
-			describe('with an invalid callback', () => {
-				it('throws an error', () => {
-					function wrapper () {
-						const myTicker = new Ticker(1000, 'not a function');
-					}
-
-					expect(wrapper).to.throw(Error);
-				});
+				expect(wrapper).to.throw(Error);
 			});
 		});
 	});
 	
-	describe('Instance', () => {
-		let myTicker;
+	describe('API', () => {
+		let myTicker = new Ticker(1000, noop);
 
-		beforeEach (() => {
-			myTicker = new Ticker(1000, noop);
-		}); 
-		
-		afterEach (() => {
-			myTicker = null;
+		describe('Props', () => {
+			it('has a .isRunning flag prop', () => {
+				expect(myTicker.isRunning).to.be.a('boolean');
+			});
+			it('has a .remainToNextTick prop', () => {
+				expect(myTicker.remainToNextTick).to.be.a('number');
+			});
+			it('has a .isPaused getter prop', () => {
+				expect(myTicker.isPaused).to.be.a('boolean');
+			});
 		});
 
-		it('has a .start() method', () => {
-			expect(myTicker.start).to.be.a('function');
-		});
-		it('has a .stop() method', () => {
-			expect(myTicker.stop).to.be.a('function');
-		});
-		it('has a .reset() method', () => {
-			expect(myTicker.reset).to.be.a('function');
+		describe('Methods', () => {
+			it('has a .start() method', () => {
+				expect(myTicker.start).to.be.a('function');
+			});
+			it('has a .stop() method', () => {
+				expect(myTicker.stop).to.be.a('function');
+			});
+			it('has a .reset() method', () => {
+				expect(myTicker.reset).to.be.a('function');
+			});
 		});
 	});
 
@@ -73,9 +75,40 @@ describe('Ticker', () => {
 			this.clock.restore();
 		});
 
+		it('starts ticking and calls the callback on every tick', function () {
+			const myTicker = new Ticker(100, spy, false);
+			expect(spy.callCount).to.equal(0);
+
+			myTicker.start();
+			expect(spy.callCount).to.equal(0);
+
+			this.clock.tick(300);
+			expect(spy.callCount).to.equal(3);
+
+			myTicker.stop();
+		});
+		
+		describe('when constructed with a false flag', () => {
+			it('calls the callback on first tick', function () {
+				const myTicker = new Ticker(100, spy, false);
+				expect(spy.callCount).to.equal(0);
+	
+				myTicker.start();
+				expect(spy.callCount).to.equal(0);
+	
+				this.clock.tick(97);
+				expect(spy.callCount).to.equal(0);
+	
+				this.clock.tick(3);
+				expect(spy.callCount).to.equal(1);
+
+				myTicker.stop();
+			});
+		});
+
 		describe('when constructed without a flag', () => {
-			it('makes Ticker call the callback on start', function () {
-				const myTicker = new Ticker(100, spy, true);
+			it('calls the callback on start', function () {
+				const myTicker = new Ticker(100, spy);
 				expect(spy.callCount).to.equal(0);
 	
 				myTicker.start();
@@ -86,35 +119,135 @@ describe('Ticker', () => {
 	
 				this.clock.tick(3);
 				expect(spy.callCount).to.equal(2);
+
+				myTicker.stop();
 			});
 		});
 
-		it('makes Ticker call the callback on start', function () {
-			const myTicker = new Ticker(100, spy, true);
-			expect(spy.callCount).to.equal(0);
+		describe('when called after .stop()', function () {
+			it('resumes from the stopping point', function () {
+				const myTicker = new Ticker(100, spy, false);
+			
+				myTicker.start();
+				expect(spy.callCount).to.equal(0);
+				this.clock.tick(290);
+				myTicker.stop();
+				expect(spy.callCount).to.equal(2);
+				
+				this.clock.tick(5000);
+				
+				myTicker.start();
+				expect(spy.callCount).to.equal(2);
+				this.clock.tick(10);
+				expect(spy.callCount).to.equal(3);
+			});
+		});
+	});
 
-			myTicker.start();
-			expect(spy.callCount).to.equal(1);
+	describe('.stop()', function () {
+		let spy;
 
-			this.clock.tick(97);
-			expect(spy.callCount).to.equal(1);
+		beforeEach(function () {
+			spy = sinon.spy();
 
-			this.clock.tick(3);
-			expect(spy.callCount).to.equal(2);
+			this.clock = sinon.useFakeTimers();
 		});
 
-		it('makes Ticker call the callback on first tick', function () {
-			const myTicker = new Ticker(100, spy, false);
+		afterEach(function () {
+			this.clock.restore();
+		});
+
+		it('stops ticking', function () {
+			const myTicker = new Ticker(100, spy);
 			expect(spy.callCount).to.equal(0);
 
 			myTicker.start();
-			expect(spy.callCount).to.equal(0);
-
-			this.clock.tick(97);
-			expect(spy.callCount).to.equal(0);
-
-			this.clock.tick(3);
 			expect(spy.callCount).to.equal(1);
+			myTicker.stop();
+
+			this.clock.tick(300);
+			expect(spy.callCount).to.equal(1);
+		});
+
+		it('saves the remaining ms to next tick', function () {
+			const myTicker = new Ticker(100, spy);
+			
+			myTicker.start();
+			this.clock.tick(90);
+			
+			expect(myTicker.remainToNextTick).to.equal(0);
+			myTicker.stop();
+			expect(myTicker.remainToNextTick).to.equal(10);
+		});
+	});
+
+	describe('.reset()', () => {
+		let spy;
+
+		beforeEach(function () {
+			spy = sinon.spy();
+
+			this.clock = sinon.useFakeTimers();
+		});
+
+		afterEach(function () {
+			this.clock.restore();
+		});
+
+		describe('when called while running', () => {
+			it('does not stop ticking', function () {
+				const myTicker = new Ticker(100, spy, false);
+				
+				myTicker.start();
+				
+				this.clock.tick(250);
+				expect(spy.callCount).to.equal(2);
+				
+				myTicker.reset();
+				expect(spy.callCount).to.equal(2);
+
+				this.clock.tick(100);
+				expect(spy.callCount).to.equal(3);
+
+				myTicker.stop();
+			});
+
+			it('sets a new starting point to calc the interval from', function () {
+				const myTicker = new Ticker(100, spy);
+				
+				myTicker.start();
+				
+				this.clock.tick(250);
+				expect(spy.callCount).to.equal(3);
+				
+				myTicker.reset();
+				expect(spy.callCount).to.equal(4);
+
+				// make sure not using .remainToNextTick
+				this.clock.tick(70);
+				expect(spy.callCount).to.equal(4);
+				
+				this.clock.tick(30);
+				expect(spy.callCount).to.equal(5);
+
+				myTicker.stop();
+			});
+		});
+
+		describe('when called after .stop()', () => {
+			it('saves the remaining ms to next tick', function () {
+				const myTicker = new Ticker(100, spy, false);
+				
+				myTicker.start();
+				this.clock.tick(290);
+				expect(spy.callCount).to.equal(2);
+				
+				myTicker.stop();
+				myTicker.reset();
+				
+				this.clock.tick(10);
+				expect(myTicker.remainToNextTick).to.equal(0);
+			});
 		});
 	});
 });
