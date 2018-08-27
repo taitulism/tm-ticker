@@ -1,7 +1,7 @@
 {
   "name": "ticker",
   "version": "0.0.0",
-  "description": "An interval Ticker class",
+  "description": "An interval Ticker class (no GUI)",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test --watch"
