@@ -66,8 +66,8 @@ class Ticker {
 module.exports = Ticker;
 
 function validateArgs (interval, callback) {
-	if (typeof interval !== 'number' || interval < 100) {
-		throw new Error('Ticker interval should be at least 100ms');
+	if (typeof interval !== 'number' || interval < 50) {
+		throw new Error('Ticker interval should be at least 50ms');
 	}
 	
 	if (typeof callback !== 'function') {

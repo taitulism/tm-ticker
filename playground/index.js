@@ -5,8 +5,8 @@ const tickerTest = require('./Ticker-test');
 const logTable = require('./log-table');
 
 // config here
-const TICK = 500;
-const TICKS_PER_TEST = 20;
+const TICK = 100;
+const TICKS_PER_TEST = 25;
 
 console.log('Benchmarking...');
 console.log('setInterval vs. setTimeout vs. auto-fixing-setTimeout vs. Ticker');

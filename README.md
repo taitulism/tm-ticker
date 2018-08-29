@@ -27,11 +27,11 @@ $ npm run playground
 
 Create:
 ```js 
-t = new Ticker(interval, callback)
+t = new Ticker(interval, callback, tickOnStart)
 ```
 Use:
 ```js
- t.start(now, skipStartTickFlag)
+ t.start(now)
 ```
 ```js
  t.stop(now)
@@ -58,10 +58,10 @@ So running a function every constant ms isn't trivial.
 ## Constructor
 
 ```js
-// First two arguments are required*.
+// First two arguments are required.
 new Ticker(interval, callback, tickOnStart);
 ```
-* `interval` (number, required) - Milliseconds between ticks. Must be greater than 100.
+* `interval` (number, required) - Milliseconds between ticks. Must be greater than 50.
 
 * `callback` (function, required) - Tick handler function ("onTick").
 
