@@ -8,14 +8,12 @@ import Ticker from 'Ticker';
 const Ticker = require('Ticker');
 ```
 
-### Playground / benchmark
-```sh
-$ npm run playground
-```
+
 
 ## Usage
 [Jump to API](#api)
-### TL;DR
+
+### tl;dr
 
 Create:
 ```js 
@@ -31,6 +29,7 @@ Use:
 ```js
  t.reset(now)
 ```
+
 
 
 ### Why?
@@ -118,5 +117,8 @@ myTicker.reset();
 ```
 
 
-
+## Playground / benchmark
+```sh
+$ npm run playground
+```
 

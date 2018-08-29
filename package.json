@@ -6,8 +6,7 @@
   "scripts": {
     "test": "mocha ./test --watch",
     "playground": "node ./playground/index.js",
-    "lint": "eslint index.js src playground",
-    "tmp": "./node_modules/.bin/eslint --init"
+    "lint": "eslint index.js src playground"
   },
   "repository": {
     "type": "git",
@@ -15,12 +14,13 @@
   },
   "keywords": [
     "accurate",
+    "interval",
     "ticker",
-    "metronom",
-    "setTimeout",
-    "setInterval",
     "timer",
-    "clock"
+    "clock",
+    "metronome",
+    "setTimeout",
+    "setInterval"
   ],
   "author": "Taitu Lizenbaum",
   "license": "MIT",
