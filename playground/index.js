@@ -1,54 +1,107 @@
-const Ticker = require('../');
-	
-const trunc = function truncateMS (ms) {
-	return (ms + '').substr(8);
-}
+const setIntervalTest = require('./setInterval-test');
+const setTimeoutTest = require('./setTimeout-test');
+const AFSetTimeoutTest = require('./autofixing-setTimeout-test');
+const tickerTest = require('./Ticker-test');
+const logTable = require('./log-table');
 
-/**
- * The first tick is on start (no interval)
- */
-let firstWas = false;
-let lastTick = 0;
-const myTicker = new Ticker(1000, (ideal, actual = Date.now()) => {
-	let diff, txt;
+// config here
+const TICK = 500;
+const TICKS_PER_TEST = 20;
 
-	// console.log('sec len:', actual-lastTick);
-	// lastTick = actual;
+console.log('Benchmarking...');
+console.log('setInterval vs. setTimeout vs. auto-fixing-setTimeout vs. Ticker');
 
-	if (actual === ideal) {
-		diff = 0;
-		txt = 'ms PERFECT!!!';
-	}
-	else if (actual < ideal) {
-		diff = ideal - actual;
-		txt = ' before';
-	}
-	else {
-		diff = actual - ideal;
-		txt = ' delay';
-	}
-	
-	console.log(`{${trunc(ideal)}}`, `>${trunc(actual)}`, `(${diff}${txt})\n`);
-	
-	if (!firstWas) {
-		firstWas = true;
-		console.log('**********');
-	}
-}, true);
+// ------------------
+const testNames = [
+	'setInterval',
+	'setTimeout',
+	'Auto-fixing SetTimeout',
+	'Ticker',
+];
 
-const now = Date.now();
+const testFns = [
+	setIntervalTest,
+	setTimeoutTest,
+	AFSetTimeoutTest,
+	tickerTest,
+];
 
-myTicker.start(now);
+let currentTestIndex = 0;
+// ------------------
 
-setTimeout(() => {
-	myTicker.stop();
-	myTicker.reset();
+let stopCurrentTest;
+let ticksCount = 0;
+
+runNextTest();
+
+function runNextTest () {
+	const testName = testNames[currentTestIndex];
+
+	if (!testName) return; // Done.
+
+	const testFn = testFns[currentTestIndex];
 	
 	setTimeout(() => {
-		myTicker.start();
+		runTest(testName, testFn);
+	}, 1000);
+	
+	currentTestIndex++;
+}
 
-		setTimeout(() => {
-			myTicker.stop();
-		}, 4000);
-	}, 4000);
-}, 16100);
+function runTest (testName, testFn) {
+	const startingAt = Date.now();
+	
+	logTable.head(testName, startingAt);
+
+	stopCurrentTest = testFn(startingAt, TICK, tickFn);
+}
+
+
+function tickFn (startTime) {
+	ticksCount++;
+
+	logTick(startTime, ticksCount);
+
+	if (ticksCount >= TICKS_PER_TEST) {
+		logTable.tail();
+		
+		stopCurrentTest();
+		ticksCount = 0;
+		
+		runNextTest();
+	}
+}
+
+
+// Logging
+const truncateMs = (ms) => (ms + '').substr(7);
+
+function logTick (startTime, ticksCount) {
+	const now = Date.now();
+
+	const target = startTime + (TICK * ticksCount); // ideal timestamp
+	
+	let diff;
+    
+    if (now === target) {
+		diff = '  PERFECT! '
+    }
+    else if (now < target) {
+		diff = (target - now) + 'ms (early)';
+    }
+    else {
+		const diffNumer = (now - target);
+
+		diff = diffNumer < 10 ? diffNumer + 'ms ': diffNumer + 'ms';
+		diff += ' (late)';
+	}
+	
+	const count = ticksCount < 10 ? ' ' + ticksCount : ticksCount;
+
+	logTable.row(
+		count,
+		truncateMs(target),
+		truncateMs(now),
+		diff
+	);
+}

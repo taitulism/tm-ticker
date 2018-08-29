@@ -4,7 +4,8 @@
   "description": "An interval Ticker class (no GUI)",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test --watch"
+    "test": "mocha ./test --watch",
+    "playground": "node ./playground/index.js"
   },
   "repository": {
     "type": "git",

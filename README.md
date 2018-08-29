@@ -16,6 +16,11 @@ import Ticker from 'Ticker';
 const Ticker = require('Ticker');
 ```
 
+### Playground / benchmark
+```sh
+$ npm run playground
+```
+
 ## Usage
 [Jump to API](#api)
 ### TL;DR
