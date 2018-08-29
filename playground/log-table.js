@@ -1,5 +1,4 @@
-module.exports = function logTableHead (testName, startingAt) {
-};
+/* eslint-disable no-console */
 
 module.exports = {
 	head (testName, startingAt) {

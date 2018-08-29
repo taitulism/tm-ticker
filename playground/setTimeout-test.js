@@ -13,9 +13,9 @@ function startSetTimeoutTest (startTime, TICK, tickFn) {
 			}
 		}, TICK);
 	}
-	
+
 	setNextTick();
-	
+
 	return function stop () {
 		isStopped = true;
 		clearTimeout(ref);

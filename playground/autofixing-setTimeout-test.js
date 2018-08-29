@@ -9,7 +9,7 @@ function startAutoFixSetTimeoutTest (initialStartTime, TICK, tickFn) {
 
 		ref = setTimeout(() => {
 			tickFn(initialStartTime);
-			
+
 			if (!isStopped) {
 				const now = Date.now();
 				const delay = now - target;
@@ -18,9 +18,9 @@ function startAutoFixSetTimeoutTest (initialStartTime, TICK, tickFn) {
 			}
 		}, ms);
 	}
-	
+
 	setNextTick(TICK, initialStartTime);
-	
+
 	return function stop () {
 		isStopped = true;
 		clearTimeout(ref);
