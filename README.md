@@ -1,13 +1,5 @@
 # Ticker
-**PROJECT STATUS:** Work in progress...  
-**CURRENT VERSION:** `0.0.0`  
-**FOLLOWS SEMVER:** Not yet.  
-**DEFAULT BRANCH:** `develop`  
-
-## Ticker
 An interval ticker class (no GUI).  
-
-
 
 ## Installation
 ```js
