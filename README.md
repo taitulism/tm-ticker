@@ -1,11 +1,14 @@
-# Ticker
+# tm-ticker
 An interval ticker class (no GUI).  
 
 ## Installation
+```sh
+$ npm install tm-ticker
+```
 ```js
-import Ticker from 'Ticker';
+import Ticker from 'tm-ticker';
 // or
-const Ticker = require('Ticker');
+const Ticker = require('tm-ticker');
 ```
 
 
