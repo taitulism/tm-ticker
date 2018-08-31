@@ -1,5 +1,6 @@
 # tm-ticker
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/taitulism/ticker.svg?branch=develop)](https://travis-ci.org/taitulism/ticker)
 
 An interval ticker class (no GUI).  
 
