@@ -8,20 +8,40 @@ const MIN_INTERVAL = 50;
 
 class Ticker {
 	constructor (interval, callback, tickOnStart = true) {
-		validateArgs(interval, callback);
+		interval && this.setInterval(interval);
+		callback && this.setCallback(callback);
 
-		this.interval = interval;
-		this.callback = callback;
 		this.abort = null;
 		this.isRunning = false;
-		this.remainToNextTick = 0;
+		this.timeLeft = 0;
 		this.shouldTickOnStart = tickOnStart;
 		this.lastTick = 0;
 	}
 
 	get isPaused () {
 		// Stopped but not reseted
-		return this.remainToNextTick !== 0;
+		return this.timeLeft !== 0;
+	}
+
+	setInterval (interval) {
+		validateInterval(interval);
+
+		this.interval = interval;
+	}
+
+	setCallback (fn) {
+		validateCallback(fn);
+
+		this.callback = fn;
+	}
+
+	setTickOnStart (bool) {
+		this.shouldTickOnStart = Boolean(bool);
+	}
+
+	set (interval, fn) {
+		this.setInterval(interval);
+		this.setCallback(fn);
 	}
 
 	start (now = Date.now()) {
@@ -52,13 +72,13 @@ class Ticker {
 
 		const fromLastTick = now - this.lastTick;
 
-		this.remainToNextTick = this.interval - fromLastTick;
+		this.timeLeft = this.interval - fromLastTick;
 	}
 
 	reset (now = Date.now()) {
 		this.abort();
 		this.abort = null;
-		this.remainToNextTick = 0;
+		this.timeLeft = 0;
 		this.lastTick = 0;
 
 		if (this.isRunning) {
@@ -70,12 +90,14 @@ class Ticker {
 
 module.exports = Ticker;
 
-function validateArgs (interval, callback) {
-	if (typeof interval !== 'number' || interval < MIN_INTERVAL) {
-		throw new Error('Ticker interval should be at least 50ms');
+function validateInterval (interval) {
+	if (interval && (typeof interval !== 'number' || interval < MIN_INTERVAL)) {
+		throw new Error('Ticker interval should be a number greater than 50');
 	}
+}
 
-	if (typeof callback !== 'function') {
-		throw new Error('Ticker callback nust be a function');
+function validateCallback (callback) {
+	if (callback && typeof callback !== 'function') {
+		throw new Error('Ticker callback must be a function');
 	}
 }

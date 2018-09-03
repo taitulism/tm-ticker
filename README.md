@@ -16,16 +16,30 @@ const Ticker = require('tm-ticker');
 
 
 
-## Usage
+## TL;DR
 [Jump to API](#api)
 
-### tl;dr
+#### Create:
+```js
+// construct & config
+const t = new Ticker(interval, callback, tickOnStart = true)
 
-Create:
-```js 
-t = new Ticker(interval, callback, tickOnStart)
+// or just construct and config later
+const t = new Ticker()
 ```
-Use:
+
+
+#### Config:
+```js
+t.setInterval(number)
+t.setCallback(fn)
+t.set(interval, callback)
+t.setTickOnStart(bool)
+```
+
+
+#### Use:
+> `now` is optional
 ```js
  t.start(now)
 ```
@@ -37,94 +51,105 @@ Use:
 ```
 
 
-
-### Why?
-Timing in javascript is inaccurate.
-
-When you try to create a ticker with a simple recursive `setTimeout` you will have a small "time leak" because each tick runs a few ms after the original interval and this will accumulate over time. If you'll compare, side by side, that kind of a ticker with an actual clock/stopwatch you'll notice a growing offset.
-
-Using `setInterval` raises another issue: when your callback run time is higher than the interval iteself, the next callback will be called before the previous one has finished and you'll soon get out of memory.
-
-`requestAnimationFrame` is really great but Node doesn't have it and browsers tend to pause it when you leave the tab (no rendering = freeze ticker? what about sound?).
-
-So running a function every constant ms isn't trivial.
-
-
 ## API
+------
 
 ## Constructor
-
 ```js
-// First two arguments are required.
 new Ticker(interval, callback, tickOnStart);
 ```
-* `interval` (number, required) - Milliseconds between ticks. Must be greater than 50.
+* `interval` [number, optional]  
+Milliseconds between ticks. Must be greater than 50.
 
-* `callback` (function, required) - Tick handler function ("onTick").
+* `callback` [function, optional]  
+Tick handler function. Gets called on every tick.
 
-* `tickOnStart` (boolean, optional, default: `true`) - By default, the first tick happens on start, synchronously, before any timeout. Set to `false` if you want the first tick to happen only after the first interval.
+* `tickOnStart` [boolean, optional, default: `true`]  
+By default, the first tick happens on start, synchronously, before any timeout. Set to `false` if you want the first tick to happen only after the first interval.
 
-Example:
+
+## Configuration
+A Ticker instance won't tick unless it has an interval and a tick callback.  
+You can do it on construction or later with the following methods which are very self explanatory:
+
 ```js
-const myTicker = new Ticker(1000, () => {
-    console.log('TICK');
-}, false);
+const myTicker = new Ticker();
+
+myTicker.setInterval(1000)
+myTicker.setCallback(myFunc)
+myTicker.set(1000, myFunc)
+
+// default is true.
+myTicker.setTickOnStart(false)
 ```
+
+## Methods
+All methods can get call with a `timestamp` argument. Pass in a current timestamp when you need to sync time with other modules.
+
+* `timestamp` (ms, number, optional) - The timestamp to be considered as the method's execution time.
 
 ## .start()
-You can pass in a current timestamp. Use this when you need to keep in sync with another piece of code.
+Start ticking.
+
+If `tickOnStart` is set to `true` (default behavior), your callback will get called on start (as opposed to only after the first interval)
+
+When called after a `.stop()` it acts as a "resume" function. There will be no start-tick in this case. The next tick is calculated based on the `timeLeft` record.
+
 ```js
-myTicker.start(timestamp);
+// optional
+const timestamp = Date.now()
+
+myTicker.start(timestamp)
 ```
-* `timestamp` (number, optional) - The timestamp to be considered as start time. Use it when you need to sync times with other modules.
-
-Example:
-```js
-const now = Date.now();
-
-myTicker.start(now);
-// or
-myTicker.start();
-```
-
 
 
 ## .stop()
-It is actually a "Pause" function because the stop time is recorded for when you start again (unless you also call `.reset()`)
+Stop/Pause ticking.
+
+When called, the Ticker instance calculates the time left to next tick and stores it on a `timeLeft` prop in case you'll want to resume ticking from exact same point.  
+Run `.start()` to resume.  
+
 ```js
-myTicker.stop(timestamp);
+const myTicker = new Ticker(1000, sayTick)
+
+myTicker.start() // TICK!
+
+// Time passes by.. TICK!.. TICK!..
+myTicker.stop()
+
+console.log(myTicker.timeLeft) // 680 (ms left to next tick)
+
+// resume
+myTicker.start() // next tick in 680ms.
 ```
-* `timestamp` (number, optional) - The timestamp to be considered as stop time.
-
-Example:
-```js
-const now = Date.now();
-
-myTicker.stop(now);
-// or
-myTicker.stop();
-```
-
 
 
 ## .reset()
-Reset the ticker. Can be called whether the ticker is running or not. If called when running it will perform a quick `stop-reset-start`. If called when the ticker is not running (after a `.stop()`) it will reset the recorded "paused timestamp" if exists. Reseting a ticker doesn't change its initial interval.
-```js
-myTicker.reset(timestamp);
-```
-* `timestamp` (number, optional) - The timestamp to be considered as the reset time (and passed to the new `.start(timestamp)` call)
+Reset the ticker. 
+
+>Reseting a ticker doesn't change its initial interval.
+
+Can be called whether the ticker is running or not:
+* When running: Restart as if you have just started. Doesn't stop the ticker.
+* When stopped: Reset the recorded `timeLeft`.
 
 ```js
-const now = Date.now();
+const myTicker = new Ticker(1000, sayTick)
 
-myTicker.reset(now);
-// or
-myTicker.reset();
+myTicker.start() // new start point
+myTicker.reset() // new start point. still running...
+myTicker.stop() // save `timeLeft`
+
+myTicker.start() // resume from the same point
+myTicker.stop()  // save `timeLeft`
+myTicker.reset() // reset `timeLeft`
+
+myTicker.start() // new start point
 ```
 
 
 ## Playground / benchmark
+Compares Ticker with using vanilla `setTimeout` & `setInterval`
 ```sh
 $ npm run playground
 ```
-

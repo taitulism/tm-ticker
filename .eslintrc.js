@@ -14,7 +14,7 @@ module.exports = {
         "array-bracket-newline": "error",
         "array-bracket-spacing": "error",
         "array-callback-return": "error",
-        "array-element-newline": "error",
+        "array-element-newline": ["error", {"minItems": 4}],
         "arrow-body-style": "error",
         "arrow-parens": "error",
         "arrow-spacing": "error",
@@ -25,7 +25,7 @@ module.exports = {
         "camelcase": "error",
         "capitalized-comments": "error",
         "class-methods-use-this": "error",
-        "comma-dangle": ["error", "always"],
+        "comma-dangle": ["error", "always-multiline"],
         "comma-spacing": "error",
         "comma-style": "error",
         "complexity": "error",
@@ -68,13 +68,15 @@ module.exports = {
         "max-classes-per-file": "error",
         "max-depth": "error",
         "max-len": "error",
-        "max-lines": "error",
+        // "max-lines": "off",
         "max-lines-per-function": "error",
         "max-nested-callbacks": "error",
-        "max-params": ["error", { "max": 4 }],
+        "max-params": ["error", {
+			"max": 4
+		}],
         "max-statements": "warn",
         "max-statements-per-line": "error",
-        "multiline-comment-style": "error",
+        // "multiline-comment-style": "off",
         "multiline-ternary": "error",
         "new-cap": "error",
         "new-parens": "error",
@@ -168,7 +170,9 @@ module.exports = {
         "no-underscore-dangle": "error",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "error",
-        "no-unused-expressions": "error",
+		"no-unused-expressions": ["error", {
+			"allowShortCircuit": true
+		}],
         "no-use-before-define": ["error", {
             "functions": false,
             "classes": false

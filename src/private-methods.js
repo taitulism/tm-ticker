@@ -14,11 +14,11 @@ module.exports = {
 const getNow = Date.now;
 
 function resume (now = getNow()) {
-	const targetTime = now + this.remainToNextTick;
+	const targetTime = now + this.timeLeft;
 
 	setTickAt.call(this, targetTime);
 
-	this.remainToNextTick = 0;
+	this.timeLeft = 0;
 }
 
 function setTickAt (targetTime) {
@@ -34,5 +34,5 @@ function runTick (targetTime) {
 
 	setTickAt.call(this, targetTime + this.interval);
 
-	this.callback(targetTime);
+	this.callback && this.callback(targetTime);
 }
