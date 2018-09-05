@@ -1,12 +1,22 @@
 /* eslint-env mocha */
-/* eslint-disable */
+/* eslint-disable
+	func-names,
+	max-len,
+	max-lines-per-function,
+	max-statements,
+	no-magic-numbers,
+	no-new,
+	no-invalid-this,
+	prefer-arrow-callback,
+*/
 
-const sinon    = require('sinon');
+
+const sinon = require('sinon');
 const {expect} = require('chai');
 
 const Ticker = require('../src/Ticker');
 
-const noop = () => {};
+const noop = () => {}; // eslint-disable-line
 
 describe('Ticker:', () => {
 	describe('Create', () => {
@@ -128,7 +138,7 @@ describe('Ticker:', () => {
 	});
 
 	describe('API', () => {
-		let myTicker = new Ticker(1000, noop);
+		const myTicker = new Ticker(1000, noop);
 
 		describe('Props', () => {
 			it('has a .isRunning flag prop', () => {
@@ -189,6 +199,7 @@ describe('Ticker:', () => {
 
 			it('starts ticking and calls the callback on every tick', function () {
 				const myTicker = new Ticker(100, spy, false);
+
 				expect(spy.callCount).to.equal(0);
 
 				myTicker.start();
@@ -203,6 +214,7 @@ describe('Ticker:', () => {
 			describe('when constructed with a false flag', () => {
 				it('calls the callback on first tick', function () {
 					const myTicker = new Ticker(100, spy, false);
+
 					expect(spy.callCount).to.equal(0);
 
 					myTicker.start();
@@ -221,6 +233,7 @@ describe('Ticker:', () => {
 			describe('when constructed without a flag', () => {
 				it('calls the callback on start', function () {
 					const myTicker = new Ticker(100, spy);
+
 					expect(spy.callCount).to.equal(0);
 
 					myTicker.start();
@@ -271,6 +284,7 @@ describe('Ticker:', () => {
 
 			it('stops ticking', function () {
 				const myTicker = new Ticker(100, spy);
+
 				expect(spy.callCount).to.equal(0);
 
 				myTicker.start();
@@ -335,7 +349,7 @@ describe('Ticker:', () => {
 					myTicker.reset();
 					expect(spy.callCount).to.equal(4);
 
-					// make sure not using .timeLeft
+					// Make sure not using `.timeLeft`
 					this.clock.tick(70);
 					expect(spy.callCount).to.equal(4);
 
