@@ -7,7 +7,7 @@
     "test": "mocha ./test",
     "tdd": "mocha ./test --watch",
     "playground": "node ./playground/index.js",
-    "lint": "eslint index.js src playground"
+    "lint": "eslint index.js src test playground"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
   "homepage": "https://github.com/taitulism/ticker#readme",
   "devDependencies": {
     "chai": "^4.1.2",
-    "eslint": "^5.4.0",
+    "eslint": "^5.5.0",
     "mocha": "^5.2.0",
     "sinon": "^6.1.4"
   }
