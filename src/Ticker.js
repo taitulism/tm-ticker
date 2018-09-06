@@ -13,14 +13,32 @@ class Ticker {
 
 		this.abort = null;
 		this.isRunning = false;
-		this.timeLeft = 0;
+		this._timeLeft = 0;
 		this.shouldTickOnStart = tickOnStart;
-		this.lastTick = 0;
+		this.nextTick = 0;
 	}
 
 	get isPaused () {
 		// Stopped but not reseted
-		return this.timeLeft !== 0;
+		const isItPaused = this._timeLeft !== 0;
+
+		return isItPaused;
+	}
+
+	get timeLeft () {
+		if (this.isRunning) {
+			return this.getTimeLeft();
+		}
+
+		return this._timeLeft;
+	}
+
+	set timeLeft (val) {
+		this._timeLeft = val;
+	}
+
+	getTimeLeft (now = Date.now()) {
+		return this.nextTick - now;
 	}
 
 	setInterval (interval) {
@@ -59,9 +77,9 @@ class Ticker {
 			runTick.call(this, now);
 		}
 		else {
-			const target = now + this.interval;
+			this.nextTick = now + this.interval;
 
-			setTickAt.call(this, target);
+			setTickAt.call(this, this.nextTick);
 		}
 	}
 
@@ -70,16 +88,15 @@ class Ticker {
 
 		this.isRunning = false;
 
-		const fromLastTick = now - this.lastTick;
-
-		this.timeLeft = this.interval - fromLastTick;
+		this.timeLeft = this.getTimeLeft(now);
 	}
 
 	reset (now = Date.now()) {
 		this.abort();
 		this.abort = null;
+
 		this.timeLeft = 0;
-		this.lastTick = 0;
+		this.nextTick = 0;
 
 		if (this.isRunning) {
 			this.isRunning = false;

@@ -14,25 +14,25 @@ module.exports = {
 const getNow = Date.now;
 
 function resume (now = getNow()) {
-	const targetTime = now + this.timeLeft;
+	this.nextTick = now + this._timeLeft;
 
-	setTickAt.call(this, targetTime);
+	setTickAt.call(this, this.nextTick);
 
 	this.timeLeft = 0;
 }
 
-function setTickAt (targetTime) {
-	this.abort = setTimeListener(targetTime, () => {
+function setTickAt (target) {
+	this.abort = setTimeListener(target, () => {
 		if (this.isRunning) {
-			runTick.call(this, targetTime);
+			runTick.call(this, target);
 		}
 	});
 }
 
-function runTick (targetTime) {
-	this.lastTick = targetTime;
+function runTick (target) {
+	this.nextTick = target + this.interval;
 
-	setTickAt.call(this, targetTime + this.interval);
+	setTickAt.call(this, this.nextTick);
 
-	this.callback && this.callback(targetTime);
+	this.callback && this.callback();
 }
