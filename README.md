@@ -49,6 +49,9 @@ t.setTickOnStart(bool)
 ```js
  t.reset(now)
 ```
+```js
+ t.destroy()
+```
 
 
 ## API
@@ -147,8 +150,25 @@ myTicker.reset() // reset `timeLeft`
 myTicker.start() // new start point
 ```
 
+## .destroy()
+Destroy the ticker.
+
+Calls `.stop()` and  `.reset()` and removes the ticker's callback.  
+
+> *To use the same Ticker instance again, a callback must be set.*
+
+```js
+const myTicker = new Ticker(1000, sayTick)
+
+myTicker.start()
+myTicker.destroy()
+
+myTicker.setCallback(sayTick)
+myTicker.start()
+```
 
 ## Playground / benchmark
+-------------------------
 Compares Ticker with using vanilla `setTimeout` & `setInterval`
 ```sh
 $ npm run playground
