@@ -405,36 +405,15 @@ describe('Ticker:', () => {
 
 					myTicker.start();
 
-					// TODO:
-					// ISSUE:
-					/*
-						TODO: when val is 88 (instead of 30) and 12 later (where 70 is) there's a sneaky bug:
-
-						I think that set-time-listener's calculate func falls into the
-						margin condition (because of 12 being the meta tick).
-
-						Currently clearing the runTick setTimeout that is set by the metaTick is not possible
-						(there's a TODO comment there). This causes the tick run after the `start` call below,
-						(even though we stop and reset before it should run).
-
-						When it runs it updates the nextTick+=interval, and the last expect call
-						recieves 140 instead of 40.
-
-						To approach this bug, a solution for the clearTimeout (mentioned above) is needed.
-					*/
-					this.clock.tick(30);
+					this.clock.tick(90);
 
 					myTicker.stop();
-					expect(myTicker.timeLeft).to.equal(70);
+					expect(myTicker.timeLeft).to.equal(10);
 
 					myTicker.reset();
 					expect(myTicker.timeLeft).to.equal(0);
 
-					// Fixes the bug described above
-					// this.clock.tick(22);
-
 					myTicker.start();
-
 					expect(myTicker.timeLeft).to.equal(100);
 
 					this.clock.tick(60);

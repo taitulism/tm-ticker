@@ -38,23 +38,35 @@ function setTimeListener (target, callback) {
 	}
 
 	return function clearTimeListener () {
-		clearTimeout(ref);
+		if (typeof ref === 'function') {
+			ref();
+		}
+		else {
+			clearTimeout(ref);
+		}
 	};
 }
 
 function setMetaTick (target, callback, timeLeft) {
+	let ref;
 	const ms = timeLeft - META_TICK;
 
-	return setTimeout(() => {
-		runMetaTick(target, callback);
+	ref = setTimeout(() => {
+		ref = runMetaTick(target, callback);
 	}, ms);
+
+	return function clearTimeListener () {
+		clearTimeout(ref);
+	};;
 }
 
 function runMetaTick (target, callback) {
 	const ms = calcTimeout(target);
 
 	if (ms < ZERO) {
-		return callback();
+		callback();
+
+		return null;
 	}
 
 	// TODO: This setTimeout cannot be cleared (time scope)
