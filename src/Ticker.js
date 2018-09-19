@@ -94,7 +94,7 @@ class Ticker {
 	}
 
 	stop (now = Date.now()) {
-		if (!this.isRunning) return;
+		if (!this.isRunning) return this;
 
 		this.isRunning = false;
 
