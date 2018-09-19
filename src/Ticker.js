@@ -88,13 +88,13 @@ class Ticker {
 
 		this.isRunning = false;
 
-		this.abort();
+		this.abort && this.abort();
 
 		this.timeLeft = this.getTimeLeft(now);
 	}
 
 	reset (now = Date.now()) {
-		this.abort();
+		this.abort && this.abort();
 
 		this.timeLeft = 0;
 		this.nextTick = 0;
