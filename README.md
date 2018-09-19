@@ -1,4 +1,4 @@
-# tm-ticker
+# TM-Ticker
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/taitulism/ticker.svg?branch=develop)](https://travis-ci.org/taitulism/ticker)
 
@@ -24,7 +24,7 @@ const Ticker = require('tm-ticker');
 // construct & config
 const t = new Ticker(interval, callback, tickOnStart = true)
 
-// or just construct and config later
+// or just construct (and config later)
 const t = new Ticker()
 ```
 
@@ -87,7 +87,7 @@ myTicker.setTickOnStart(false)
 ```
 
 ## Methods
-All methods can get call with a `timestamp` argument. Pass in a current timestamp when you need to sync time with other modules.
+All methods can get called with a `timestamp` argument. Pass in a current timestamp when you need to sync time with other modules.
 
 * `timestamp` (ms, number, optional) - The timestamp to be considered as the method's execution time.
 
