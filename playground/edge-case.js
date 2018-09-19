@@ -1,13 +1,19 @@
-/* eslint-disable no-console, max-statements */
+/* eslint-disable
+	no-console,
+	max-statements,
+	capitalized-comments,
+*/
 
 const Ticker = require('..');
 
-const t = new Ticker(500, () => {
-	console.log('tick');
-})
+const SECOND = 1000;
 
-t.reset()
+const myTicker = new Ticker(SECOND, () => {
+	console.log('tick');
+});
+
+myTicker.reset();
 
 // setTimeout(() => {
-// 	t.stop();
+// 	myTicker.stop();
 // }, 4000);

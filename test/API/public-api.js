@@ -1,3 +1,6 @@
+/* eslint-env mocha */
+/* eslint-disable no-magic-numbers */
+
 const {expect} = require('chai');
 
 const {

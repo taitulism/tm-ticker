@@ -1,22 +1,27 @@
+/* eslint-env mocha */
+/* eslint-disable
+	max-lines-per-function,
+	no-magic-numbers,
+*/
+
 const sinon = require('sinon');
 const {expect} = require('chai');
 
-const { Ticker } = require('../common');
+const {Ticker} = require('../common');
 
-describe('.start()', function () {
-	let spy;
+describe('.start()', () => {
+	let spy, clock;
 
-	beforeEach(function () {
+	beforeEach(() => {
 		spy = sinon.spy();
-
-		this.clock = sinon.useFakeTimers();
+		clock = sinon.useFakeTimers();
 	});
 
-	afterEach(function () {
-		this.clock.restore();
+	afterEach(() => {
+		clock.restore();
 	});
 
-	it('starts ticking and calls the callback on every tick', function () {
+	it('starts ticking and calls the callback on every tick', () => {
 		const myTicker = new Ticker(100, spy, false);
 
 		expect(spy.callCount).to.equal(0);
@@ -24,14 +29,14 @@ describe('.start()', function () {
 		myTicker.start();
 		expect(spy.callCount).to.equal(0);
 
-		this.clock.tick(300);
+		clock.tick(300);
 		expect(spy.callCount).to.equal(3);
 
 		myTicker.stop();
 	});
 
 	describe('when constructed with a false flag', () => {
-		it('calls the callback on first tick', function () {
+		it('calls the callback on first tick', () => {
 			const myTicker = new Ticker(100, spy, false);
 
 			expect(spy.callCount).to.equal(0);
@@ -39,10 +44,10 @@ describe('.start()', function () {
 			myTicker.start();
 			expect(spy.callCount).to.equal(0);
 
-			this.clock.tick(97);
+			clock.tick(97);
 			expect(spy.callCount).to.equal(0);
 
-			this.clock.tick(3);
+			clock.tick(3);
 			expect(spy.callCount).to.equal(1);
 
 			myTicker.stop();
@@ -50,7 +55,7 @@ describe('.start()', function () {
 	});
 
 	describe('when constructed without a flag', () => {
-		it('calls the callback on start', function () {
+		it('calls the callback on start', () => {
 			const myTicker = new Ticker(100, spy);
 
 			expect(spy.callCount).to.equal(0);
@@ -58,30 +63,30 @@ describe('.start()', function () {
 			myTicker.start();
 			expect(spy.callCount).to.equal(1);
 
-			this.clock.tick(97);
+			clock.tick(97);
 			expect(spy.callCount).to.equal(1);
 
-			this.clock.tick(3);
+			clock.tick(3);
 			expect(spy.callCount).to.equal(2);
 
 			myTicker.stop();
 		});
 	});
 
-	describe('when called after .stop()', function () {
-		it('resumes from the stopping point', function () {
+	describe('when called after .stop()', () => {
+		it('resumes from the stopping point', () => {
 			const myTicker = new Ticker(100, spy, false);
 
 			myTicker.start();
 
-			this.clock.tick(130);
+			clock.tick(130);
 			expect(spy.callCount).to.equal(1);
 
 			myTicker.stop();
-			this.clock.tick(5000);
+			clock.tick(5000);
 			myTicker.start();
 
-			this.clock.tick(70);
+			clock.tick(70);
 			expect(spy.callCount).to.equal(2);
 
 			myTicker.stop();

@@ -57,7 +57,7 @@ function setMetaTick (target, callback, timeLeft) {
 
 	return function clearTimeListener () {
 		clearTimeout(ref);
-	};;
+	};
 }
 
 function runMetaTick (target, callback) {

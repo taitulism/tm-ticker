@@ -1,7 +1,15 @@
+/* eslint-env mocha */
+/* eslint-disable
+	max-lines-per-function,
+	no-magic-numbers,
+	func-names,
+	prefer-arrow-callback,
+*/
+
 const sinon = require('sinon');
 const {expect} = require('chai');
 
-const { Ticker } = require('../common');
+const {Ticker} = require('../common');
 
 describe('Configuration', function () {
 	let spy;
