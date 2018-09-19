@@ -45,32 +45,40 @@ class Ticker {
 		validateInterval(interval);
 
 		this.interval = interval;
+
+		return this;
 	}
 
 	setCallback (fn) {
 		validateCallback(fn);
 
 		this.callback = fn;
+
+		return this;
 	}
 
 	setTickOnStart (bool) {
 		this.shouldTickOnStart = Boolean(bool);
+
+		return this;
 	}
 
 	set (interval, fn) {
 		this.setInterval(interval);
 		this.setCallback(fn);
+
+		return this;
 	}
 
 	start (now = Date.now()) {
-		if (this.isRunning) return;
+		if (this.isRunning) return this;
 
 		this.isRunning = true;
 
 		if (this.isPaused) {
 			resume.call(this, now);
 
-			return;
+			return this;
 		}
 
 		if (this.shouldTickOnStart) {
@@ -81,6 +89,8 @@ class Ticker {
 
 			setTickAt.call(this, this.nextTick);
 		}
+
+		return this;
 	}
 
 	stop (now = Date.now()) {
@@ -91,6 +101,8 @@ class Ticker {
 		this.abort && this.abort();
 
 		this.timeLeft = this.getTimeLeft(now);
+
+		return this;
 	}
 
 	reset (now = Date.now()) {
@@ -103,6 +115,8 @@ class Ticker {
 			this.isRunning = false;
 			this.start(now);
 		}
+
+		return this;
 	}
 
 	destroy () {
