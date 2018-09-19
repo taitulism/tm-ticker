@@ -14,9 +14,9 @@
     "url": "git+https://github.com/taitulism/ticker.git"
   },
   "keywords": [
-    "accurate",
     "interval",
     "ticker",
+    "ticks",
     "timer",
     "clock",
     "metronome",
