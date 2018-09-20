@@ -16,6 +16,7 @@ class Ticker {
 
 		this.abort = null;
 		this.isRunning = false;
+		this.isOk = true;
 		this.tickOnStart = tickOnStart;
 		this.timeLeft = 0;
 		this.nextTick = 0;
@@ -53,7 +54,7 @@ class Ticker {
 	}
 
 	start (now = getNow()) {
-		if (this.isRunning) return this;
+		if (this.isRunning || !this.isOk) return this;
 
 		this.isRunning = true;
 
@@ -102,11 +103,9 @@ class Ticker {
 	}
 
 	destroy () {
-		this.stop();
-		this.reset();
+		this.stop().reset();
 
-		this.abort = null;
-		this.callback = null;
+		this.isOk = false;
 	}
 }
 

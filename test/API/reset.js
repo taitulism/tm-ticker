@@ -35,6 +35,8 @@ describe('.reset()', () => {
 
 				myTicker.reset();
 				expect(spy.callCount).to.equal(3);
+
+				myTicker.destroy();
 			});
 		});
 
@@ -50,6 +52,8 @@ describe('.reset()', () => {
 
 				myTicker.reset();
 				expect(spy.callCount).to.equal(1);
+
+				myTicker.destroy();
 			});
 		});
 
@@ -70,7 +74,7 @@ describe('.reset()', () => {
 			clock.tick(100);
 			expect(spy.callCount).to.equal(3);
 
-			myTicker.stop();
+			myTicker.destroy();
 		});
 
 		it('sets a new starting point to calc the interval from', () => {
@@ -92,7 +96,7 @@ describe('.reset()', () => {
 			clock.tick(30);
 			expect(spy.callCount).to.equal(5);
 
-			myTicker.stop();
+			myTicker.destroy();
 		});
 	});
 
@@ -117,7 +121,7 @@ describe('.reset()', () => {
 
 			expect(myTicker.getTimeLeft()).to.equal(40);
 
-			myTicker.stop();
+			myTicker.destroy();
 		});
 	});
 });

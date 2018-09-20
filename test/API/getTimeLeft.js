@@ -25,7 +25,7 @@ describe('.getTimeLeft()', () => {
 			clock.tick(130);
 			expect(myTicker.getTimeLeft()).to.equal(70);
 
-			myTicker.stop();
+			myTicker.destroy();
 		});
 	});
 
@@ -37,6 +37,8 @@ describe('.getTimeLeft()', () => {
 			clock.tick(140);
 			myTicker.stop();
 			expect(myTicker.getTimeLeft()).to.equal(60);
+
+			myTicker.destroy();
 		});
 	});
 });

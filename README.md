@@ -169,9 +169,9 @@ myTicker.start() // new start point
 ## .destroy()
 Destroy the ticker.
 
-Calls `.stop()` and  `.reset()` and removes the ticker's callback.  
+Calls `.stop()` and  `.reset()` and set the `.isOk` prop to `false`.  
 
-> *To use the same Ticker instance again, a callback must be set.*
+> *To use the same Ticker instance again, `isOk` should be set to `true`.*
 
 ```js
 const myTicker = new Ticker(1000, sayTick)
@@ -179,7 +179,9 @@ const myTicker = new Ticker(1000, sayTick)
 myTicker.start()
 myTicker.destroy()
 
-myTicker.setCallback(sayTick)
+// Resurrection
+myTicker.isOk = true;
+
 myTicker.start()
 ```
 

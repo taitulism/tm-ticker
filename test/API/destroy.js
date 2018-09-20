@@ -21,21 +21,25 @@ describe('.destroy()', () => {
 		clock.restore();
 	});
 
-	it('kills the ticker', () => {
+	it('cannot be started again', () => {
 		const myTicker = new Ticker(100, spy, false);
 
 		myTicker.start();
 		clock.tick(300);
 		expect(spy.callCount).to.equal(3);
 
+		expect(myTicker.isOk).to.be.true;
 		myTicker.destroy();
+		expect(myTicker.isOk).to.be.false;
 
 		myTicker.start();
 		clock.tick(300);
 		expect(spy.callCount).to.equal(3);
+
+		myTicker.destroy();
 	});
 
-	it('can be revived given a new callback', () => {
+	it('unless setting `.isOk` to true', () => {
 		const myTicker = new Ticker(100, spy, false);
 
 		myTicker.start();
@@ -43,9 +47,12 @@ describe('.destroy()', () => {
 		expect(spy.callCount).to.equal(3);
 
 		myTicker.destroy();
+		myTicker.isOk = true;
 
-		myTicker.setCallback(spy).start();
+		myTicker.start();
 		clock.tick(300);
 		expect(spy.callCount).to.equal(6);
+
+		myTicker.destroy();
 	});
 });

@@ -32,7 +32,7 @@ describe('.start()', () => {
 		clock.tick(300);
 		expect(spy.callCount).to.equal(3);
 
-		myTicker.stop();
+		myTicker.destroy();
 	});
 
 	describe('when constructed with a false flag', () => {
@@ -50,7 +50,7 @@ describe('.start()', () => {
 			clock.tick(3);
 			expect(spy.callCount).to.equal(1);
 
-			myTicker.stop();
+			myTicker.destroy();
 		});
 	});
 
@@ -69,7 +69,7 @@ describe('.start()', () => {
 			clock.tick(3);
 			expect(spy.callCount).to.equal(2);
 
-			myTicker.stop();
+			myTicker.destroy();
 		});
 	});
 
@@ -89,7 +89,7 @@ describe('.start()', () => {
 			clock.tick(70);
 			expect(spy.callCount).to.equal(2);
 
-			myTicker.stop();
+			myTicker.destroy();
 		});
 	});
 });

@@ -54,7 +54,7 @@ describe('Configuration', function () {
 			expect(spy.callCount).to.equal(0);
 			clock.tick(300);
 			expect(spy.callCount).to.equal(1);
-			myTicker.stop();
+			myTicker.destroy();
 		});
 	});
 

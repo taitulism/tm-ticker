@@ -32,6 +32,8 @@ describe('.stop()', () => {
 
 		clock.tick(300);
 		expect(spy.callCount).to.equal(1);
+
+		myTicker.destroy();
 	});
 
 	it('saves the remaining ms to next tick', () => {
@@ -45,5 +47,7 @@ describe('.stop()', () => {
 		myTicker.stop();
 		expect(myTicker.timeLeft).to.equal(40);
 		/* eslint-enable no-underscore-dangle */
+
+		myTicker.destroy();
 	});
 });
