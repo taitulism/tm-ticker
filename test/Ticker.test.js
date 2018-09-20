@@ -3,8 +3,12 @@
 	global-require,
 */
 
-describe('Ticker:', () => {
-	require('./creation');
-	require('./API/public-api');
-	require('./API/usage');
+const creation = require('./creation');
+const publicAPI = require('./public-API');
+const usage = require('./API/usage');
+
+describe('Ticker', () => {
+	creation();
+	publicAPI();
+	usage();
 });

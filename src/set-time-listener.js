@@ -1,3 +1,5 @@
+const {getNow} = require('./common');
+
 // Default values
 const META_TICK = 12;
 const TIME_MARGIN = 2;
@@ -15,7 +17,7 @@ module.exports = setTimeListener;
 
 function setTimeListener (target, callback) {
 	let ref;
-	const timeLeft = getTimeLeft(target);
+	const timeLeft = target - getNow();
 
 	// Using `setTimeListener` for such a short time period is an overhead.
 	if (timeLeft <= META_THRESHOLD) {
@@ -76,7 +78,7 @@ function runMetaTick (target, callback) {
 }
 
 function calcTimeout (target) {
-	const timeLeft = getTimeLeft(target);
+	const timeLeft = target - getNow();
 
 	// A great delay
 	if (timeLeft <= MIN_TIME_LEFT) {
@@ -91,8 +93,4 @@ function calcTimeout (target) {
 
 	// Miror the delay
 	return timeLeft - delay;
-}
-
-function getTimeLeft (target, now = Date.now()) {
-	return target - now;
 }

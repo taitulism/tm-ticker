@@ -4,6 +4,8 @@ const {
 	setTickAt,
 } = require('./private-methods');
 
+const {getNow} = require('./common');
+
 const MIN_INTERVAL = 50;
 
 class Ticker {
@@ -13,32 +15,17 @@ class Ticker {
 
 		this.abort = null;
 		this.isRunning = false;
-		this._timeLeft = 0;
-		this.shouldTickOnStart = tickOnStart;
+		this.tickOnStart = tickOnStart;
+		this.timeLeft = 0;
 		this.nextTick = 0;
 	}
 
-	get isPaused () {
-		// Stopped but not reseted
-		const isItPaused = this._timeLeft !== 0;
-
-		return isItPaused;
-	}
-
-	get timeLeft () {
+	getTimeLeft (now = getNow()) {
 		if (this.isRunning) {
-			return this.getTimeLeft();
+			return this.nextTick - now;
 		}
 
-		return this._timeLeft;
-	}
-
-	set timeLeft (val) {
-		this._timeLeft = val;
-	}
-
-	getTimeLeft (now = Date.now()) {
-		return this.nextTick - now;
+		return this.timeLeft;
 	}
 
 	setInterval (interval) {
@@ -57,12 +44,6 @@ class Ticker {
 		return this;
 	}
 
-	setTickOnStart (bool) {
-		this.shouldTickOnStart = Boolean(bool);
-
-		return this;
-	}
-
 	set (interval, fn) {
 		this.setInterval(interval);
 		this.setCallback(fn);
@@ -70,18 +51,18 @@ class Ticker {
 		return this;
 	}
 
-	start (now = Date.now()) {
+	start (now = getNow()) {
 		if (this.isRunning) return this;
 
 		this.isRunning = true;
 
-		if (this.isPaused) {
+		if (this.timeLeft) {
 			resume.call(this, now);
 
 			return this;
 		}
 
-		if (this.shouldTickOnStart) {
+		if (this.tickOnStart) {
 			runTick.call(this, now);
 		}
 		else {
@@ -93,19 +74,19 @@ class Ticker {
 		return this;
 	}
 
-	stop (now = Date.now()) {
+	stop (now = getNow()) {
 		if (!this.isRunning) return this;
 
 		this.isRunning = false;
 
 		this.abort && this.abort();
 
-		this.timeLeft = this.getTimeLeft(now);
+		this.timeLeft = this.nextTick - now;
 
 		return this;
 	}
 
-	reset (now = Date.now()) {
+	reset (now = getNow()) {
 		this.abort && this.abort();
 
 		this.timeLeft = 0;

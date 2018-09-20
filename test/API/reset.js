@@ -111,11 +111,11 @@ describe('.reset()', () => {
 			expect(myTicker.timeLeft).to.equal(0);
 
 			myTicker.start();
-			expect(myTicker.timeLeft).to.equal(100);
+			expect(myTicker.getTimeLeft()).to.equal(100);
 
 			clock.tick(60);
 
-			expect(myTicker.timeLeft).to.equal(40);
+			expect(myTicker.getTimeLeft()).to.equal(40);
 
 			myTicker.stop();
 		});

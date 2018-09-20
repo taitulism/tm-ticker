@@ -78,14 +78,14 @@ describe('.start()', () => {
 			const myTicker = new Ticker(100, spy, false);
 
 			myTicker.start();
-
 			clock.tick(130);
 			expect(spy.callCount).to.equal(1);
-
 			myTicker.stop();
+
 			clock.tick(5000);
 			myTicker.start();
 
+			expect(spy.callCount).to.equal(1);
 			clock.tick(70);
 			expect(spy.callCount).to.equal(2);
 

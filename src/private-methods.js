@@ -1,4 +1,5 @@
 const setTimeListener = require('./set-time-listener');
+const {getNow} = require('./common');
 
 /**
  * These are the Ticker class private methods.
@@ -11,10 +12,8 @@ module.exports = {
 	setTickAt,
 };
 
-const getNow = Date.now;
-
 function resume (now = getNow()) {
-	this.nextTick = now + this._timeLeft;
+	this.nextTick = now + this.timeLeft;
 
 	setTickAt.call(this, this.nextTick);
 

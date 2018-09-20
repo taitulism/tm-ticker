@@ -41,9 +41,9 @@ describe('.stop()', () => {
 		clock.tick(60);
 
 		/* eslint-disable no-underscore-dangle */
-		expect(myTicker._timeLeft).to.equal(0);
+		expect(myTicker.timeLeft).to.equal(0);
 		myTicker.stop();
-		expect(myTicker._timeLeft).to.equal(40);
+		expect(myTicker.timeLeft).to.equal(40);
 		/* eslint-enable no-underscore-dangle */
 	});
 });

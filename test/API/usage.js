@@ -3,12 +3,15 @@
 	global-require,
 */
 
-describe('Usage', () => {
-	describe('usage', () => {
+module.exports = function usage () {
+	describe('Usage', () => {
 		require('./configuration');
-		require('./start');
-		require('./stop');
-		require('./reset');
-		require('./destroy');
+		describe('Using', () => {
+			require('./start');
+			require('./getTimeLeft');
+			require('./stop');
+			require('./reset');
+			require('./destroy');
+		});
 	});
-});
+};

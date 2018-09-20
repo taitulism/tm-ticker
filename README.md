@@ -31,10 +31,10 @@ const t = new Ticker()
 
 #### Config:
 ```js
+t.tickOnStart = bool // deafult: true
 t.setInterval(number)
 t.setCallback(fn)
 t.set(interval, callback)
-t.setTickOnStart(bool)
 ```
 
 
@@ -42,6 +42,9 @@ t.setTickOnStart(bool)
 > `now` is optional
 ```js
  t.start(now)
+```
+```js
+ t.getTimeLeft(now)
 ```
 ```js
  t.stop(now)
@@ -83,7 +86,7 @@ myTicker.setCallback(myFunc)
 myTicker.set(1000, myFunc)
 
 // default is true.
-myTicker.setTickOnStart(false)
+myTicker.tickOnStart = false
 ```
 
 ## Methods
@@ -103,6 +106,19 @@ When called after a `.stop()` it acts as a "resume" function. There will be no s
 const timestamp = Date.now()
 
 myTicker.start(timestamp)
+```
+
+
+## .getTimeLeft()
+Returns how many milliseconds left to next tick.
+
+```js
+const myTicker = new Ticker(1000, callback)
+
+myTicker.start()
+
+// after two ticks and about a half (2480ms)
+myTicker.getTimeLeft() // --> 520
 ```
 
 
