@@ -2,6 +2,7 @@ const {
 	resume,
 	runTick,
 	setTickAt,
+	abort,
 } = require('./private-methods');
 
 const {getNow} = require('./common');
@@ -79,7 +80,7 @@ class Ticker {
 
 		this.isRunning = false;
 
-		this.abort && this.abort();
+		abort.call(this);
 
 		this.timeLeft = this.nextTick - now;
 
@@ -87,7 +88,7 @@ class Ticker {
 	}
 
 	reset (now = getNow()) {
-		this.abort && this.abort();
+		abort.call(this);
 
 		this.timeLeft = 0;
 		this.nextTick = 0;

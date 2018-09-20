@@ -10,6 +10,7 @@ module.exports = {
 	resume,
 	runTick,
 	setTickAt,
+	abort,
 };
 
 function resume (now = getNow()) {
@@ -21,7 +22,7 @@ function resume (now = getNow()) {
 }
 
 function setTickAt (target) {
-	this.abort = setTimeListener(target, () => {
+	this.abortFn = setTimeListener(target, () => {
 		if (this.isRunning) {
 			runTick.call(this, target);
 		}
@@ -34,4 +35,11 @@ function runTick (target) {
 	setTickAt.call(this, this.nextTick);
 
 	this.callback && this.callback();
+}
+
+function abort () {
+	if (this.abortFn) {
+		this.abortFn();
+		this.abortFn = null;
+	}
 }
