@@ -1,5 +1,3 @@
-const getNow = () => {
-	return Date.now();
-};
+const getNow = () => Date.now();
 
 module.exports.getNow = getNow;
