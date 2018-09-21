@@ -1,11 +1,27 @@
 module.exports = {
+	"root": true,
     "env": {
         "browser": true,
         "commonjs": true,
         "es6": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+	"extends": "eslint:recommended",
+	"overrides": [{
+		"files": 'test/**',
+		"env": {
+			"mocha": true
+		},
+		"rules": {
+			"no-unused-expressions": "off",
+			"no-magic-numbers": "off",
+			"max-lines-per-function": "off",
+			"func-names": "off",
+			"prefer-arrow-callback": "off",
+			"global-require": "off",
+			"no-new": "off",
+		},
+	}],
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-newline": "error",
