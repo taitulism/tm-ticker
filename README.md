@@ -89,6 +89,12 @@ myTicker.set(1000, myFunc)
 myTicker.tickOnStart = false
 ```
 
+You can also set the `interval` & `callback` directly as props but this way bypasses type validation for both and min number validation for `interval` (should be greater than *50*ms).
+```js
+myTicker.interval = 1000
+myTicker.callback = myFunc
+```
+
 ## Methods
 All methods can get called with a `timestamp` argument. Pass in a current timestamp when you need to sync time with other modules.
 
