@@ -1,8 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable
-	global-require,
-*/
-
 module.exports = function usage () {
 	describe('Usage', () => {
 		require('./configuration');

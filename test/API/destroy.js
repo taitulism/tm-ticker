@@ -1,9 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable
-	max-lines-per-function,
-	no-magic-numbers,
-*/
-
 const sinon = require('sinon');
 const {expect} = require('chai');
 

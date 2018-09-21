@@ -1,11 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable
-	max-lines-per-function,
-	no-magic-numbers,
-	no-new,
-	no-unused-expressions,
-*/
-
 const {expect} = require('chai');
 
 const {

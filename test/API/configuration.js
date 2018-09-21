@@ -1,11 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable
-	max-lines-per-function,
-	no-magic-numbers,
-	func-names,
-	prefer-arrow-callback,
-*/
-
 const sinon = require('sinon');
 const {expect} = require('chai');
 
