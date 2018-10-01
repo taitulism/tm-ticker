@@ -123,7 +123,7 @@ const myTicker = new Ticker(1000, callback)
 
 myTicker.start()
 
-// after two ticks and about a half (2480ms)
+// after about two ticks and a half (2480ms)
 myTicker.getTimeLeft() // --> 520
 ```
 
