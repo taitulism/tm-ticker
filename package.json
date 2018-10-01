@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test",
-    "tdd": "mocha ./test --watch",
+    "dev": "mocha ./test --watch",
     "playground": "node ./playground/index.js",
     "lint": "eslint index.js src test playground",
     "preversion": "npm run lint && npm test",
