@@ -112,13 +112,13 @@ class Ticker {
 module.exports = Ticker;
 
 function validateInterval (interval) {
-	if (interval && (typeof interval !== 'number' || interval < MIN_INTERVAL)) {
+	if (typeof interval !== 'number' || interval < MIN_INTERVAL) {
 		throw new Error('Ticker interval should be a number greater than 50');
 	}
 }
 
 function validateCallback (callback) {
-	if (callback && typeof callback !== 'function') {
+	if (typeof callback !== 'function') {
 		throw new Error('Ticker callback must be a function');
 	}
 }
