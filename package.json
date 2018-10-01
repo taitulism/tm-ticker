@@ -1,6 +1,6 @@
 {
   "name": "tm-ticker",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "An interval Ticker class (no GUI)",
   "main": "index.js",
   "scripts": {
