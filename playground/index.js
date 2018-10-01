@@ -80,7 +80,7 @@ function tickFn (startTime) {
 
 
 // Logging
-const truncateMs = (ms) => String(ms).substr(TRUNCATED_TIMESTAMP_LENGTH);
+const truncateMs = ms => String(ms).substr(TRUNCATED_TIMESTAMP_LENGTH);
 
 function logTick (startTime) {
 	const now = Date.now();
