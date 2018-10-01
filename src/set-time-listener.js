@@ -1,4 +1,4 @@
-const {getNow} = require('./common');
+const {getNow, memoize} = require('./common');
 
 // Default values
 const META_TICK = 12;
@@ -12,6 +12,22 @@ const TIME_PASSED = -1;
 const META_THRESHOLD = (META_TICK * 2) + TIME_MARGIN; // 26
 const MIN_TIME_LEFT = (META_TICK / 4); // 3
 /* eslint-enable no-magic-numbers */
+
+const calcTimeoutMs = memoize((timeLeft) => {
+	// A great delay
+	if (timeLeft <= MIN_TIME_LEFT) {
+		return TIME_PASSED;
+	}
+
+	const delay = META_TICK - timeLeft;
+
+	if (delay <= TIME_MARGIN) {
+		return timeLeft - TIME_MARGIN;
+	}
+
+	// Miror the delay
+	return timeLeft - delay;
+});
 
 module.exports = setTimeListener;
 
@@ -63,7 +79,8 @@ function setMetaTick (target, callback, timeLeft) {
 }
 
 function runMetaTick (target, callback) {
-	const ms = calcTimeout(target);
+	const timeLeft = target - getNow();
+	const ms = calcTimeoutMs(timeLeft);
 
 	if (ms < ZERO) {
 		callback();
@@ -75,22 +92,4 @@ function runMetaTick (target, callback) {
 	return setTimeout(() => {
 		callback();
 	}, ms);
-}
-
-function calcTimeout (target) {
-	const timeLeft = target - getNow();
-
-	// A great delay
-	if (timeLeft <= MIN_TIME_LEFT) {
-		return TIME_PASSED;
-	}
-
-	const delay = META_TICK - timeLeft;
-
-	if (delay <= TIME_MARGIN) {
-		return timeLeft - TIME_MARGIN;
-	}
-
-	// Miror the delay
-	return timeLeft - delay;
 }
