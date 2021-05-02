@@ -19,7 +19,7 @@ export class Ticker implements ITicker {
 	interval?: Milliseconds;
 	callback?: VoidFunction;
 
-	constructor (interval: number, callback: VoidFunction, tickOnStart: boolean = true) {
+	constructor (interval?: number, callback?: VoidFunction, tickOnStart: boolean = true) {
 		interval && this.setInterval(interval);
 		callback && this.setCallback(callback);
 

@@ -1,11 +1,7 @@
-const {expect} = require('chai');
+import {expect} from 'chai';
+import { Ticker, noop } from './common';
 
-const {
-	Ticker,
-	noop,
-} = require('./common');
-
-module.exports = function instanceCreation () {
+export default function instanceCreation () {
 	describe('Create Instance', () => {
 		describe('with no arguments', () => {
 			it('is created without errors', () => {

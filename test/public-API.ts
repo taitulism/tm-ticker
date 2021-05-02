@@ -1,11 +1,7 @@
-const {expect} = require('chai');
+import {expect} from 'chai';
+import { Ticker, noop } from './common';
 
-const {
-	Ticker,
-	noop,
-} = require('./common');
-
-module.exports = function publicAPI () {
+export default function publicAPI () {
 	describe('Public API', () => {
 		const myTicker = new Ticker(1000, noop);
 

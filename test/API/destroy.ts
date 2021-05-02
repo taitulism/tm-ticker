@@ -1,10 +1,9 @@
-const sinon = require('sinon');
-const {expect} = require('chai');
-
-const {Ticker} = require('../common');
+import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
+import {expect} from 'chai';
+import { Ticker } from '../common';
 
 describe('.destroy()', () => {
-	let spy, clock;
+	let spy: SinonSpy, clock: SinonFakeTimers;
 
 	beforeEach(() => {
 		spy = sinon.spy();

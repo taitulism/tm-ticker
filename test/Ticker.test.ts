@@ -1,6 +1,6 @@
-const creation = require('./creation');
-const publicAPI = require('./public-API');
-const usage = require('./API/usage');
+import creation from './creation';
+import publicAPI from './public-API';
+import usage from './API/usage';
 
 describe('Ticker', () => {
 	creation();

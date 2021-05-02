@@ -1,4 +1,4 @@
-module.exports = function usage () {
+export default function usage () {
 	describe('Usage', () => {
 		require('./configuration');
 		describe('Using', () => {

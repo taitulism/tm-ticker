@@ -1,8 +1,2 @@
-const Ticker = require('../src/Ticker');
-
-const noop = () => {}; // eslint-disable-line
-
-module.exports = {
-	Ticker,
-	noop,
-};
+export const noop = () => {}; // eslint-disable-line
+export {Ticker} from '../src/Ticker';
