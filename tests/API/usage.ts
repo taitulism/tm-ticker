@@ -1,12 +1,20 @@
+import configuration from './configuration';
+import start from './start';
+import getTimeLeft from './getTimeLeft';
+import stop from './stop';
+import reset from './reset';
+import destroy from './destroy';
+
 export default function usage () {
 	describe('Usage', () => {
-		require('./configuration');
+		configuration();
+		
 		describe('Using', () => {
-			require('./start');
-			require('./getTimeLeft');
-			require('./stop');
-			require('./reset');
-			require('./destroy');
+			start();
+			getTimeLeft();
+			stop();
+			reset();
+			destroy();
 		});
 	});
 };
