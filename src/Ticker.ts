@@ -1,16 +1,25 @@
-const {
+import {getNow} from './common';
+import { ITicker, Milliseconds } from './types';
+import {
 	resume,
 	runTick,
 	setTickAt,
 	abort,
-} = require('./private-methods');
-
-const {getNow} = require('./common');
+} from './private-methods';
 
 const MIN_INTERVAL = 50;
 
-class Ticker {
-	constructor (interval, callback, tickOnStart = true) {
+export class Ticker implements ITicker {
+	abort: null;
+	isRunning: boolean;
+	isOk: boolean;
+	tickOnStart: boolean;
+	timeLeft: number;
+	nextTick: number;
+	interval?: Milliseconds;
+	callback?: VoidFunction;
+
+	constructor (interval: number, callback: VoidFunction, tickOnStart: boolean = true) {
 		interval && this.setInterval(interval);
 		callback && this.setCallback(callback);
 
@@ -30,7 +39,7 @@ class Ticker {
 		return this.timeLeft;
 	}
 
-	setInterval (interval) {
+	setInterval (interval: number) {
 		validateInterval(interval);
 
 		this.interval = interval;
@@ -38,7 +47,7 @@ class Ticker {
 		return this;
 	}
 
-	setCallback (fn) {
+	setCallback (fn: VoidFunction) {
 		validateCallback(fn);
 
 		this.callback = fn;
@@ -46,7 +55,7 @@ class Ticker {
 		return this;
 	}
 
-	set (interval, fn) {
+	set (interval: number, fn: VoidFunction) {
 		this.setInterval(interval);
 		this.setCallback(fn);
 
@@ -109,15 +118,13 @@ class Ticker {
 	}
 }
 
-module.exports = Ticker;
-
-function validateInterval (interval) {
+function validateInterval (interval: number) {
 	if (typeof interval !== 'number' || interval < MIN_INTERVAL) {
 		throw new Error('Ticker interval should be a number greater than 50');
 	}
 }
 
-function validateCallback (callback) {
+function validateCallback (callback: VoidFunction) {
 	if (typeof callback !== 'function') {
 		throw new Error('Ticker callback must be a function');
 	}

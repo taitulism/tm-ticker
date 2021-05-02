@@ -1,3 +1,5 @@
+import { Milliseconds, Timestamp } from './types';
+
 const {getNow, memoize} = require('./common');
 
 // Default values
@@ -13,7 +15,7 @@ const META_THRESHOLD = (META_TICK * 2) + TIME_MARGIN; // 26
 const MIN_TIME_LEFT = (META_TICK / 4); // 3
 /* eslint-enable no-magic-numbers */
 
-const calcTimeoutMs = memoize((timeLeft) => {
+const calcTimeoutMs = memoize((timeLeft: Milliseconds) => {
 	// A great delay
 	if (timeLeft <= MIN_TIME_LEFT) {
 		return TIME_PASSED;
@@ -29,9 +31,7 @@ const calcTimeoutMs = memoize((timeLeft) => {
 	return timeLeft - delay;
 });
 
-module.exports = setTimeListener;
-
-function setTimeListener (target, callback) {
+export function setTimeListener (target: Timestamp, callback: VoidFunction) {
 	let ref;
 	const timeLeft = target - getNow();
 
@@ -65,7 +65,7 @@ function setTimeListener (target, callback) {
 	};
 }
 
-function setMetaTick (target, callback, timeLeft) {
+function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milliseconds) {
 	let ref;
 	const ms = timeLeft - META_TICK;
 
@@ -78,7 +78,7 @@ function setMetaTick (target, callback, timeLeft) {
 	};
 }
 
-function runMetaTick (target, callback) {
+function runMetaTick (target:Timestamp, callback: VoidFunction) {
 	const timeLeft = target - getNow();
 	const ms = calcTimeoutMs(timeLeft);
 
