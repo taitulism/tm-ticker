@@ -13,17 +13,17 @@ export default [{
 		sourcemap: true,
 		name: 'setTimeoutWorker',
 	},
-// }, {
-// 	input: 'tests/index.spec.ts',
-// 	plugins: [nodeResolve(), commonjs(), typescript()],
-// 	output: {
-// 		file: 'dev-bundles/tm-ticker-spec.js',
-// 		sourcemap: true,
-// 		format: 'iife',
-// 	},
-// 	onwarn (warning, rollupWarn) {
-// 		if (warning.code !== 'CIRCULAR_DEPENDENCY' && warning.code !== 'EVAL') {
-// 			rollupWarn(warning);
-// 		}
-// 	},
+}, {
+	input: 'tests/index.spec.ts',
+	plugins: [nodeResolve(), commonjs(), typescript()],
+	output: {
+		file: 'dev-bundles/tm-ticker-spec.ts',
+		sourcemap: true,
+		format: 'iife',
+	},
+	onwarn (warning, rollupWarn) {
+		if (warning.code !== 'CIRCULAR_DEPENDENCY' && warning.code !== 'EVAL') {
+			rollupWarn(warning);
+		}
+	},
 }];

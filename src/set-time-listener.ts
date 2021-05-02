@@ -1,6 +1,5 @@
 import { Milliseconds, Timestamp } from './types';
-
-const {getNow, memoize} = require('./common');
+import {getNow, memoize} from './common';
 
 // Default values
 const META_TICK = 12;
