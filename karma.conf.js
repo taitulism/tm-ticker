@@ -36,6 +36,8 @@ module.exports = function karma (config) {
 					declaration: false,
 					declarationMap: false,
 					outDir: undefined,
+					strict: false,
+					alwaysStrict: false,
 				})
 			],
 			onwarn (warning, rollupWarn) {

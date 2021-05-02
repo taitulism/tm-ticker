@@ -1,5 +1,5 @@
 import {getNow} from './common';
-import { ITicker, Milliseconds } from './types';
+import { Milliseconds } from './types';
 import {
 	resume,
 	runTick,
@@ -9,26 +9,26 @@ import {
 
 const MIN_INTERVAL = 50;
 
-export class Ticker implements ITicker {
-	abort: null;
+export class Ticker {
 	isRunning: boolean;
 	isOk: boolean;
 	tickOnStart: boolean;
 	timeLeft: number;
 	nextTick: number;
 	interval?: Milliseconds;
+	abortFn: VoidFunction | void; // TODO: rename (abortHandler? abortCallback?)
 	callback?: VoidFunction;
 
 	constructor (interval?: number, callback?: VoidFunction, tickOnStart: boolean = true) {
 		interval && this.setInterval(interval);
 		callback && this.setCallback(callback);
 
-		this.abort = null;
 		this.isRunning = false;
 		this.isOk = true;
 		this.tickOnStart = tickOnStart;
 		this.timeLeft = 0;
 		this.nextTick = 0;
+		this.abortFn = undefined; // TODO: null? but null is not void. make optional?
 	}
 
 	getTimeLeft (now = getNow()) {

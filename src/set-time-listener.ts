@@ -30,7 +30,7 @@ const calcTimeoutMs = memoize((timeLeft: Milliseconds) => {
 	return timeLeft - delay;
 });
 
-export function setTimeListener (target: Timestamp, callback: VoidFunction) {
+export function setTimeListener (target: Timestamp, callback: VoidFunction): VoidFunction | void{
 	let ref;
 	const timeLeft = target - getNow();
 

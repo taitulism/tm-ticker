@@ -5,7 +5,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default [{
-	input: 'src/index.ts',
+	input: 'src/Ticker.ts',
 	plugins: [typescript()],
 	output: {
 		file: 'dev-bundles/tm-ticker.js',
