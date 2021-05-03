@@ -3,7 +3,7 @@ import { Milliseconds } from './types';
 import {
 	resume,
 	runTick,
-	setTickAt,
+	setNextTick,
 	abort,
 } from './private-methods';
 
@@ -68,18 +68,13 @@ export class Ticker {
 		this.isRunning = true;
 
 		if (this.timeLeft) {
-			resume.call(this, now);
-
-			return this;
+			resume(this, now);
 		}
-
-		if (this.tickOnStart) {
-			runTick.call(this, now);
+		else if (this.tickOnStart) {
+			runTick(this, now);
 		}
 		else {
-			this.nextTick = now + this.interval;
-
-			setTickAt.call(this, this.nextTick);
+			setNextTick(this, now + this.interval);
 		}
 
 		return this;
@@ -90,7 +85,7 @@ export class Ticker {
 
 		this.isRunning = false;
 
-		abort.call(this);
+		abort(this);
 
 		this.timeLeft = this.nextTick - now;
 
@@ -98,7 +93,7 @@ export class Ticker {
 	}
 
 	reset (now = getNow()) {
-		abort.call(this);
+		abort(this);
 
 		this.timeLeft = 0;
 		this.nextTick = 0;

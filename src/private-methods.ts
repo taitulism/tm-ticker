@@ -3,42 +3,31 @@ import {setTimeListener} from './set-time-listener';
 import {getNow} from './common';
 import type { Ticker } from './Ticker';
 
-/**
- * These are the Ticker class private methods.
- * They are called with a ticker instance as their context (`this`).
- *
- */
+export function resume (ticker: Ticker, now: Timestamp = getNow()) {
+	setNextTick(ticker, now + ticker.timeLeft);
 
-
-// TODO: dont use `this` here. pass a ticker instance instead
-
-export function resume (this: Ticker, now: Timestamp = getNow()) {
-	this.nextTick = now + this.timeLeft;
-
-	setTickAt.call(this, this.nextTick);
-
-	this.timeLeft = 0;
+	ticker.timeLeft = 0;
 }
 
-export function setTickAt (this: Ticker, target: Timestamp) {
-	this.abortFn = setTimeListener(target, () => {
-		if (this.isRunning) {
-			runTick.call(this, target);
+export function setNextTick (ticker: Ticker, nextTarget: Timestamp) {
+	ticker.nextTick = nextTarget;
+
+	ticker.abortFn = setTimeListener(nextTarget, () => {
+		if (ticker.isRunning) {
+			runTick(ticker, nextTarget);
 		}
 	});
 }
 
-export function runTick (this: Ticker, target: Timestamp) {
-	this.nextTick = target + this.interval;
+export function runTick (ticker: Ticker, currentTarget: Timestamp) {
+	setNextTick(ticker, currentTarget + ticker.interval);
 
-	setTickAt.call(this, this.nextTick);
-
-	this.callback && this.callback();
+	ticker.callback && ticker.callback();
 }
 
-export function abort (this: Ticker) {
-	if (this.abortFn) {
-		this.abortFn();
-		this.abortFn = undefined;
+export function abort (ticker: Ticker) {
+	if (ticker.abortFn) {
+		ticker.abortFn();
+		ticker.abortFn = undefined;
 	}
 }
