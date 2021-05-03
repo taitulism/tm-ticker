@@ -1,6 +1,10 @@
 import { Milliseconds, Timestamp } from './types';
 import {getNow, memoize} from './common';
 
+// TODO: fix type
+// https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
+type TimeoutRef = ReturnType<typeof setTimeout> | VoidFunction;
+
 // Default values
 const META_TICK = 12;
 const TIME_MARGIN = 2;
@@ -14,7 +18,9 @@ const META_THRESHOLD = (META_TICK * 2) + TIME_MARGIN; // 26
 const MIN_TIME_LEFT = (META_TICK / 4); // 3
 /* eslint-enable no-magic-numbers */
 
-const calcTimeoutMs = memoize((timeLeft: Milliseconds) => {
+const noop: VoidFunction = () => {};
+
+const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
 	// A great delay
 	if (timeLeft <= MIN_TIME_LEFT) {
 		return TIME_PASSED;
@@ -31,13 +37,13 @@ const calcTimeoutMs = memoize((timeLeft: Milliseconds) => {
 });
 
 export function setTimeListener (target: Timestamp, callback: VoidFunction): VoidFunction | void{
-	let ref;
+	let ref: TimeoutRef;
 	const timeLeft = target - getNow();
 
 	// Using `setTimeListener` for such a short time period is an overhead.
 	if (timeLeft <= META_THRESHOLD) {
 		if (timeLeft <= TIME_MARGIN) {
-			ref = null;
+			ref = noop;
 
 			// No time for setTimeout. Run callback now.
 			return callback();
@@ -47,7 +53,7 @@ export function setTimeListener (target: Timestamp, callback: VoidFunction): Voi
 		const ms = timeLeft - TIME_MARGIN;
 
 		ref = setTimeout(() => {
-			callback(target);
+			callback();
 		}, ms);
 	}
 	else {
@@ -65,7 +71,7 @@ export function setTimeListener (target: Timestamp, callback: VoidFunction): Voi
 }
 
 function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milliseconds) {
-	let ref;
+	let ref: TimeoutRef;
 	const ms = timeLeft - META_TICK;
 
 	ref = setTimeout(() => {
@@ -77,14 +83,13 @@ function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milli
 	};
 }
 
-function runMetaTick (target:Timestamp, callback: VoidFunction) {
+function runMetaTick (target:Timestamp, callback: VoidFunction): TimeoutRef {
 	const timeLeft = target - getNow();
 	const ms = calcTimeoutMs(timeLeft);
 
 	if (ms < ZERO) {
 		callback();
-
-		return null;
+		return noop;
 	}
 
 	// TODO: This setTimeout cannot be cleared (time scope)
