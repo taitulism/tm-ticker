@@ -1,4 +1,4 @@
-import {getNow} from './common';
+import { getNow } from './utils';
 import { Milliseconds } from './types';
 import {
 	resume,
@@ -9,7 +9,7 @@ import {
 
 const MIN_INTERVAL = 50;
 
-export class Ticker {
+export default class Ticker {
 	isRunning: boolean;
 	isOk: boolean;
 	tickOnStart: boolean;

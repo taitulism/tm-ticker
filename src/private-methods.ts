@@ -1,7 +1,7 @@
 import { Timestamp } from './types';
-import {setTimeListener} from './set-time-listener';
-import {getNow} from './common';
-import type { Ticker } from './Ticker';
+import { setTimeListener } from './set-time-listener';
+import { getNow } from './utils';
+import type Ticker from './Ticker';
 
 export function resume (ticker: Ticker, now: Timestamp = getNow()) {
 	setNextTick(ticker, now + ticker.timeLeft);

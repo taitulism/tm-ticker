@@ -1,5 +1,5 @@
 import { Milliseconds, Timestamp } from './types';
-import {getNow, memoize} from './common';
+import {getNow, memoize} from './utils';
 
 // TODO: fix type
 // https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
