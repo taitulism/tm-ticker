@@ -1,3 +1,5 @@
+import stow from 'set-timeout-worker';
+
 import { Milliseconds, Timestamp } from './types';
 import {getNow, memoize} from './utils';
 
@@ -20,6 +22,14 @@ const MIN_TIME_LEFT = (META_TICK / 4); // 3
 /* eslint-enable no-magic-numbers */
 
 const noop: VoidFunction = () => {};
+
+let stoMethod: Function;
+
+document.addEventListener('visibilitychange', () => {
+    stoMethod = document.visibilityState === 'hidden' ? stow.setTimeout : window.setTimeout;
+}, false);
+
+
 
 const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
 	// A great delay
@@ -53,7 +63,7 @@ export function setTimeListener (target: Timestamp, callback: VoidFunction): Voi
 		// No time for a metaTick. Just pad and run.
 		const ms = timeLeft - TIME_MARGIN;
 
-		ref = setTimeout(() => {
+		ref = stow.setTimeout(() => {
 			callback();
 		}, ms);
 	}
@@ -75,7 +85,7 @@ function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milli
 	let ref: TimeoutRef;
 	const ms = timeLeft - META_TICK;
 
-	ref = setTimeout(() => {
+	ref = stow.setTimeout(() => {
 		ref = runMetaTick(target, callback);
 	}, ms);
 
@@ -94,7 +104,7 @@ function runMetaTick (target:Timestamp, callback: VoidFunction): TimeoutRef {
 	}
 
 	// TODO: This setTimeout cannot be cleared (time scope)
-	return setTimeout(() => {
+	return stow.setTimeout(() => {
 		callback();
 	}, ms);
 }

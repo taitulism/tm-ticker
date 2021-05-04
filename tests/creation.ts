@@ -1,3 +1,4 @@
+import * as stow from 'set-timeout-worker';
 import {expect} from 'chai';
 import { Ticker, noop } from './common';
 

@@ -1,3 +1,5 @@
+import stow from 'set-timeout-worker';
+
 import { getNow } from './utils';
 import { Milliseconds } from './types';
 import {
@@ -26,6 +28,7 @@ export default class Ticker {
 
 		this.tickOnStart = tickOnStart;
 		this.abortFn = undefined; // TODO: null? but null is not void. make optional?
+		stow.start();
 	}
 
 	getTimeLeft (now = getNow()) {
@@ -105,7 +108,7 @@ export default class Ticker {
 
 	destroy () {
 		this.stop().reset();
-
+		stow.stop();
 		this.isOk = false;
 	}
 }

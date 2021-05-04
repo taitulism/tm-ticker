@@ -57,5 +57,8 @@
 		"metronome",
 		"setTimeout",
 		"setInterval"
-	]
+	],
+	"dependencies": {
+		"set-timeout-worker": "^1.0.0"
+	}
 }

@@ -6,7 +6,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default [{
 	input: 'src/Ticker.ts',
-	plugins: [typescript()],
+	plugins: [nodeResolve(), typescript()],
 	output: {
 		file: 'dev-bundles/tm-ticker.js',
 		format: 'iife',
