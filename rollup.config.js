@@ -11,7 +11,7 @@ export default [{
 		file: 'dev-bundles/tm-ticker.js',
 		format: 'iife',
 		sourcemap: true,
-		name: 'setTimeoutWorker',
+		name: 'Ticker',
 	},
 }, {
 	input: 'tests/index.spec.ts',

@@ -3,6 +3,7 @@ import {getNow, memoize} from './common';
 
 // TODO: fix type
 // https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
+// https://www.designcise.com/web/tutorial/what-is-the-correct-typescript-return-type-for-javascripts-settimeout-function
 type TimeoutRef = ReturnType<typeof setTimeout> | VoidFunction;
 
 // Default values
