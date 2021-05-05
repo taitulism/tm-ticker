@@ -24,7 +24,7 @@ export default function instanceCreation () {
 
 		describe('with callback', () => {
 			it('is created without errors', () => {
-				const myTicker = new Ticker(null, noop);
+				const myTicker = new Ticker(undefined, noop);
 
 				expect(myTicker.callback).to.equal(noop);
 			});
@@ -41,6 +41,7 @@ export default function instanceCreation () {
 		describe('with an invalid interval or callback', () => {
 			it('throws an error on invalid interval', () => {
 				function wrapper () {
+					// @ts-expect-error
 					new Ticker('not a number', noop);
 				}
 
@@ -49,6 +50,7 @@ export default function instanceCreation () {
 
 			it('throws an error on invalid callback', () => {
 				function wrapper () {
+					// @ts-expect-error
 					new Ticker(1000, 'not a function');
 				}
 

@@ -1,4 +1,4 @@
-import stow from 'set-timeout-worker';
+import {setTimeoutWorker} from 'set-timeout-worker';
 
 import { getNow } from './utils';
 import { Milliseconds } from './types';
@@ -17,18 +17,19 @@ export default class Ticker {
 	isOk: boolean = true;
 	timeLeft: number = 0;
 	nextTick: number = 0;
-	interval: Milliseconds = DEFAULT_INTERVAL;
-	tickOnStart: boolean;
 	abortFn: VoidFunction | void;
-	callback?: VoidFunction;
 
-	constructor (interval?: number, callback?: VoidFunction, tickOnStart: boolean = true) {
+	constructor (
+		public interval: Milliseconds = DEFAULT_INTERVAL,
+		public callback?: VoidFunction,
+		public tickOnStart: boolean = true
+	) {
 		interval && this.setInterval(interval);
 		callback && this.setCallback(callback);
 
 		this.tickOnStart = tickOnStart;
 		this.abortFn = undefined; // TODO: null? but null is not void. make optional?
-		stow.start();
+		setTimeoutWorker.start();
 	}
 
 	getTimeLeft (now = getNow()) {
@@ -39,7 +40,7 @@ export default class Ticker {
 		return this.timeLeft;
 	}
 
-	setInterval (interval: number) {
+	setInterval (interval: Milliseconds) {
 		validateInterval(interval);
 
 		this.interval = interval;
@@ -108,7 +109,7 @@ export default class Ticker {
 
 	destroy () {
 		this.stop().reset();
-		stow.stop();
+		setTimeoutWorker.stop();
 		this.isOk = false;
 	}
 }

@@ -1,14 +1,16 @@
-import { UnknownArgs, UnknownFn } from './types';
+// import { UnknownArgs, UnknownFn } from './types';
 
 export const getNow = () => Date.now();
 
-export function memoize (fn: UnknownFn): UnknownFn {
-	const memo = new Map<UnknownArgs, unknown>();
+export function memoize<Args extends Array<unknown>, Return> (
+	fn: (...args: Args) => Return
+): (...args: Args) => Return {
+	const memo = new Map<Args, Return>();
 
-	return function memoFn (...args: UnknownArgs): unknown {
-		if (memo.has(args)) return memo.get(args);
+	return function memoFn (...args: Args): Return {
+		if (memo.has(args)) return memo.get(args)!;
 
-		const results = fn(args);
+		const results = fn(...args);
 
 		memo.set(args, results);
 

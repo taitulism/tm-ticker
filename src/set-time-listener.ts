@@ -1,12 +1,13 @@
-import stow from 'set-timeout-worker';
+import {setTimeoutWorker, Ref} from 'set-timeout-worker';
 
 import { Milliseconds, Timestamp } from './types';
 import {getNow, memoize} from './utils';
 
-// TODO: fix type
+// TODO: fix type (fixed for worker ref only, but take a second look)
 // https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
 // https://www.designcise.com/web/tutorial/what-is-the-correct-typescript-return-type-for-javascripts-settimeout-function
-type TimeoutRef = ReturnType<typeof setTimeout> | VoidFunction;
+// type TimeoutRef = ReturnType<typeof setTimeout> | VoidFunction;
+type TimeoutRef = Ref;
 
 // Default values
 const META_TICK = 12;
@@ -16,20 +17,13 @@ const ZERO = 0;
 // Negative value means run the callback now (synchronously).
 const TIME_PASSED = -1;
 
+// TODO: eslint
 /* eslint-disable no-magic-numbers */
 const META_THRESHOLD = (META_TICK * 2) + TIME_MARGIN; // 26
 const MIN_TIME_LEFT = (META_TICK / 4); // 3
 /* eslint-enable no-magic-numbers */
 
 const noop: VoidFunction = () => {};
-
-let stoMethod: Function;
-
-document.addEventListener('visibilitychange', () => {
-    stoMethod = document.visibilityState === 'hidden' ? stow.setTimeout : window.setTimeout;
-}, false);
-
-
 
 const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
 	// A great delay
@@ -63,7 +57,7 @@ export function setTimeListener (target: Timestamp, callback: VoidFunction): Voi
 		// No time for a metaTick. Just pad and run.
 		const ms = timeLeft - TIME_MARGIN;
 
-		ref = stow.setTimeout(() => {
+		ref = setTimeoutWorker.setTimeout(() => {
 			callback();
 		}, ms);
 	}
@@ -85,7 +79,7 @@ function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milli
 	let ref: TimeoutRef;
 	const ms = timeLeft - META_TICK;
 
-	ref = stow.setTimeout(() => {
+	ref = setTimeoutWorker.setTimeout(() => {
 		ref = runMetaTick(target, callback);
 	}, ms);
 
@@ -104,7 +98,7 @@ function runMetaTick (target:Timestamp, callback: VoidFunction): TimeoutRef {
 	}
 
 	// TODO: This setTimeout cannot be cleared (time scope)
-	return stow.setTimeout(() => {
+	return setTimeoutWorker.setTimeout(() => {
 		callback();
 	}, ms);
 }
