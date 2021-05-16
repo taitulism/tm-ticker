@@ -32,7 +32,7 @@ export default class Ticker {
 		setTimeoutWorker.start();
 	}
 
-	getTimeLeft (now = getNow()) {
+	getTimeLeft (now = getNow()): Milliseconds {
 		if (this.isRunning) {
 			return this.nextTick - now;
 		}
@@ -40,7 +40,7 @@ export default class Ticker {
 		return this.timeLeft;
 	}
 
-	setInterval (interval: Milliseconds) {
+	setInterval (interval: Milliseconds): Ticker {
 		validateInterval(interval);
 
 		this.interval = interval;
@@ -48,7 +48,7 @@ export default class Ticker {
 		return this;
 	}
 
-	setCallback (fn: VoidFunction) {
+	setCallback (fn: VoidFunction): Ticker {
 		validateCallback(fn);
 
 		this.callback = fn;
@@ -56,14 +56,14 @@ export default class Ticker {
 		return this;
 	}
 
-	set (interval: number, fn: VoidFunction) {
+	set (interval: number, fn: VoidFunction): Ticker {
 		this.setInterval(interval);
 		this.setCallback(fn);
 
 		return this;
 	}
 
-	start (now = getNow()) {
+	start (now = getNow()): Ticker {
 		if (this.isRunning || !this.isOk) return this;
 
 		this.isRunning = true;
@@ -81,7 +81,7 @@ export default class Ticker {
 		return this;
 	}
 
-	stop (now = getNow()) {
+	stop (now = getNow()): Ticker {
 		if (!this.isRunning) return this;
 
 		this.isRunning = false;
@@ -93,7 +93,7 @@ export default class Ticker {
 		return this;
 	}
 
-	reset (now = getNow()) {
+	reset (now = getNow()): Ticker {
 		abort(this);
 
 		this.timeLeft = 0;
@@ -107,7 +107,7 @@ export default class Ticker {
 		return this;
 	}
 
-	destroy () {
+	destroy (): void {
 		this.stop().reset();
 		setTimeoutWorker.stop();
 		this.isOk = false;
