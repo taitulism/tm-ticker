@@ -3,13 +3,13 @@ import { setTimeListener } from './set-time-listener';
 import { getNow } from './utils';
 import type Ticker from './Ticker';
 
-export function resume (ticker: Ticker, now: Timestamp = getNow()) {
+export function resume (ticker: Ticker, now: Timestamp = getNow()): void {
 	setNextTick(ticker, now + ticker.timeLeft);
 
 	ticker.timeLeft = 0;
 }
 
-export function setNextTick (ticker: Ticker, nextTarget: Timestamp) {
+export function setNextTick (ticker: Ticker, nextTarget: Timestamp): void {
 	ticker.nextTick = nextTarget;
 
 	ticker.abortFn = setTimeListener(nextTarget, () => {
@@ -19,8 +19,8 @@ export function setNextTick (ticker: Ticker, nextTarget: Timestamp) {
 	});
 }
 
-export function runTick (ticker: Ticker, currentTarget: Timestamp) {
-	const interval = ticker.interval;
+export function runTick (ticker: Ticker, currentTarget: Timestamp): void {
+	const {interval} = ticker;
 	let nextTarget: Timestamp = currentTarget + interval;
 
 	const now = Date.now();
@@ -37,7 +37,7 @@ export function runTick (ticker: Ticker, currentTarget: Timestamp) {
 	ticker.callback?.();
 }
 
-export function abort (ticker: Ticker) {
+export function abort (ticker: Ticker): void {
 	if (ticker.abortFn) {
 		ticker.abortFn();
 		ticker.abortFn = undefined;
