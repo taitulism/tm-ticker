@@ -1,4 +1,4 @@
-import {setTimeoutWorker, Ref} from 'set-timeout-worker';
+import { setTimeoutWorker, TimeoutRef } from 'set-timeout-worker';
 
 import { Milliseconds, Timestamp } from './types';
 import {getNow, memoize} from './utils';
@@ -7,7 +7,7 @@ import {getNow, memoize} from './utils';
 // https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
 // https://www.designcise.com/web/tutorial/what-is-the-correct-typescript-return-type-for-javascripts-settimeout-function
 // type TimeoutRef = ReturnType<typeof setTimeout> | VoidFunction;
-type TimeoutRef = Ref;
+type ClearTimeoutRef = TimeoutRef | VoidFunction;
 
 // Default values
 const META_TICK = 12;
@@ -42,7 +42,7 @@ const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
 });
 
 export function setTimeListener (target: Timestamp, callback: VoidFunction): VoidFunction | void{
-	let ref: TimeoutRef;
+	let ref: ClearTimeoutRef;
 	const timeLeft = target - getNow();
 
 	// Using `setTimeListener` for such a short time period is an overhead.
@@ -76,7 +76,7 @@ export function setTimeListener (target: Timestamp, callback: VoidFunction): Voi
 }
 
 function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milliseconds) {
-	let ref: TimeoutRef;
+	let ref: ClearTimeoutRef;
 	const ms = timeLeft - META_TICK;
 
 	ref = setTimeoutWorker.setTimeout(() => {
@@ -84,11 +84,11 @@ function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milli
 	}, ms);
 
 	return function clearTimeListener () {
-		clearTimeout(ref);
+		clearTimeout(ref as number);
 	};
 }
 
-function runMetaTick (target:Timestamp, callback: VoidFunction): TimeoutRef {
+function runMetaTick (target:Timestamp, callback: VoidFunction): ClearTimeoutRef {
 	const timeLeft = target - getNow();
 	const ms = calcTimeoutMs(timeLeft);
 
