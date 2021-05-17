@@ -3,17 +3,23 @@ module.exports = {
 	env: {
 		browser: true,
 		commonjs: true,
-		es6: true,
-		node: true,
+		mocha: true,
 	},
+	extends: [
+		'eslint:recommended',
+		'plugin:@typescript-eslint/recommended',
+	],
+	parser: '@typescript-eslint/parser',
+	plugins: [
+		'@typescript-eslint',
+	],
 	parserOptions: {
 		ecmaVersion: 6,
-		sourceType: 'module',
+		sourceType: 'module'
 	},
-	extends: 'eslint:recommended',
 	overrides: [
 		{
-			files: 'test/**',
+			files: 'tests/**',
 			env: {
 				mocha: true,
 			},
@@ -34,7 +40,7 @@ module.exports = {
 		'array-bracket-newline': 'error',
 		'array-bracket-spacing': 'error',
 		'array-callback-return': 'error',
-		'array-element-newline': ['error', {minItems: 4}],
+		// 'array-element-newline': ['error', {minItems: 4}],
 		'arrow-body-style': 'error',
 		'arrow-parens': ['error', 'as-needed', {requireForBlockBody: true}],
 		'arrow-spacing': 'error',
@@ -81,7 +87,7 @@ module.exports = {
 		'linebreak-style': ['error', 'unix'],
 		'lines-around-comment': 'error',
 		'lines-around-directive': 'error',
-		'lines-between-class-members': 'error',
+		'lines-between-class-members': ['error', {"exceptAfterSingleLine": true}],
 		'max-classes-per-file': 'error',
 		'max-depth': 'error',
 		'max-len': [
@@ -224,7 +230,7 @@ module.exports = {
 		'no-with': 'error',
 		'nonblock-statement-body-position': 'error',
 		'object-curly-newline': 'error',
-		'object-curly-spacing': 'error',
+		// 'object-curly-spacing': 'error',
 		'object-property-newline': 'error',
 		'object-shorthand': 'error',
 		//      "one-var": "off",
@@ -258,6 +264,7 @@ module.exports = {
 			'error', {
 				ignoreCase: true,
 				ignoreMemberSort: true,
+				ignoreDeclarationSort: true,
 				memberSyntaxSortOrder: [
 					'single',
 					'multiple',
