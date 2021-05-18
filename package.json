@@ -44,6 +44,7 @@
 		"karma-sinon": "^1.0.5",
 		"mocha": "^8.3.2",
 		"rollup": "^2.45.2",
+		"set-timeout-worker": "^1.0.3",
 		"sinon": "^10.0.0",
 		"tslib": "^2.2.0",
 		"typescript": "^4.2.4"
@@ -57,8 +58,5 @@
 		"metronome",
 		"setTimeout",
 		"setInterval"
-	],
-	"dependencies": {
-		"set-timeout-worker": "^1.0.2"
-	}
+	]
 }

@@ -1,22 +1,33 @@
 import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
+import { MockWorker } from 'set-timeout-worker';
 import { Ticker } from '../common';
 
 export default function start () {
 	describe('.start()', () => {
-		let spy: SinonSpy, clock: SinonFakeTimers;
+		let myTicker: Ticker,
+			mockWorker: Worker,
+			spy: SinonSpy,
+			clock: SinonFakeTimers
+		;
 
 		beforeEach(() => {
+			mockWorker = new MockWorker('mock-url');
 			spy = sinon.spy();
 			clock = sinon.useFakeTimers();
 		});
 
 		afterEach(() => {
 			clock.restore();
+			mockWorker.terminate();
+		});
+
+		after(() => {
+			myTicker.destroy();
 		});
 
 		it('starts ticking and calls the callback on every tick', () => {
-			const myTicker = new Ticker(100, spy, false);
+			myTicker = new Ticker(100, spy, false, mockWorker);
 
 			expect(spy.callCount).to.equal(0);
 
@@ -25,13 +36,11 @@ export default function start () {
 
 			clock.tick(300);
 			expect(spy.callCount).to.equal(3);
-
-			myTicker.destroy();
 		});
 
 		describe('when constructed with a false flag', () => {
 			it('calls the callback on first tick', () => {
-				const myTicker = new Ticker(100, spy, false);
+				myTicker = new Ticker(100, spy, false, mockWorker);
 
 				expect(spy.callCount).to.equal(0);
 
@@ -43,14 +52,12 @@ export default function start () {
 
 				clock.tick(3);
 				expect(spy.callCount).to.equal(1);
-
-				myTicker.destroy();
 			});
 		});
 
 		describe('when constructed without a flag', () => {
 			it('calls the callback on start', () => {
-				const myTicker = new Ticker(100, spy);
+				myTicker = new Ticker(100, spy, undefined, mockWorker);
 
 				expect(spy.callCount).to.equal(0);
 
@@ -62,14 +69,12 @@ export default function start () {
 
 				clock.tick(3);
 				expect(spy.callCount).to.equal(2);
-
-				myTicker.destroy();
 			});
 		});
 
 		describe('when called after .stop()', () => {
 			it('resumes from the stopping point', () => {
-				const myTicker = new Ticker(100, spy, false);
+				myTicker = new Ticker(100, spy, false, mockWorker);
 
 				myTicker.start();
 				clock.tick(130);
@@ -82,8 +87,6 @@ export default function start () {
 				expect(spy.callCount).to.equal(1);
 				clock.tick(70);
 				expect(spy.callCount).to.equal(2);
-
-				myTicker.destroy();
 			});
 		});
 	});

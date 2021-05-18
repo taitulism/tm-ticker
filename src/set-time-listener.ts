@@ -70,7 +70,7 @@ export function setTimeListener (target: Timestamp, callback: VoidFunction): Voi
 			ref();
 		}
 		else {
-			clearTimeout(ref);
+			setTimeoutWorker.clearTimeout(ref);
 		}
 	};
 }
@@ -84,7 +84,7 @@ function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milli
 	}, ms);
 
 	return function clearTimeListener () {
-		clearTimeout(ref as number);
+		setTimeoutWorker.clearTimeout(ref as number);
 	};
 }
 

@@ -1,5 +1,6 @@
 import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
+import { MockWorker } from 'set-timeout-worker';
 import { Ticker } from '../common';
 
 export default function configuration () {
@@ -38,7 +39,8 @@ export default function configuration () {
 
 		describe('.tickOnStart = bool', () => {
 			it('sets the tickOnStart flag', function () {
-				const myTicker = new Ticker(300, spy, true);
+				const mockWorker = new MockWorker('mock-url');
+				const myTicker = new Ticker(300, spy, true, mockWorker);
 
 				myTicker.tickOnStart = false;
 

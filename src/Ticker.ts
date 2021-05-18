@@ -22,14 +22,15 @@ export default class Ticker {
 	constructor (
 		public interval: Milliseconds = DEFAULT_INTERVAL,
 		public callback?: VoidFunction,
-		public tickOnStart: boolean = true
+		public tickOnStart: boolean = true,
+		public mockWorker?: Worker,
 	) {
 		interval && this.setInterval(interval);
 		callback && this.setCallback(callback);
 
 		this.tickOnStart = tickOnStart;
 		this.abortFn = undefined; // TODO: null? but null is not void. make optional?
-		setTimeoutWorker.start();
+		setTimeoutWorker.start(mockWorker);
 	}
 
 	getTimeLeft (now = getNow()): Milliseconds {
@@ -67,6 +68,7 @@ export default class Ticker {
 		if (this.isRunning || !this.isOk) return this;
 
 		this.isRunning = true;
+		setTimeoutWorker.start(this.mockWorker);
 
 		if (this.timeLeft) {
 			resume(this, now);
