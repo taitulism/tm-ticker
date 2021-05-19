@@ -1,11 +1,8 @@
-const {expect} = require('chai');
+import * as stow from 'set-timeout-worker';
+import {expect} from 'chai';
+import { Ticker, noop } from './common';
 
-const {
-	Ticker,
-	noop,
-} = require('./common');
-
-module.exports = function instanceCreation () {
+export default function instanceCreation () {
 	describe('Create Instance', () => {
 		describe('with no arguments', () => {
 			it('is created without errors', () => {
@@ -27,7 +24,7 @@ module.exports = function instanceCreation () {
 
 		describe('with callback', () => {
 			it('is created without errors', () => {
-				const myTicker = new Ticker(null, noop);
+				const myTicker = new Ticker(undefined, noop);
 
 				expect(myTicker.callback).to.equal(noop);
 			});
@@ -44,6 +41,7 @@ module.exports = function instanceCreation () {
 		describe('with an invalid interval or callback', () => {
 			it('throws an error on invalid interval', () => {
 				function wrapper () {
+					// @ts-expect-error
 					new Ticker('not a number', noop);
 				}
 
@@ -52,6 +50,7 @@ module.exports = function instanceCreation () {
 
 			it('throws an error on invalid callback', () => {
 				function wrapper () {
+					// @ts-expect-error
 					new Ticker(1000, 'not a function');
 				}
 

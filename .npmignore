@@ -1,2 +1,4 @@
-/playground/
-/.vscode/
+node_modules
+playground
+dev-bundles
+.vscode

@@ -1,13 +1,17 @@
-const {expect} = require('chai');
+import {expect} from 'chai';
+import { Ticker, noop } from './common';
 
-const {
-	Ticker,
-	noop,
-} = require('./common');
-
-module.exports = function publicAPI () {
+export default function publicAPI () {
 	describe('Public API', () => {
-		const myTicker = new Ticker(1000, noop);
+		let myTicker: Ticker;
+
+		before(() => {
+			myTicker = new Ticker(1000, noop);
+		});
+
+		after(() => {
+			myTicker.destroy();
+		});
 
 		describe('Props', () => {
 			it('has a .isRunning flag prop', () => {
