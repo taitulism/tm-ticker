@@ -19,10 +19,6 @@ export default function destroy () {
 
 		afterEach(() => {
 			clock.restore();
-			mockWorker.terminate();
-		});
-
-		after(() => {
 			myTicker.destroy();
 		});
 

@@ -5,10 +5,6 @@ import publicAPI from './public-API';
 import usage from './API/usage';
 
 describe('Ticker', () => {
-	afterEach(() => {
-		setTimeoutWorker.stop();
-	});
-
 	creation();
 	publicAPI();
 	usage();

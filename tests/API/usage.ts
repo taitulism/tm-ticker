@@ -8,7 +8,7 @@ import destroy from './destroy';
 export default function usage () {
 	describe('Usage', () => {
 		configuration();
-		
+
 		describe('Using', () => {
 			start();
 			getTimeLeft();
