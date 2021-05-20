@@ -13,7 +13,7 @@ export function setNextTick (ticker: Ticker, nextTarget: Timestamp): void {
 	ticker.nextTick = nextTarget;
 
 	ticker.abortFn = setTimeListener(nextTarget, () => {
-		if (ticker.isRunning) {
+		if (ticker.isTicking) {
 			runTick(ticker, nextTarget);
 		}
 	});

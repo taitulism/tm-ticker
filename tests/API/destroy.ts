@@ -29,16 +29,16 @@ export default function destroy () {
 			clock.tick(300);
 			expect(spy.callCount).to.equal(3);
 
-			expect(myTicker.isOk).to.be.true;
+			expect(myTicker.isDestroyed).to.be.false;
 			myTicker.destroy();
-			expect(myTicker.isOk).to.be.false;
+			expect(myTicker.isDestroyed).to.be.true;
 
 			myTicker.start();
 			clock.tick(300);
 			expect(spy.callCount).to.equal(3);
 		});
 
-		it('unless setting `.isOk` to true', () => {
+		it('unless setting `.isDestroyed` to true', () => {
 			myTicker = new Ticker(100, spy, false, mockWorker);
 
 			myTicker.start();
@@ -46,7 +46,7 @@ export default function destroy () {
 			expect(spy.callCount).to.equal(3);
 
 			myTicker.destroy();
-			myTicker.isOk = true;
+			myTicker.isDestroyed = false;
 
 			myTicker.start();
 			clock.tick(300);

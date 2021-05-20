@@ -175,9 +175,9 @@ myTicker.start() // new start point
 ## .destroy()
 Destroy the ticker.
 
-Calls `.stop()` and  `.reset()` and set the `.isOk` prop to `false`.  
+Calls `.stop()` and  `.reset()` and set the `.isDestroyed` prop to `true`.  
 
-> *To use the same Ticker instance again, `isOk` should be set to `true`.*
+> *To use the same Ticker instance again, `isDestroyed` should be set to `false`.*
 
 ```js
 const myTicker = new Ticker(1000, sayTick)
@@ -186,7 +186,7 @@ myTicker.start()
 myTicker.destroy()
 
 // Resurrection
-myTicker.isOk = true;
+myTicker.isDestroyed = false;
 
 myTicker.start()
 ```

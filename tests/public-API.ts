@@ -14,8 +14,8 @@ export default function publicAPI () {
 		});
 
 		describe('Props', () => {
-			it('has a .isRunning flag prop', () => {
-				expect(myTicker.isRunning).to.be.a('boolean');
+			it('has a .isTicking flag prop', () => {
+				expect(myTicker.isTicking).to.be.a('boolean');
 			});
 			it('has a .timeLeft prop', () => {
 				expect(myTicker.timeLeft).to.be.a('number');
