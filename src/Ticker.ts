@@ -1,6 +1,5 @@
 import {setTimeoutWorker} from 'set-timeout-worker';
 
-import { getNow } from './utils';
 import { Milliseconds } from './types';
 import {
 	resume,
@@ -35,7 +34,7 @@ export default class Ticker {
 
 	get timeToNextTick (): Milliseconds {
 		return this.isTicking
-			? this.nextTick - getNow()
+			? this.nextTick - Date.now()
 			: this.remainder
 		;
 	}
@@ -63,7 +62,7 @@ export default class Ticker {
 		return this;
 	}
 
-	start (now = getNow()): Ticker {
+	start (now = Date.now()): Ticker {
 		if (this.isDestroyed) throw new Error('Ticker instance cannot be started after destruction.')
 		if (this.isTicking) return this;
 
@@ -82,7 +81,7 @@ export default class Ticker {
 		return this;
 	}
 
-	stop (now = getNow()): Ticker {
+	stop (now = Date.now()): Ticker {
 		if (!this.isTicking) return this;
 
 		this.isTicking = false;
@@ -94,7 +93,7 @@ export default class Ticker {
 		return this;
 	}
 
-	reset (now = getNow()): Ticker {
+	reset (now = Date.now()): Ticker {
 		abort(this);
 
 		this.remainder = 0;

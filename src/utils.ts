@@ -1,7 +1,3 @@
-// import { UnknownArgs, UnknownFn } from './types';
-
-export const getNow = () => Date.now();
-
 export function memoize<Args extends Array<unknown>, Return> (
 	fn: (...args: Args) => Return
 ): (...args: Args) => Return {

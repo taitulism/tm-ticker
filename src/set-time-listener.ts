@@ -1,7 +1,7 @@
 import { setTimeoutWorker, TimeoutRef } from 'set-timeout-worker';
 
 import { Milliseconds, Timestamp } from './types';
-import {getNow, memoize} from './utils';
+import {memoize} from './utils';
 
 // TODO: fix type (fixed for worker ref only, but take a second look)
 // https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
@@ -43,7 +43,7 @@ const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
 
 export function setTimeListener (target: Timestamp, callback: VoidFunction): VoidFunction | void{
 	let ref: ClearTimeoutRef;
-	const timeLeft = target - getNow();
+	const timeLeft = target - Date.now();
 
 	// Using `setTimeListener` for such a short time period is an overhead.
 	if (timeLeft <= META_THRESHOLD) {
@@ -89,7 +89,7 @@ function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milli
 }
 
 function runMetaTick (target:Timestamp, callback: VoidFunction): ClearTimeoutRef {
-	const timeLeft = target - getNow();
+	const timeLeft = target - Date.now();
 	const ms = calcTimeoutMs(timeLeft);
 
 	if (ms < ZERO) {

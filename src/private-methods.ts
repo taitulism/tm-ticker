@@ -1,9 +1,8 @@
 import { Timestamp } from './types';
 import { setTimeListener } from './set-time-listener';
-import { getNow } from './utils';
 import type Ticker from './Ticker';
 
-export function resume (ticker: Ticker, now: Timestamp = getNow()): void {
+export function resume (ticker: Ticker, now: Timestamp): void {
 	setNextTick(ticker, now + ticker.remainder);
 
 	ticker.remainder = 0;
