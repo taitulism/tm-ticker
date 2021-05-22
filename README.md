@@ -44,7 +44,7 @@ t.set(interval, callback)
  t.start(now)
 ```
 ```js
- t.getTimeLeft(now)
+ t.timeToNextTick
 ```
 ```js
  t.stop(now)
@@ -103,9 +103,9 @@ All methods can get called with a `timestamp` argument. Pass in a current timest
 ## .start()
 Start ticking.
 
-If `tickOnStart` is set to `true` (default behavior), your callback will get called on start (as opposed to only after the first interval)
+If `tickOnStart` is set to `true` (default), your callback will get called on start (as opposed to only after the first interval)
 
-When called after a `.stop()` it acts as a "resume" function. There will be no start-tick in this case. The next tick is calculated based on the `timeLeft` record.
+When called after a `.stop()` it acts as a "resume" function. There will be no start-tick in this case. The next tick is calculated based on the `timeToNextTick` property value.
 
 ```js
 // optional
@@ -115,7 +115,7 @@ myTicker.start(timestamp)
 ```
 
 
-## .getTimeLeft()
+## .timeToNextTick
 Returns how many milliseconds left to next tick.
 
 ```js
@@ -123,15 +123,13 @@ const myTicker = new Ticker(1000, callback)
 
 myTicker.start()
 
-// after about two ticks and a half (2480ms)
-myTicker.getTimeLeft() // --> 520
+// after 2400ms
+myTicker.timeToNextTick // --> 600
 ```
 
 
 ## .stop()
 Stop/Pause ticking.
-
-When called, the Ticker instance calculates the time left to next tick and stores it on a `timeLeft` prop in case you'll want to resume ticking from exact same point.  
 Run `.start()` to resume.  
 
 ```js
@@ -142,7 +140,7 @@ myTicker.start() // TICK!
 // Time passes by.. TICK!.. TICK!..
 myTicker.stop()
 
-console.log(myTicker.timeLeft) // 680 (ms left to next tick)
+console.log(myTicker.timeToNextTick) // 680 (ms left to next tick)
 
 // resume
 myTicker.start() // next tick in 680ms.
@@ -154,20 +152,20 @@ Reset the ticker.
 
 >Reseting a ticker doesn't change its initial interval.
 
-Can be called whether the ticker is running or not:
+Can be called whether the ticker is currently ticking or not:
 * When running: Restart as if you have just started. Doesn't stop the ticker.
-* When stopped: Reset the recorded `timeLeft`.
+* When stopped: Reset the `timeToNextTick` value to zero.
 
 ```js
 const myTicker = new Ticker(1000, sayTick)
 
 myTicker.start() // new start point
 myTicker.reset() // new start point. still running...
-myTicker.stop() // save `timeLeft`
+myTicker.stop() // save `timeToNextTick`
 
 myTicker.start() // resume from the same point
-myTicker.stop()  // save `timeLeft`
-myTicker.reset() // reset `timeLeft`
+myTicker.stop()  // save `timeToNextTick`
+myTicker.reset() // reset `timeToNextTick`
 
 myTicker.start() // new start point
 ```

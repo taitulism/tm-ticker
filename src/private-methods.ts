@@ -4,9 +4,9 @@ import { getNow } from './utils';
 import type Ticker from './Ticker';
 
 export function resume (ticker: Ticker, now: Timestamp = getNow()): void {
-	setNextTick(ticker, now + ticker.timeLeft);
+	setNextTick(ticker, now + ticker.remainder);
 
-	ticker.timeLeft = 0;
+	ticker.remainder = 0;
 }
 
 export function setNextTick (ticker: Ticker, nextTarget: Timestamp): void {

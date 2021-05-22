@@ -38,7 +38,7 @@ export default function destroy () {
 			expect(throwingFn).to.throw('cannot be started after destruction');
 		});
 
-		it('cannot be started again', () => {
+		it('stops ticking', () => {
 			myTicker = new Ticker(100, spy, false, mockWorker);
 
 			myTicker.start();
@@ -58,21 +58,6 @@ export default function destroy () {
 
 			clock.tick(300);
 			expect(spy.callCount).to.equal(3);
-		});
-
-		it('unless setting `.isDestroyed` to true', () => {
-			myTicker = new Ticker(100, spy, false, mockWorker);
-
-			myTicker.start();
-			clock.tick(300);
-			expect(spy.callCount).to.equal(3);
-
-			myTicker.destroy();
-			myTicker.isDestroyed = false;
-
-			myTicker.start();
-			clock.tick(300);
-			expect(spy.callCount).to.equal(6);
 		});
 	});
 }

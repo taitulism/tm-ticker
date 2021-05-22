@@ -15,7 +15,7 @@ const DEFAULT_INTERVAL = 500;
 export default class Ticker {
 	isTicking: boolean = false;
 	isDestroyed: boolean = false;
-	timeLeft: number = 0;
+	remainder: number = 0;
 	nextTick: number = 0;
 	abortFn: VoidFunction | void;
 
@@ -33,12 +33,11 @@ export default class Ticker {
 		setTimeoutWorker.start(mockWorker);
 	}
 
-	getTimeLeft (now = getNow()): Milliseconds {
-		if (this.isTicking) {
-			return this.nextTick - now;
-		}
-
-		return this.timeLeft;
+	get timeToNextTick (): Milliseconds {
+		return this.isTicking
+			? this.nextTick - getNow()
+			: this.remainder
+		;
 	}
 
 	setInterval (interval: Milliseconds): Ticker {
@@ -69,9 +68,8 @@ export default class Ticker {
 		if (this.isTicking) return this;
 
 		this.isTicking = true;
-		setTimeoutWorker.start(this.mockWorker);
 
-		if (this.timeLeft) {
+		if (this.remainder) {
 			resume(this, now);
 		}
 		else if (this.tickOnStart) {
@@ -91,7 +89,7 @@ export default class Ticker {
 
 		abort(this);
 
-		this.timeLeft = this.nextTick - now;
+		this.remainder = this.nextTick - now;
 
 		return this;
 	}
@@ -99,7 +97,7 @@ export default class Ticker {
 	reset (now = getNow()): Ticker {
 		abort(this);
 
-		this.timeLeft = 0;
+		this.remainder = 0;
 		this.nextTick = 0;
 
 		if (this.isTicking) {

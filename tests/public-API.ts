@@ -17,11 +17,14 @@ export default function publicAPI () {
 			it('has a .isTicking flag prop', () => {
 				expect(myTicker.isTicking).to.be.a('boolean');
 			});
-			it('has a .timeLeft prop', () => {
-				expect(myTicker.timeLeft).to.be.a('number');
-			});
 			it('has a .tickOnStart prop', () => {
 				expect(myTicker.tickOnStart).to.be.a('boolean');
+			});
+			it('has a .timeLeft prop', () => {
+				expect(myTicker.remainder).to.be.a('number');
+			});
+			it('has a .timeToNextTick prop', () => {
+				expect(myTicker.timeToNextTick).to.be.a('number');
 			});
 		});
 
@@ -38,9 +41,6 @@ export default function publicAPI () {
 		});
 
 		describe('Methods', () => {
-			it('has a .getTimeLeft() method', () => {
-				expect(myTicker.getTimeLeft).to.be.a('function');
-			});
 			it('has a .start() method', () => {
 				expect(myTicker.start).to.be.a('function');
 			});

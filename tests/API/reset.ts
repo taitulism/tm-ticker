@@ -98,17 +98,17 @@ export default function reset () {
 				clock.tick(90);
 
 				myTicker.stop();
-				expect(myTicker.timeLeft).to.equal(10);
+				expect(myTicker.timeToNextTick).to.equal(10);
 
 				myTicker.reset();
-				expect(myTicker.timeLeft).to.equal(0);
+				expect(myTicker.timeToNextTick).to.equal(0);
 
 				myTicker.start();
-				expect(myTicker.getTimeLeft()).to.equal(100);
+				expect(myTicker.timeToNextTick).to.equal(100);
 
 				clock.tick(60);
 
-				expect(myTicker.getTimeLeft()).to.equal(40);
+				expect(myTicker.timeToNextTick).to.equal(40);
 			});
 		});
 	});

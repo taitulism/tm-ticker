@@ -3,8 +3,8 @@ import {expect} from 'chai';
 import { MockWorker } from 'set-timeout-worker';
 import { Ticker } from '../common';
 
-export default function getTimeLeft () {
-	describe('.getTimeLeft()', () => {
+export default function timeToNextTick () {
+	describe('.timeToNextTick()', () => {
 		let myTicker: Ticker,
 			mockWorker: Worker,
 			spy: SinonSpy,
@@ -28,9 +28,7 @@ export default function getTimeLeft () {
 
 				myTicker.start();
 				clock.tick(130);
-				expect(myTicker.getTimeLeft()).to.equal(70);
-
-				myTicker.destroy();
+				expect(myTicker.timeToNextTick).to.equal(70);
 			});
 		});
 
@@ -41,9 +39,8 @@ export default function getTimeLeft () {
 				myTicker.start();
 				clock.tick(140);
 				myTicker.stop();
-				expect(myTicker.getTimeLeft()).to.equal(60);
 
-				myTicker.destroy();
+				expect(myTicker.timeToNextTick).to.equal(60);
 			});
 		});
 	});

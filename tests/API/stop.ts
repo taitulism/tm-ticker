@@ -41,16 +41,5 @@ export default function stop () {
 			clock.tick(300);
 			expect(spy.callCount, 'after stop').to.equal(3);
 		});
-
-		it('saves the remaining ms to next tick', () => {
-			myTicker = new Ticker(100, spy, true, mockWorker);
-
-			myTicker.start();
-
-			clock.tick(360);
-			expect(myTicker.timeLeft).to.equal(0);
-			myTicker.stop();
-			expect(myTicker.timeLeft).to.equal(40);
-		});
 	});
 }
