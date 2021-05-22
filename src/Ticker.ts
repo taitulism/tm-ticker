@@ -65,7 +65,8 @@ export default class Ticker {
 	}
 
 	start (now = getNow()): Ticker {
-		if (this.isTicking || this.isDestroyed) return this;
+		if (this.isDestroyed) throw new Error('Ticker instance cannot be started after destruction.')
+		if (this.isTicking) return this;
 
 		this.isTicking = true;
 		setTimeoutWorker.start(this.mockWorker);

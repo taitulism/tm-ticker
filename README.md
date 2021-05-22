@@ -173,22 +173,17 @@ myTicker.start() // new start point
 ```
 
 ## .destroy()
-Destroy the ticker.
+Destroy the ticker instance permanently. Any following calls to `.start()` will throw an error.
 
 Calls `.stop()` and  `.reset()` and set the `.isDestroyed` prop to `true`.  
 
-> *To use the same Ticker instance again, `isDestroyed` should be set to `false`.*
 
 ```js
 const myTicker = new Ticker(1000, sayTick)
 
 myTicker.start()
 myTicker.destroy()
-
-// Resurrection
-myTicker.isDestroyed = false;
-
-myTicker.start()
+myTicker.start() // throws
 ```
 
 ## Playground / benchmark

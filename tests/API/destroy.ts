@@ -22,6 +22,22 @@ export default function destroy () {
 			myTicker.destroy();
 		});
 
+		it('following calls to .start() will throw', () => {
+			myTicker = new Ticker(100, spy, false, mockWorker);
+
+			myTicker.start();
+			clock.tick(300);
+			expect(spy.callCount).to.equal(3);
+
+			myTicker.destroy();
+
+			const throwingFn = () => {
+				myTicker.start();
+			};
+
+			expect(throwingFn).to.throw('cannot be started after destruction');
+		});
+
 		it('cannot be started again', () => {
 			myTicker = new Ticker(100, spy, false, mockWorker);
 
@@ -33,7 +49,13 @@ export default function destroy () {
 			myTicker.destroy();
 			expect(myTicker.isDestroyed).to.be.true;
 
-			myTicker.start();
+			try {
+				myTicker.start();
+			}
+			catch (err) {
+				// ignore error
+			}
+
 			clock.tick(300);
 			expect(spy.callCount).to.equal(3);
 		});
