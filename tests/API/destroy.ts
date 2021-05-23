@@ -1,63 +1,44 @@
-import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
-import { MockWorker } from 'set-timeout-worker';
-import { Ticker } from '../common';
+import { ITestObj, Ticker } from '../common';
 
-export default function destroy () {
+export default function destroy (test: ITestObj) {
 	describe('.destroy()', () => {
-		let myTicker: Ticker,
-			mockWorker: Worker,
-			spy: SinonSpy,
-			clock: SinonFakeTimers
-		;
-
-		beforeEach(() => {
-			mockWorker = new MockWorker('mock-url');
-			spy = sinon.spy();
-			clock = sinon.useFakeTimers();
-		});
-
-		afterEach(() => {
-			clock.restore();
-			myTicker.destroy();
-		});
-
 		it('following calls to .start() will throw', () => {
-			myTicker = new Ticker(100, spy, false, mockWorker);
+			test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
-			myTicker.start();
-			clock.tick(300);
-			expect(spy.callCount).to.equal(3);
+			test.ticker.start();
+			test.clock.tick(300);
+			expect(test.spy.callCount).to.equal(3);
 
-			myTicker.destroy();
+			test.ticker.destroy();
 
 			const throwingFn = () => {
-				myTicker.start();
+				test.ticker!.start();
 			};
 
 			expect(throwingFn).to.throw('cannot be started after destruction');
 		});
 
 		it('stops ticking', () => {
-			myTicker = new Ticker(100, spy, false, mockWorker);
+			test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
-			myTicker.start();
-			clock.tick(300);
-			expect(spy.callCount).to.equal(3);
+			test.ticker.start();
+			test.clock.tick(300);
+			expect(test.spy.callCount).to.equal(3);
 
-			expect(myTicker.isDestroyed).to.be.false;
-			myTicker.destroy();
-			expect(myTicker.isDestroyed).to.be.true;
+			expect(test.ticker.isDestroyed).to.be.false;
+			test.ticker.destroy();
+			expect(test.ticker.isDestroyed).to.be.true;
 
 			try {
-				myTicker.start();
+				test.ticker.start();
 			}
 			catch (err) {
 				// ignore error
 			}
 
-			clock.tick(300);
-			expect(spy.callCount).to.equal(3);
+			test.clock.tick(300);
+			expect(test.spy.callCount).to.equal(3);
 		});
 	});
 }

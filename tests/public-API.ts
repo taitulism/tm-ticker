@@ -2,16 +2,11 @@ import {expect} from 'chai';
 import { Ticker, noop } from './common';
 
 export default function publicAPI () {
-	describe('Public API', () => {
+	describe('Instance', () => {
 		let myTicker: Ticker;
 
-		before(() => {
-			myTicker = new Ticker(1000, noop);
-		});
-
-		after(() => {
-			myTicker.destroy();
-		});
+		before(() => { myTicker = new Ticker(1000, noop); });
+		after(() => { myTicker.destroy(); });
 
 		describe('Props', () => {
 			it('has a .isTicking flag prop', () => {
@@ -28,7 +23,7 @@ export default function publicAPI () {
 			});
 		});
 
-		describe('Configuration Methods', () => {
+		describe('Setup Methods', () => {
 			it('has a .setInterval(num) method', () => {
 				expect(myTicker.setInterval).to.be.a('function');
 			});

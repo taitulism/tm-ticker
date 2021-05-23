@@ -1,114 +1,97 @@
 import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
 import { MockWorker } from 'set-timeout-worker';
-import { Ticker } from '../common';
+import { ITestObj, Ticker } from '../common';
 
-export default function reset () {
+export default function reset (test: ITestObj) {
 	describe('.reset()', () => {
-		let myTicker: Ticker,
-			mockWorker: Worker,
-			spy: SinonSpy,
-			clock: SinonFakeTimers
-		;
-
-		beforeEach(() => {
-			mockWorker = new MockWorker('mock-url');
-			spy = sinon.spy();
-			clock = sinon.useFakeTimers();
-		});
-
-		afterEach(() => {
-			clock.restore();
-			myTicker.destroy();
-		});
-
 		describe('when called while running', () => {
 			describe('with start-tick flag', () => {
 				it('ticks on call', () => {
-					myTicker = new Ticker(100, spy, true, mockWorker);
+					test.ticker = new Ticker(100, test.spy, true, test.mockWorker);
 
-					myTicker.start();
-					expect(spy.callCount).to.equal(1);
+					test.ticker.start();
+					expect(test.spy.callCount).to.equal(1);
 
-					clock.tick(100);
-					expect(spy.callCount).to.equal(2);
+					test.clock.tick(100);
+					expect(test.spy.callCount).to.equal(2);
 
-					myTicker.reset();
-					expect(spy.callCount).to.equal(3);
+					test.ticker.reset();
+					expect(test.spy.callCount).to.equal(3);
 				});
 			});
 
 			describe('without start-tick flag', () => {
 				it('doesn\'t tick on call', () => {
-					myTicker = new Ticker(100, spy, false, mockWorker);
+					test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
-					myTicker.start();
-					expect(spy.callCount).to.equal(0);
+					test.ticker.start();
+					expect(test.spy.callCount).to.equal(0);
 
-					clock.tick(100);
-					expect(spy.callCount, 'before reset').to.equal(1);
-					myTicker.reset();
-					expect(spy.callCount, 'after reset').to.equal(1);
+					test.clock.tick(100);
+					expect(test.spy.callCount, 'before reset').to.equal(1);
+					test.ticker.reset();
+					expect(test.spy.callCount, 'after reset').to.equal(1);
 				});
 			});
 
 			it('does not stop ticking', () => {
-				myTicker = new Ticker(100, spy, false, mockWorker);
+				test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
-				myTicker.start();
+				test.ticker.start();
 
-				clock.tick(100);
-				expect(spy.callCount, 'before reset').to.equal(1);
-				myTicker.reset();
-				expect(spy.callCount, 'after reset').to.equal(1);
+				test.clock.tick(100);
+				expect(test.spy.callCount, 'before reset').to.equal(1);
+				test.ticker.reset();
+				expect(test.spy.callCount, 'after reset').to.equal(1);
 
-				clock.tick(100);
-				expect(spy.callCount).to.equal(2);
+				test.clock.tick(100);
+				expect(test.spy.callCount).to.equal(2);
 
-				clock.tick(100);
-				expect(spy.callCount).to.equal(3);
+				test.clock.tick(100);
+				expect(test.spy.callCount).to.equal(3);
 			});
 
 			it('sets a new starting point to calc the interval from', () => {
-				myTicker = new Ticker(100, spy, undefined, mockWorker);
+				test.ticker = new Ticker(100, test.spy, undefined, test.mockWorker);
 
-				myTicker.start();
-				expect(spy.callCount).to.equal(1);
+				test.ticker.start();
+				expect(test.spy.callCount).to.equal(1);
 
-				clock.tick(250);
-				expect(spy.callCount).to.equal(3);
+				test.clock.tick(250);
+				expect(test.spy.callCount).to.equal(3);
 
-				myTicker.reset();
-				expect(spy.callCount, 'reset').to.equal(4);
+				test.ticker.reset();
+				expect(test.spy.callCount, 'reset').to.equal(4);
 
-				clock.tick(70);
-				expect(spy.callCount, 'reset + 70').to.equal(4);
+				test.clock.tick(70);
+				expect(test.spy.callCount, 'reset + 70').to.equal(4);
 
-				clock.tick(30);
-				expect(spy.callCount).to.equal(5);
+				test.clock.tick(30);
+				expect(test.spy.callCount).to.equal(5);
 			});
 		});
 
 		describe('when called after .stop()', () => {
 			it('resets to zero the remaining ms to next tick', () => {
-				myTicker = new Ticker(100, spy, false);
+				test.ticker = new Ticker(100, test.spy, false);
 
-				myTicker.start();
+				test.ticker.start();
 
-				clock.tick(90);
+				test.clock.tick(90);
 
-				myTicker.stop();
-				expect(myTicker.timeToNextTick).to.equal(10);
+				test.ticker.stop();
+				expect(test.ticker.timeToNextTick).to.equal(10);
 
-				myTicker.reset();
-				expect(myTicker.timeToNextTick).to.equal(0);
+				test.ticker.reset();
+				expect(test.ticker.timeToNextTick).to.equal(0);
 
-				myTicker.start();
-				expect(myTicker.timeToNextTick).to.equal(100);
+				test.ticker.start();
+				expect(test.ticker.timeToNextTick).to.equal(100);
 
-				clock.tick(60);
+				test.clock.tick(60);
 
-				expect(myTicker.timeToNextTick).to.equal(40);
+				expect(test.ticker.timeToNextTick).to.equal(40);
 			});
 		});
 	});

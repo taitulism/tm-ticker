@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import { Ticker, noop } from './common';
 
 export default function instanceCreation () {
-	describe('Create Instance', () => {
+	describe('Instance Creation', () => {
 		describe('with no arguments', () => {
 			it('is created without errors', () => {
 				function wrapper () {

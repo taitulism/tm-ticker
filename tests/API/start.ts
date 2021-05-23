@@ -1,88 +1,71 @@
 import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
 import { MockWorker } from 'set-timeout-worker';
-import { Ticker } from '../common';
+import { ITestObj, Ticker } from '../common';
 
-export default function start () {
+export default function start (test: ITestObj) {
 	describe('.start()', () => {
-		let myTicker: Ticker,
-			mockWorker: Worker,
-			spy: SinonSpy,
-			clock: SinonFakeTimers
-		;
-
-		beforeEach(() => {
-			mockWorker = new MockWorker('mock-url');
-			spy = sinon.spy();
-			clock = sinon.useFakeTimers();
-		});
-
-		afterEach(() => {
-			clock.restore();
-			myTicker.destroy();
-		});
-
 		it('starts ticking and calls the callback on every tick', () => {
-			myTicker = new Ticker(100, spy, false, mockWorker);
+			test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
-			expect(spy.callCount).to.equal(0);
+			expect(test.spy.callCount).to.equal(0);
 
-			myTicker.start();
-			expect(spy.callCount).to.equal(0);
+			test.ticker.start();
+			expect(test.spy.callCount).to.equal(0);
 
-			clock.tick(300);
-			expect(spy.callCount).to.equal(3);
+			test.clock.tick(300);
+			expect(test.spy.callCount).to.equal(3);
 		});
 
 		describe('when constructed with a false flag', () => {
 			it('calls the callback on first tick', () => {
-				myTicker = new Ticker(100, spy, false, mockWorker);
+				test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
-				expect(spy.callCount).to.equal(0);
+				expect(test.spy.callCount).to.equal(0);
 
-				myTicker.start();
-				expect(spy.callCount).to.equal(0);
+				test.ticker.start();
+				expect(test.spy.callCount).to.equal(0);
 
-				clock.tick(97);
-				expect(spy.callCount).to.equal(0);
+				test.clock.tick(97);
+				expect(test.spy.callCount).to.equal(0);
 
-				clock.tick(3);
-				expect(spy.callCount).to.equal(1);
+				test.clock.tick(3);
+				expect(test.spy.callCount).to.equal(1);
 			});
 		});
 
 		describe('when constructed without a flag', () => {
 			it('calls the callback on start', () => {
-				myTicker = new Ticker(100, spy, undefined, mockWorker);
+				test.ticker = new Ticker(100, test.spy, undefined, test.mockWorker);
 
-				expect(spy.callCount).to.equal(0);
+				expect(test.spy.callCount).to.equal(0);
 
-				myTicker.start();
-				expect(spy.callCount).to.equal(1);
+				test.ticker.start();
+				expect(test.spy.callCount).to.equal(1);
 
-				clock.tick(97);
-				expect(spy.callCount).to.equal(1);
+				test.clock.tick(97);
+				expect(test.spy.callCount).to.equal(1);
 
-				clock.tick(3);
-				expect(spy.callCount).to.equal(2);
+				test.clock.tick(3);
+				expect(test.spy.callCount).to.equal(2);
 			});
 		});
 
 		describe('when called after .stop()', () => {
 			it('resumes from the stopping point', () => {
-				myTicker = new Ticker(100, spy, false, mockWorker);
+				test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
-				myTicker.start();
-				clock.tick(130);
-				expect(spy.callCount).to.equal(1);
-				myTicker.stop();
+				test.ticker.start();
+				test.clock.tick(130);
+				expect(test.spy.callCount).to.equal(1);
+				test.ticker.stop();
 
-				clock.tick(5000);
-				myTicker.start();
+				test.clock.tick(5000);
+				test.ticker.start();
 
-				expect(spy.callCount).to.equal(1);
-				clock.tick(70);
-				expect(spy.callCount).to.equal(2);
+				expect(test.spy.callCount).to.equal(1);
+				test.clock.tick(70);
+				expect(test.spy.callCount).to.equal(2);
 			});
 		});
 	});

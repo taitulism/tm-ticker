@@ -1,46 +1,29 @@
 import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
 import { MockWorker } from 'set-timeout-worker';
-import { Ticker } from '../common';
+import { ITestObj, Ticker } from '../common';
 
-export default function timeToNextTick () {
-	describe('.timeToNextTick()', () => {
-		let myTicker: Ticker,
-			mockWorker: Worker,
-			spy: SinonSpy,
-			clock: SinonFakeTimers
-		;
-
-		beforeEach(() => {
-			mockWorker = new MockWorker('mock-url');
-			spy = sinon.spy();
-			clock = sinon.useFakeTimers();
-		});
-
-		afterEach(() => {
-			clock.restore();
-			myTicker.destroy();
-		});
-
+export default function timeToNextTick (test: ITestObj) {
+	describe('.timeToNextTick', () => {
 		describe('when called while running', () => {
 			it('returns the time left to next tick in milliseconds', () => {
-				myTicker = new Ticker(100, spy, false, mockWorker);
+				test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
-				myTicker.start();
-				clock.tick(130);
-				expect(myTicker.timeToNextTick).to.equal(70);
+				test.ticker.start();
+				test.clock.tick(130);
+				expect(test.ticker.timeToNextTick).to.equal(70);
 			});
 		});
 
 		describe('when called after .stop()', () => {
 			it('returns the time left to next tick in milliseconds', () => {
-				myTicker = new Ticker(100, spy, false, mockWorker);
+				test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
-				myTicker.start();
-				clock.tick(140);
-				myTicker.stop();
+				test.ticker.start();
+				test.clock.tick(140);
+				test.ticker.stop();
 
-				expect(myTicker.timeToNextTick).to.equal(60);
+				expect(test.ticker.timeToNextTick).to.equal(60);
 			});
 		});
 	});
