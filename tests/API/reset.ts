@@ -1,9 +1,7 @@
-import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
-import { MockWorker } from 'set-timeout-worker';
 import { ITestObj, Ticker } from '../common';
 
-export default function reset (test: ITestObj) {
+export default function reset (test: ITestObj): void {
 	describe('.reset()', () => {
 		describe('when called while running', () => {
 			it('does not stop ticking', () => {
@@ -41,7 +39,7 @@ export default function reset (test: ITestObj) {
 				expect(test.spy.callCount, 'after reset').to.equal(2);
 
 				test.clock.tick(30);
-				// equals 3 means same starting point
+				// Equals 3 means same starting point
 				expect(test.spy.callCount, 'after reset + 30').to.equal(2);
 
 				test.clock.tick(70);
@@ -50,6 +48,7 @@ export default function reset (test: ITestObj) {
 
 			it('sets `timeToNextTick` to the interval value', () => {
 				const INTERVAL = 100;
+
 				test.ticker = new Ticker(INTERVAL, test.spy, false);
 
 				test.ticker.start();

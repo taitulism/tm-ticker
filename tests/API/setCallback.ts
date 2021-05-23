@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import { ITestObj, noop, Ticker } from '../common';
 
-export default function setCallback (test: ITestObj) {
+export default function setCallback (test: ITestObj): void {
 	describe('.setCallback(fn)', () => {
 		it('if valid - sets callback prop', function () {
 			test.ticker = new Ticker();
@@ -14,7 +14,7 @@ export default function setCallback (test: ITestObj) {
 			test.ticker = new Ticker();
 
 			function wrapper () {
-				// @ts-expect-error
+				// @ts-expect-error test errors
 				test.ticker.setCallback('not a function');
 			}
 

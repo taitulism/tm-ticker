@@ -10,6 +10,7 @@ import {
 
 const MIN_INTERVAL = 50;
 const DEFAULT_INTERVAL = 500;
+const DESTRUCTION_ERROR = 'Ticker instance cannot be started after destruction.';
 
 export default class Ticker {
 	isTicking: boolean = false;
@@ -63,7 +64,7 @@ export default class Ticker {
 	}
 
 	start (now = Date.now()): Ticker {
-		if (this.isDestroyed) throw new Error('Ticker instance cannot be started after destruction.')
+		if (this.isDestroyed) throw new Error(DESTRUCTION_ERROR);
 		if (this.isTicking) return this;
 
 		this.isTicking = true;

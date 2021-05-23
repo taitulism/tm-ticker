@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import { ITestObj, Ticker } from '../common';
 
-export default function setInterval (test: ITestObj) {
+export default function setInterval (test: ITestObj): void {
 	describe('.setInterval(number)', () => {
 		it('if valid - sets interval prop', function () {
 			test.ticker = new Ticker();
@@ -15,7 +15,7 @@ export default function setInterval (test: ITestObj) {
 			test.ticker = new Ticker();
 
 			function wrapper () {
-				// @ts-expect-error
+				// @ts-expect-error test errors
 				test.ticker.setInterval('not a number');
 			}
 

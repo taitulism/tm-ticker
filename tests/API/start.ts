@@ -1,9 +1,7 @@
-import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
-import { MockWorker } from 'set-timeout-worker';
 import { ITestObj, Ticker } from '../common';
 
-export default function start (test: ITestObj) {
+export default function start (test: ITestObj): void {
 	describe('.start()', () => {
 		it('starts calling the callback on every tick', () => {
 			test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
@@ -27,7 +25,7 @@ export default function start (test: ITestObj) {
 			expect(ticker instanceof Ticker).to.be.true;
 		});
 
-		it.skip('Test default interval value', () => {});
+		it.skip('Test default interval value');
 
 		describe('when called after .stop()', () => {
 			it('resumes from the stopping point', () => {

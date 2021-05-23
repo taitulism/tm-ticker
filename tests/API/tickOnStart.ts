@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import { ITestObj, Ticker } from '../common';
 
-export default function tickOnStart (test: ITestObj) {
+export default function tickOnStart (test: ITestObj): void {
 	describe('.tickOnStart', () => {
 		it('when set to `true` - first tick is right on start', function () {
 			test.ticker = new Ticker(100, test.spy, undefined, test.mockWorker);

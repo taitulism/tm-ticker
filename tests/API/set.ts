@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import { ITestObj, Ticker } from '../common';
 
-export default function set (test: ITestObj) {
+export default function set (test: ITestObj): void {
 	describe('.set(number, fn)', () => {
 		it('if valid - sets both interval & callback', function () {
 			test.ticker = new Ticker();
@@ -15,7 +15,7 @@ export default function set (test: ITestObj) {
 			test.ticker = new Ticker();
 
 			function wrapper () {
-				// @ts-expect-error
+				// @ts-expect-error test errors
 				test.ticker.set('not a number', noop);
 			}
 
@@ -26,7 +26,7 @@ export default function set (test: ITestObj) {
 			test.ticker = new Ticker();
 
 			function wrapper () {
-				// @ts-expect-error
+				// @ts-expect-error test errors
 				test.ticker.set(100, 'not a number');
 			}
 

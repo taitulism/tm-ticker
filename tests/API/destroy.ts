@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import { ITestObj, Ticker } from '../common';
 
-export default function destroy (test: ITestObj) {
+export default function destroy (test: ITestObj): void {
 	describe('.destroy()', () => {
 		it('stops ticking', () => {
 			test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
@@ -18,7 +18,7 @@ export default function destroy (test: ITestObj) {
 				test.ticker.start();
 			}
 			catch (err) {
-				// ignore error
+				// Ignore error
 			}
 
 			test.clock.tick(300);

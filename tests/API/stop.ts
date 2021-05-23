@@ -1,9 +1,7 @@
-import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
-import { MockWorker, setTimeoutWorker } from 'set-timeout-worker';
 import { ITestObj, Ticker } from '../common';
 
-export default function stop (test: ITestObj) {
+export default function stop (test: ITestObj): void {
 	describe('.stop()', () => {
 		it('stops ticking', () => {
 			test.ticker = new Ticker(100, test.spy, true, test.mockWorker);

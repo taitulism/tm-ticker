@@ -1,8 +1,7 @@
-import * as stow from 'set-timeout-worker';
 import {expect} from 'chai';
 import { Ticker, noop } from './common';
 
-export default function instanceCreation () {
+export default function instanceCreation (): void {
 	describe('Constructor', () => {
 		describe('with no arguments', () => {
 			it('is ok', () => {
@@ -35,7 +34,7 @@ export default function instanceCreation () {
 
 			it('if invalid - throws an error', () => {
 				function wrapper () {
-					// @ts-expect-error
+					// @ts-expect-error test errors
 					new Ticker('not a number');
 				}
 
@@ -58,7 +57,7 @@ export default function instanceCreation () {
 
 			it('if invalid - throws an error', () => {
 				function wrapper () {
-					// @ts-expect-error
+					// @ts-expect-error test errors
 					new Ticker(100, 'not a function');
 				}
 
@@ -102,4 +101,4 @@ export default function instanceCreation () {
 			});
 		});
 	});
-};
+}

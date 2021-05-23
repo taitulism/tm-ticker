@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import { Ticker, noop } from './common';
 
-export default function publicAPI () {
+export default function publicAPI (): void {
 	describe('Instance', () => {
 		let ticker: Ticker;
 
@@ -47,4 +47,4 @@ export default function publicAPI () {
 			});
 		});
 	});
-};
+}

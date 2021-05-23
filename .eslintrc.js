@@ -10,12 +10,10 @@ module.exports = {
 		'plugin:@typescript-eslint/recommended',
 	],
 	parser: '@typescript-eslint/parser',
-	plugins: [
-		'@typescript-eslint',
-	],
+	plugins: [ '@typescript-eslint'],
 	parserOptions: {
 		ecmaVersion: 6,
-		sourceType: 'module'
+		sourceType: 'module',
 	},
 	overrides: [
 		{
@@ -36,9 +34,12 @@ module.exports = {
 		},
 	],
 	rules: {
+		'@typescript-eslint/no-inferrable-types': 'off',
+		'@typescript-eslint/no-non-null-assertion': 'off',
+		'@typescript-eslint/no-empty-function': 'off',
 		'accessor-pairs': 'error',
-		'array-bracket-newline': 'error',
-		'array-bracket-spacing': 'error',
+		// 'array-bracket-newline': ['off', {minItems: 2}],
+		'array-bracket-spacing': 'off',
 		'array-callback-return': 'error',
 		// 'array-element-newline': ['error', {minItems: 4}],
 		'arrow-body-style': 'error',
@@ -46,10 +47,10 @@ module.exports = {
 		'arrow-spacing': 'error',
 		'block-scoped-var': 'error',
 		'block-spacing': 'error',
-		'brace-style': ['error', 'stroustrup'],
+		'brace-style': ['error', 'stroustrup', { allowSingleLine: true }],
 		'callback-return': 'warn',
 		camelcase: 'error',
-		'capitalized-comments': 'error',
+		'capitalized-comments': 'off',
 		'class-methods-use-this': 'error',
 		'comma-dangle': ['error', 'always-multiline'],
 		'comma-spacing': 'error',
@@ -68,7 +69,7 @@ module.exports = {
 		'func-name-matching': 'error',
 		'func-names': ['error', 'as-needed'],
 		//      "func-style": "off",
-		'function-paren-newline': 'error',
+		// 'function-paren-newline': 'off',
 		'generator-star-spacing': 'error',
 		'global-require': 'error',
 		'guard-for-in': 'error',
@@ -87,13 +88,14 @@ module.exports = {
 		'linebreak-style': ['error', 'unix'],
 		'lines-around-comment': 'error',
 		'lines-around-directive': 'error',
-		'lines-between-class-members': ['error', {"exceptAfterSingleLine": true}],
+		'lines-between-class-members': ['off', {exceptAfterSingleLine: true}],
 		'max-classes-per-file': 'error',
 		'max-depth': 'error',
 		'max-len': [
 			'error', {
-				code: 90,
+				code: 100,
 				tabWidth: 4,
+				ignoreComments: true,
 			},
 		],
 		'max-lines': 'error',
@@ -101,7 +103,7 @@ module.exports = {
 		'max-nested-callbacks': 'error',
 		'max-params': ['error', {max: 4}],
 		'max-statements': ['warn', {max: 12}],
-		'max-statements-per-line': 'error',
+		'max-statements-per-line': 'off',
 		//      "multiline-comment-style": "off",
 		'multiline-ternary': 'error',
 		'new-cap': 'error',
@@ -196,7 +198,7 @@ module.exports = {
 		'no-throw-literal': 'error',
 		'no-trailing-spaces': 'error',
 		'no-undef-init': 'error',
-		'no-undefined': 'error',
+		'no-undefined': 'off',
 		'no-underscore-dangle': [
 			'error', {
 				allowAfterThis: true,

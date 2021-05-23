@@ -1,4 +1,4 @@
-import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
+import sinon from 'sinon';
 import { MockWorker } from 'set-timeout-worker';
 
 import timeToNextTick from './timeToNextTick';
@@ -12,7 +12,7 @@ import reset from './reset';
 import destroy from './destroy';
 import { ITestObj } from '../common';
 
-export default function usage () {
+export default function usage (): void {
 	describe('Usage', () => {
 		const testObj: ITestObj = {
 			ticker: null,
@@ -44,4 +44,4 @@ export default function usage () {
 		reset(testObj);
 		destroy(testObj);
 	});
-};
+}

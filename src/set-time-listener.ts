@@ -6,7 +6,7 @@ import {memoize} from './utils';
 // TODO: fix type (fixed for worker ref only, but take a second look)
 // https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
 // https://www.designcise.com/web/tutorial/what-is-the-correct-typescript-return-type-for-javascripts-settimeout-function
-// type TimeoutRef = ReturnType<typeof setTimeout> | VoidFunction;
+// Type TimeoutRef = ReturnType<typeof setTimeout> | VoidFunction;
 type ClearTimeoutRef = TimeoutRef | VoidFunction;
 
 // Default values
@@ -23,6 +23,7 @@ const META_THRESHOLD = (META_TICK * 2) + TIME_MARGIN; // 26
 const MIN_TIME_LEFT = (META_TICK / 4); // 3
 /* eslint-enable no-magic-numbers */
 
+// eslint-disable-next-line no-empty-function
 const noop: VoidFunction = () => {};
 
 const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
@@ -41,7 +42,10 @@ const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
 	return timeLeft - delay;
 });
 
-export function setTimeListener (target: Timestamp, callback: VoidFunction): VoidFunction | void{
+export function setTimeListener (
+	target: Timestamp,
+	callback: VoidFunction
+): VoidFunction | void {
 	let ref: ClearTimeoutRef;
 	const timeLeft = target - Date.now();
 
@@ -94,6 +98,7 @@ function runMetaTick (target:Timestamp, callback: VoidFunction): ClearTimeoutRef
 
 	if (ms < ZERO) {
 		callback();
+
 		return noop;
 	}
 

@@ -1,13 +1,12 @@
-import sinon, { SinonFakeTimers, SinonSpy } from 'sinon';
 import {expect} from 'chai';
-import { MockWorker } from 'set-timeout-worker';
 import { ITestObj, Ticker } from '../common';
 
-export default function timeToNextTick (test: ITestObj) {
+export default function timeToNextTick (test: ITestObj): void {
 	describe('.timeToNextTick', () => {
 		describe('when called while running', () => {
 			it('returns the time left to next tick in milliseconds', () => {
 				const INTERVAL = 100;
+
 				test.ticker = new Ticker(INTERVAL, test.spy, false, test.mockWorker);
 
 				test.ticker.start();
