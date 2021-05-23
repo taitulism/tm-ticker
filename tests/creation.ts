@@ -3,58 +3,102 @@ import {expect} from 'chai';
 import { Ticker, noop } from './common';
 
 export default function instanceCreation () {
-	describe('Instance Creation', () => {
+	describe('Constructor', () => {
 		describe('with no arguments', () => {
-			it('is created without errors', () => {
+			it('is ok', () => {
 				function wrapper () {
 					return new Ticker();
 				}
 
 				expect(wrapper).to.not.throw(Error);
 			});
-		});
 
-		describe('with interval', () => {
-			it('is created without errors', () => {
-				const myTicker = new Ticker(300);
+			it('returns a `Ticker` instance', () => {
+				const ticker = new Ticker();
 
-				expect(myTicker.interval).to.equal(300);
+				expect(ticker instanceof Ticker).to.be.true;
 			});
 		});
 
-		describe('with callback', () => {
-			it('is created without errors', () => {
-				const myTicker = new Ticker(undefined, noop);
+		describe('with `interval` argument', () => {
+			it('returns a `Ticker` instance', () => {
+				const ticker = new Ticker(100);
 
-				expect(myTicker.callback).to.equal(noop);
+				expect(ticker instanceof Ticker).to.be.true;
 			});
-		});
 
-		describe('when constructed with valid interval and callback', () => {
-			it('returns an instance of Ticker', () => {
-				const myTicker = new Ticker(1000, noop);
+			it('if valid - sets the `interval` value', () => {
+				const ticker = new Ticker(100);
 
-				expect(myTicker instanceof Ticker).to.be.true;
+				expect(ticker.interval).to.equal(100);
 			});
-		});
 
-		describe('with an invalid interval or callback', () => {
-			it('throws an error on invalid interval', () => {
+			it('if invalid - throws an error', () => {
 				function wrapper () {
 					// @ts-expect-error
-					new Ticker('not a number', noop);
+					new Ticker('not a number');
 				}
 
 				expect(wrapper).to.throw(Error);
 			});
+		});
 
-			it('throws an error on invalid callback', () => {
+		describe('with `callback` argument', () => {
+			it('returns a `Ticker` instance', () => {
+				const ticker = new Ticker(100, noop);
+
+				expect(ticker instanceof Ticker).to.be.true;
+			});
+
+			it('if valid - sets the `callback` value', () => {
+				const ticker = new Ticker(100, noop);
+
+				expect(ticker.callback).to.equal(noop);
+			});
+
+			it('if invalid - throws an error', () => {
 				function wrapper () {
 					// @ts-expect-error
-					new Ticker(1000, 'not a function');
+					new Ticker(100, 'not a function');
 				}
 
 				expect(wrapper).to.throw(Error);
+			});
+		});
+
+		describe('with `tickOnStart = false`', () => {
+			it('returns a `Ticker` instance', () => {
+				const ticker = new Ticker(100, noop, false);
+
+				expect(ticker instanceof Ticker).to.be.true;
+			});
+
+			it('sets `tickOnStart` to `false`', () => {
+				const ticker = new Ticker(100, noop, false);
+
+				expect(ticker.tickOnStart).to.be.false;
+			});
+		});
+
+		describe('with `tickOnStart = true`', () => {
+			it('returns a `Ticker` instance', () => {
+				const ticker = new Ticker(100, noop, true);
+
+				expect(ticker instanceof Ticker).to.be.true;
+			});
+
+			it('sets `tickOnStart` to `true`', () => {
+				const ticker = new Ticker(100, noop, true);
+
+				expect(ticker.tickOnStart).to.be.true;
+			});
+		});
+
+		describe('without `tickOnStart`', () => {
+			it('sets `tickOnStart` to `true` by default', () => {
+				const ticker = new Ticker(100, noop);
+
+				expect(ticker.tickOnStart).to.be.true;
 			});
 		});
 	});

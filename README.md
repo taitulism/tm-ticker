@@ -60,6 +60,10 @@ t.set(interval, callback)
 ## API
 ------
 
+// TODO: document `isTicking` prop  
+// TODO: document `tickOnStart` prop  
+// TODO: document `timeToNextTick` prop  
+
 ## Constructor
 ```js
 new Ticker(interval, callback, tickOnStart);

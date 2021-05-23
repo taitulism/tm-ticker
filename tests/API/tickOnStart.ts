@@ -3,7 +3,7 @@ import { ITestObj, Ticker } from '../common';
 
 export default function tickOnStart (test: ITestObj) {
 	describe('.tickOnStart', () => {
-		it('when `true`: first tick is right on start', function () {
+		it('when set to `true` - first tick is right on start', function () {
 			test.ticker = new Ticker(100, test.spy, undefined, test.mockWorker);
 
 			test.ticker.tickOnStart = true;
@@ -15,7 +15,7 @@ export default function tickOnStart (test: ITestObj) {
 			expect(test.spy.callCount).to.equal(2);
 		});
 
-		it('when `false`: first tick is after first interval', function () {
+		it('when set to `false` - first tick is after first interval', function () {
 			test.ticker = new Ticker(100, test.spy, undefined, test.mockWorker);
 
 			test.ticker.tickOnStart = false;
