@@ -5,7 +5,7 @@ import timeToNextTick from './timeToNextTick';
 import tickOnStart from './tickOnStart';
 import set from './set';
 import setInterval from './setInterval';
-import setCallback from './setCallback';
+import onTick from './onTick';
 import start from './start';
 import stop from './stop';
 import reset from './reset';
@@ -37,7 +37,7 @@ export default function usage (): void {
 		tickOnStart(testObj);
 		set(testObj);
 		setInterval(testObj);
-		setCallback(testObj);
+		onTick(testObj);
 		start(testObj);
 		timeToNextTick(testObj);
 		stop(testObj);

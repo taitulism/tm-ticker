@@ -33,7 +33,7 @@ export function runTick (ticker: Ticker, currentTarget: Timestamp): void {
 
 	setNextTick(ticker, nextTarget);
 
-	ticker.callback?.();
+	ticker.tickHandler?.();
 }
 
 export function abort (ticker: Ticker): void {

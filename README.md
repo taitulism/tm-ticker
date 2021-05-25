@@ -9,7 +9,7 @@ An accurate interval ticker class.
 
 ## TL;DR
 ```js
-const myTicker = new Ticker(1000, onTick);
+const myTicker = new Ticker(1000, tickHandler);
 
 myTicker.start();
 myTicker.stop();
@@ -33,40 +33,42 @@ const Ticker = require('tm-ticker');
 ## Creation & Setup
 ### Constructor
 ```js
-const myTicker = new Ticker(interval, callback, tickOnStart = true);
+const myTicker = new Ticker(interval, tickHandler, tickOnStart = true);
 ```
 * `interval` [number]  
 Milliseconds between ticks. **Must be greater than 50.**
 
-* `callback` [function]  
-The "onTick" handler function. Gets called on every tick.
+* `tickHandler` [function]  
+Ticking callback function. Gets called on every tick.
 
 * `tickOnStart` [boolean] optional  
 By default, the first tick happens right on start, synchronously, before any timeout is set. Set `tickOnStart` to `false` if you want the first tick to happen only after the first interval.
 
 
-<!-- TODO: default interval   -->
-A Ticker instance won't tick unless it has an interval and a tick callback.  
+<!-- TODO: default interval -->
+A Ticker instance won't tick unless it has an interval and a tick Handler.  
 
 &nbsp;
 
 It is also possible to instantiate a Ticker with no arguments and set them later using the following methods:
-* `.set()` - for both, `interval` and `onTick` handler.
-* `.setInterval()` - `interval` only.
-* `.setCallback()` - `onTick` handler only.
+* `.set(interval, tickHandler)`
+* `.setInterval(interval)`
+* `.onTick(tickHandler)`
 
 ```js
 const myTicker = new Ticker();
 
-myTicker.set(interval, onTick)
+myTicker.set(interval, tickHandler)
 ```
 or separately:
 ```js
 const myTicker = new Ticker();
 
 myTicker.setInterval(interval);
-myTicker.setCallback(onTick);
+myTicker.onTick(tickHandler);
 ```
+
+> There can be only one `tickHandler`. Setting a new handler by calling `.onTick(tickHandler)` again will override the previous one.
 
 The constructor also accepts a third argument, `tickOnStart` (boolean, default is `true`).  
 This boolean controls the first tick behavior. When `true` (default), the first tick happens right on start, synchronously. When `false`, first tick will only happen after `<interval>` milliseconds since start. You can also set it after construction:
@@ -126,10 +128,10 @@ If, for whatever reason, we don't want to loose those precious milliseconds we c
 &nbsp;
 
 ### `.start()`
-Start ticking. The "onTick" function will get called every `<interval>` milliseconds.  
+Start ticking. The `tickHandler` function will get called every `<interval>` milliseconds.  
 When called after `.stop()` it acts as a "resume" function. There will be no start-tick in this case.
 
-If the `tickOnStart` flag was set to `true` (default), your `onTick` handler will get called right on start. See `tickOnStart`. <!-- TODO: link -->
+If the `tickOnStart` flag was set to `true` (default), your `tickHandler` function will get called right on start. See `tickOnStart`. <!-- TODO: link -->
 
 
 ```js
@@ -190,11 +192,11 @@ console.log(myTicker.isTicking) // false
 
 ### `.reset()`
 Resets the ticker.
-Calling `.reset()` while ticking does NOT stop the ticker. It does set the ticking starting point to when it was called, as if you have just started. In case the `tickOnStart` flag is set to `true` (default), your `onTick` handler will get called.  
+Calling `.reset()` while ticking does NOT stop the ticker. It does set the ticking starting point to when it was called, as if you have just started. In case the `tickOnStart` flag is set to `true` (default), your `tickHandler` function will get called.  
 
 Calling `.reset()` after the ticker was stopped resets the `timeToNextTick` value to zero.
 
->Reseting a ticker does NOT clear the `interval` nor unbinds the `onTick` handler callback.
+>Reseting a ticker does NOT clear the `interval` nor unbinds the `tickHandler` callback.
 
 ```js
 myTicker.start()

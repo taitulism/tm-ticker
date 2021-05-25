@@ -42,17 +42,17 @@ export default function instanceCreation (): void {
 			});
 		});
 
-		describe('with `callback` argument', () => {
+		describe('with `tickHandler` argument', () => {
 			it('returns a `Ticker` instance', () => {
 				const ticker = new Ticker(100, noop);
 
 				expect(ticker instanceof Ticker).to.be.true;
 			});
 
-			it('if valid - sets the `callback` value', () => {
+			it('if valid - sets the `tickHandler` value', () => {
 				const ticker = new Ticker(100, noop);
 
-				expect(ticker.callback).to.equal(noop);
+				expect(ticker.tickHandler).to.equal(noop);
 			});
 
 			it('if invalid - throws an error', () => {

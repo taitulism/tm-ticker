@@ -27,8 +27,8 @@ export default function publicAPI (): void {
 			it('.setInterval(num)', () => {
 				expect(ticker.setInterval).to.be.a('function');
 			});
-			it('.setCallback(fn)', () => {
-				expect(ticker.setCallback).to.be.a('function');
+			it('.onTick(fn)', () => {
+				expect(ticker.onTick).to.be.a('function');
 			});
 		});
 

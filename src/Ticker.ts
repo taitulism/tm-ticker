@@ -21,12 +21,12 @@ export default class Ticker {
 
 	constructor (
 		public interval: Milliseconds = DEFAULT_INTERVAL,
-		public callback?: VoidFunction,
+		public tickHandler?: VoidFunction,
 		public tickOnStart: boolean = true,
 		public mockWorker?: Worker,
 	) {
 		interval && this.setInterval(interval);
-		callback && this.setCallback(callback);
+		tickHandler && this.onTick(tickHandler);
 
 		this.tickOnStart = tickOnStart;
 		this.abortFn = undefined; // TODO: null? but null is not void. make optional?
@@ -48,17 +48,17 @@ export default class Ticker {
 		return this;
 	}
 
-	setCallback (fn: VoidFunction): Ticker {
-		validateCallback(fn);
+	onTick (fn: VoidFunction): Ticker {
+		validateTickHandler(fn);
 
-		this.callback = fn;
+		this.tickHandler = fn;
 
 		return this;
 	}
 
 	set (interval: number, fn: VoidFunction): Ticker {
 		this.setInterval(interval);
-		this.setCallback(fn);
+		this.onTick(fn);
 
 		return this;
 	}
@@ -121,8 +121,8 @@ function validateInterval (interval: number) {
 	}
 }
 
-function validateCallback (callback: VoidFunction) {
-	if (typeof callback !== 'function') {
-		throw new Error('Ticker callback must be a function');
+function validateTickHandler (tickHandler: VoidFunction) {
+	if (typeof tickHandler !== 'function') {
+		throw new Error('Ticker `tickHandler` must be a function');
 	}
 }

@@ -3,7 +3,7 @@ import { ITestObj, Ticker } from '../common';
 
 export default function start (test: ITestObj): void {
 	describe('.start()', () => {
-		it('starts calling the callback on every tick', () => {
+		it('starts calling the `tickHandler` on every tick', () => {
 			test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
 
 			expect(test.spy.callCount).to.equal(0);
