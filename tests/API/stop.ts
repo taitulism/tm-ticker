@@ -4,7 +4,7 @@ import { ITestObj, Ticker } from '../common';
 export default function stop (test: ITestObj): void {
 	describe('.stop()', () => {
 		it('stops ticking', () => {
-			test.ticker = new Ticker(100, test.spy, true, test.mockWorker);
+			test.ticker = new Ticker(100, test.spy, true);
 
 			expect(test.spy.callCount).to.equal(0);
 
@@ -25,7 +25,7 @@ export default function stop (test: ITestObj): void {
 		});
 
 		it('returns a `Ticker` instance', () => {
-			test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
+			test.ticker = new Ticker(100, test.spy, false);
 			test.ticker.start();
 
 			test.clock.tick(500);

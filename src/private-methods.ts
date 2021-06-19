@@ -1,5 +1,4 @@
 import { Timestamp } from './types';
-import { setTimeListener } from './set-time-listener';
 import type Ticker from './Ticker';
 
 export function resume (ticker: Ticker, now: Timestamp): void {
@@ -11,7 +10,7 @@ export function resume (ticker: Ticker, now: Timestamp): void {
 export function setNextTick (ticker: Ticker, nextTarget: Timestamp): void {
 	ticker.nextTick = nextTarget;
 
-	ticker.abortFn = setTimeListener(nextTarget, () => {
+	ticker.abortFn = ticker.setTimeListener(nextTarget, () => {
 		if (ticker.isTicking) {
 			runTick(ticker, nextTarget);
 		}

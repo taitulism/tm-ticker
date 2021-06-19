@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.org/taitulism/tm-ticker.svg?branch=master)](https://travis-ci.org/taitulism/tm-ticker)
 
 An accurate interval ticker class.  
-<!-- TODO: mention using a worker (client side) -->
 
 &nbsp;
 

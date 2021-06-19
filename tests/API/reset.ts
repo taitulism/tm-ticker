@@ -5,7 +5,7 @@ export default function reset (test: ITestObj): void {
 	describe('.reset()', () => {
 		describe('when called while running', () => {
 			it('does not stop ticking', () => {
-				test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
+				test.ticker = new Ticker(100, test.spy, false);
 
 				test.ticker.start();
 
@@ -25,7 +25,7 @@ export default function reset (test: ITestObj): void {
 			});
 
 			it('sets a new starting point to calculate the interval from', () => {
-				test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
+				test.ticker = new Ticker(100, test.spy, false);
 
 				expect(test.spy.callCount).to.equal(0);
 				test.ticker.start();
@@ -64,7 +64,7 @@ export default function reset (test: ITestObj): void {
 
 			describe('with start-tick flag', () => {
 				it('ticks on call', () => {
-					test.ticker = new Ticker(100, test.spy, true, test.mockWorker);
+					test.ticker = new Ticker(100, test.spy, true);
 
 					test.ticker.start();
 					expect(test.spy.callCount).to.equal(1);
@@ -82,7 +82,7 @@ export default function reset (test: ITestObj): void {
 
 			describe('without start-tick flag', () => {
 				it('doesn\'t tick on call', () => {
-					test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
+					test.ticker = new Ticker(100, test.spy, false);
 
 					test.ticker.start();
 					expect(test.spy.callCount).to.equal(0);

@@ -1,9 +1,9 @@
-import { setTimeoutWorker, TimeoutRef } from 'set-timeout-worker';
+/* eslint-disable max-lines-per-function */
 
-import { Milliseconds, Timestamp } from './types';
+import { Milliseconds, TimeoutObject, TimeoutRef, Timestamp } from './types';
 import {memoize} from './utils';
 
-// TODO: fix type (fixed for worker ref only, but take a second look)
+// TODO: better type
 // https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
 // https://www.designcise.com/web/tutorial/what-is-the-correct-typescript-return-type-for-javascripts-settimeout-function
 // Type TimeoutRef = ReturnType<typeof setTimeout> | VoidFunction;
@@ -26,6 +26,7 @@ const MIN_TIME_LEFT = (META_TICK / 4); // 3
 // eslint-disable-next-line no-empty-function
 const noop: VoidFunction = () => {};
 
+// TODO: memoize could be huge over time when using non-ticking timeouts (reminders?)
 const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
 	// A great delay
 	if (timeLeft <= MIN_TIME_LEFT) {
@@ -42,68 +43,73 @@ const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
 	return timeLeft - delay;
 });
 
-export function setTimeListener (
+export function createSetTimeListener (timeoutObject: TimeoutObject = window): (
 	target: Timestamp,
 	callback: VoidFunction
-): VoidFunction | void {
-	let ref: ClearTimeoutRef;
-	const timeLeft = target - Date.now();
+) => VoidFunction | void {
+	function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milliseconds) {
+		let ref: ClearTimeoutRef;
+		const ms = timeLeft - META_TICK;
 
-	// Using `setTimeListener` for such a short time period is an overhead.
-	if (timeLeft <= META_THRESHOLD) {
-		if (timeLeft <= TIME_MARGIN) {
-			ref = noop;
+		ref = timeoutObject.setTimeout(() => {
+			ref = runMetaTick(target, callback);
+		}, ms);
 
-			// No time for setTimeout. Run callback now.
-			return callback();
+		return function clearTimeListener () {
+			timeoutObject.clearTimeout(ref as number);
+		};
+	}
+
+	function runMetaTick (target:Timestamp, callback: VoidFunction): ClearTimeoutRef {
+		const timeLeft = target - Date.now();
+		const ms = calcTimeoutMs(timeLeft);
+
+		if (ms < ZERO) {
+			callback();
+
+			return noop;
 		}
 
-		// No time for a metaTick. Just pad and run.
-		const ms = timeLeft - TIME_MARGIN;
-
-		ref = setTimeoutWorker.setTimeout(() => {
+		// TODO: This setTimeout cannot be cleared (time scope)
+		return timeoutObject.setTimeout(() => {
 			callback();
 		}, ms);
 	}
-	else {
-		ref = setMetaTick(target, callback, timeLeft);
-	}
 
-	return function clearTimeListener () {
-		if (typeof ref === 'function') {
-			ref();
+	return function setTimeListener (
+		target: Timestamp,
+		callback: VoidFunction
+	): VoidFunction | void {
+		let ref: ClearTimeoutRef;
+		const timeLeft = target - Date.now();
+
+		// Using `setTimeListener` for such a short time period is an overhead.
+		if (timeLeft <= META_THRESHOLD) {
+			if (timeLeft <= TIME_MARGIN) {
+				ref = noop;
+
+				// No time for setTimeout. Run callback now.
+				return callback();
+			}
+
+			// No time for a metaTick. Just pad and run.
+			const ms = timeLeft - TIME_MARGIN;
+
+			ref = timeoutObject.setTimeout(() => {
+				callback();
+			}, ms);
 		}
 		else {
-			setTimeoutWorker.clearTimeout(ref);
+			ref = setMetaTick(target, callback, timeLeft);
 		}
+
+		return function clearTimeListener () {
+			if (typeof ref === 'function') {
+				ref();
+			}
+			else {
+				timeoutObject.clearTimeout(ref);
+			}
+		};
 	};
-}
-
-function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milliseconds) {
-	let ref: ClearTimeoutRef;
-	const ms = timeLeft - META_TICK;
-
-	ref = setTimeoutWorker.setTimeout(() => {
-		ref = runMetaTick(target, callback);
-	}, ms);
-
-	return function clearTimeListener () {
-		setTimeoutWorker.clearTimeout(ref as number);
-	};
-}
-
-function runMetaTick (target:Timestamp, callback: VoidFunction): ClearTimeoutRef {
-	const timeLeft = target - Date.now();
-	const ms = calcTimeoutMs(timeLeft);
-
-	if (ms < ZERO) {
-		callback();
-
-		return noop;
-	}
-
-	// TODO: This setTimeout cannot be cleared (time scope)
-	return setTimeoutWorker.setTimeout(() => {
-		callback();
-	}, ms);
 }

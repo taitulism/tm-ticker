@@ -1,6 +1,5 @@
-import {setTimeoutWorker} from 'set-timeout-worker';
-
-import { Milliseconds } from './types';
+import { createSetTimeListener } from './set-time-listener';
+import { Milliseconds, TimeoutObject, Timestamp } from './types';
 import {
 	resume,
 	runTick,
@@ -12,25 +11,30 @@ const MIN_INTERVAL = 50;
 const DEFAULT_INTERVAL = 500;
 const DESTRUCTION_ERROR = 'Ticker instance cannot be started after destruction.';
 
+
 export default class Ticker {
 	isTicking: boolean = false;
 	isDestroyed: boolean = false;
 	remainder: number = 0;
 	nextTick: number = 0;
-	abortFn: VoidFunction | void;
+	abortFn: VoidFunction | void; // TODO: type
+	setTimeListener: (
+		target: Timestamp,
+		callback: VoidFunction
+	) => VoidFunction | void
 
 	constructor (
 		public interval: Milliseconds = DEFAULT_INTERVAL,
 		public tickHandler?: VoidFunction,
 		public tickOnStart: boolean = true,
-		public mockWorker?: Worker,
+		public timeoutObject: TimeoutObject = window,
 	) {
 		interval && this.setInterval(interval);
 		tickHandler && this.onTick(tickHandler);
 
 		this.tickOnStart = tickOnStart;
 		this.abortFn = undefined; // TODO: null? but null is not void. make optional?
-		setTimeoutWorker.start(mockWorker);
+		this.setTimeListener = createSetTimeListener(timeoutObject);
 	}
 
 	get timeToNextTick (): Milliseconds {
@@ -110,7 +114,6 @@ export default class Ticker {
 
 	destroy (): void {
 		this.stop().reset();
-		setTimeoutWorker.stop();
 		this.isDestroyed = true;
 	}
 }

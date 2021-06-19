@@ -45,10 +45,6 @@ module.exports = function karma (config) {
 					rollupWarn(warning);
 				}
 			},
-			output: {
-				format: 'iife',
-				name: 'setTimeoutWorker',
-			},
 		},
 		client: {
 			clearContext: false,

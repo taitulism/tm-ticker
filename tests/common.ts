@@ -6,7 +6,6 @@ export const noop = () => {}; // eslint-disable-line
 
 export interface ITestObj {
 	ticker: Ticker | null,
-	mockWorker: Worker,
 	spy: SinonSpy,
 	clock: SinonFakeTimers
 }

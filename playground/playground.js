@@ -1,18 +1,19 @@
+/* eslint-disable */
 // module is in scope (loaded by ./playground.html)
 
-(async () => {
-	try {
-		let lastTimestamp = Date.now()
-		const ticker = new Ticker(500, () => {
-			const now = Date.now();
-			console.log(now - lastTimestamp);
+try {
+	let lastTimestamp = Date.now();
 
-			lastTimestamp = now;
-		})
-		.start()
-	}
-	catch (err) {
-		console.error('ARRRR');
-		console.error(err);
-	}
-})();
+	const ticker = new Ticker(500, () => {
+		const now = Date.now();
+		console.log(now - lastTimestamp);
+
+		lastTimestamp = now;
+	});
+
+	ticker.start();
+}
+catch (err) {
+	console.error('ARRRR');
+	console.error(err);
+}

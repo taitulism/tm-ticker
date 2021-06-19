@@ -1,5 +1,4 @@
 import sinon from 'sinon';
-import { MockWorker } from 'set-timeout-worker';
 
 import timeToNextTick from './timeToNextTick';
 import tickOnStart from './tickOnStart';
@@ -16,15 +15,12 @@ export default function usage (): void {
 	describe('Usage', () => {
 		const testObj: ITestObj = {
 			ticker: null,
-			mockWorker: new MockWorker('mock-url'),
 			spy: sinon.spy(),
 			clock: sinon.useFakeTimers(),
 		};
 
 		beforeEach(() => {
-			testObj.mockWorker = new MockWorker('mock-url');
 			testObj.spy = sinon.spy();
-
 			testObj.clock.restore();
 			testObj.clock = sinon.useFakeTimers();
 		});

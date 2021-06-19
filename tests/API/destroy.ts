@@ -4,7 +4,7 @@ import { ITestObj, Ticker } from '../common';
 export default function destroy (test: ITestObj): void {
 	describe('.destroy()', () => {
 		it('stops ticking', () => {
-			test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
+			test.ticker = new Ticker(100, test.spy, false);
 
 			test.ticker.start();
 			test.clock.tick(300);
@@ -26,7 +26,7 @@ export default function destroy (test: ITestObj): void {
 		});
 
 		it('following calls to .start() will throw', () => {
-			test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
+			test.ticker = new Ticker(100, test.spy, false);
 
 			test.ticker.start();
 			test.clock.tick(300);

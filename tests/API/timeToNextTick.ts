@@ -7,7 +7,7 @@ export default function timeToNextTick (test: ITestObj): void {
 			it('returns the time left to next tick in milliseconds', () => {
 				const INTERVAL = 100;
 
-				test.ticker = new Ticker(INTERVAL, test.spy, false, test.mockWorker);
+				test.ticker = new Ticker(INTERVAL, test.spy, false);
 
 				test.ticker.start();
 				test.clock.tick(170);
@@ -23,7 +23,7 @@ export default function timeToNextTick (test: ITestObj): void {
 
 		describe('when called after .stop()', () => {
 			it('returns the time left to next tick in milliseconds', () => {
-				test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
+				test.ticker = new Ticker(100, test.spy, false);
 
 				test.ticker.start();
 				test.clock.tick(360);
@@ -37,7 +37,7 @@ export default function timeToNextTick (test: ITestObj): void {
 
 		describe('when called after .stop() & .reset()', () => {
 			it('returns the time left to next tick in milliseconds', () => {
-				test.ticker = new Ticker(100, test.spy, false, test.mockWorker);
+				test.ticker = new Ticker(100, test.spy, false);
 
 				test.ticker.start();
 				test.clock.tick(360);
