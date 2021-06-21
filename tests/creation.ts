@@ -122,7 +122,7 @@ export default function instanceCreation (): void {
 				ticker.start();
 				expect(timeoutObject.setTimeout.callCount, 'setTimeout.callCount').to.equal(1);
 
-				ticker.destroy();
+				ticker.stop().reset();
 			});
 
 			it('uses the given `clearTimeout` method', () => {
@@ -134,7 +134,7 @@ export default function instanceCreation (): void {
 				const ticker = new Ticker(100, noop, false, timeoutObject);
 
 				ticker.start();
-				ticker.destroy();
+				ticker.stop().reset();
 				expect(timeoutObject.clearTimeout.callCount, 'clearTimeout.callCount').to.equal(1);
 			});
 		});
@@ -148,7 +148,7 @@ export default function instanceCreation (): void {
 				ticker.start();
 				expect(spy.callCount, 'setTimeout.callCount').to.equal(1);
 
-				ticker.destroy();
+				ticker.stop().reset();
 				spy.restore();
 			});
 
@@ -159,7 +159,7 @@ export default function instanceCreation (): void {
 				expect(spy.callCount, 'clearTimeout.callCount').to.equal(0);
 				ticker.start();
 				expect(spy.callCount, 'clearTimeout.callCount').to.equal(0);
-				ticker.destroy();
+				ticker.stop().reset();
 				expect(spy.callCount, 'clearTimeout.callCount').to.equal(1);
 				spy.restore();
 			});

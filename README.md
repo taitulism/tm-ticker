@@ -91,9 +91,6 @@ and two properties:
 * `isTicking`
 * `timeToNextTick`
 
-You also have:
-* `.destroy()`
-
 &nbsp;
 
 For the following examples we'll use the same ticker that logs the word `"tick"` every second.
@@ -230,17 +227,6 @@ myTicker.stop()
 console.log(myTicker.timeToNextTick); // 200
 myTicker.reset()
 console.log(myTicker.timeToNextTick); // 0
-```
-
-&nbsp;
-
-### `.destroy()`
-Stops ticking and destroys the ticker instance permanently. Any following calls to `.start()` will throw an error.
-
-```js
-myTicker.start()
-myTicker.destroy()
-myTicker.start() // throws
 ```
 
 &nbsp;

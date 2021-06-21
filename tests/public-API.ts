@@ -6,7 +6,7 @@ export default function publicAPI (): void {
 		let ticker: Ticker;
 
 		before(() => { ticker = new Ticker(100, noop); });
-		after(() => { ticker.destroy(); });
+		after(() => { ticker.stop().reset(); });
 
 		describe('Props', () => {
 			it('isTicking: boolean', () => {
@@ -41,9 +41,6 @@ export default function publicAPI (): void {
 			});
 			it('.reset()', () => {
 				expect(ticker.reset).to.be.a('function');
-			});
-			it('.destroy()', () => {
-				expect(ticker.destroy).to.be.a('function');
 			});
 		});
 	});
