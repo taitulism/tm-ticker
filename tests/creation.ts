@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import { Ticker, noop } from './common';
 
 export default function instanceCreation (): void {
-	describe('Constructor', () => {
+	describe.only('Constructor', () => {
 		describe('with no arguments', () => {
 			it('is ok', () => {
 				function wrapper () {
@@ -18,9 +18,15 @@ export default function instanceCreation (): void {
 
 				expect(ticker instanceof Ticker).to.be.true;
 			});
+
+			it('uses the default interval - 1000 ', () => {
+				const ticker = new Ticker();
+
+				expect(ticker.interval).to.equal(1000);
+			});
 		});
 
-		describe('with `interval` argument', () => {
+		describe('with first argument `interval`', () => {
 			it('returns a `Ticker` instance', () => {
 				const ticker = new Ticker(100);
 
@@ -51,7 +57,15 @@ export default function instanceCreation (): void {
 			});
 		});
 
-		describe('with `tickHandler` argument', () => {
+		describe('with first argument `tickHandler`', () => {
+			it('returns a `Ticker` instance', () => {
+				const ticker = new Ticker(noop);
+
+				expect(ticker instanceof Ticker).to.be.true;
+			});
+		});
+
+		describe('with 2 arguments `interval` & `tickHandler`', () => {
 			it('returns a `Ticker` instance', () => {
 				const ticker = new Ticker(100, noop);
 
@@ -76,13 +90,13 @@ export default function instanceCreation (): void {
 
 		describe('with `tickOnStart = false`', () => {
 			it('returns a `Ticker` instance', () => {
-				const ticker = new Ticker(100, noop, false);
+				const ticker = new Ticker(100, noop, {tickOnStart: false});
 
 				expect(ticker instanceof Ticker).to.be.true;
 			});
 
 			it('sets `tickOnStart` to `false`', () => {
-				const ticker = new Ticker(100, noop, false);
+				const ticker = new Ticker(100, noop, {tickOnStart: false});
 
 				expect(ticker.tickOnStart).to.be.false;
 			});
@@ -90,13 +104,13 @@ export default function instanceCreation (): void {
 
 		describe('with `tickOnStart = true`', () => {
 			it('returns a `Ticker` instance', () => {
-				const ticker = new Ticker(100, noop, true);
+				const ticker = new Ticker(100, noop, {tickOnStart: true});
 
 				expect(ticker instanceof Ticker).to.be.true;
 			});
 
 			it('sets `tickOnStart` to `true`', () => {
-				const ticker = new Ticker(100, noop, true);
+				const ticker = new Ticker(100, noop, {tickOnStart: true});
 
 				expect(ticker.tickOnStart).to.be.true;
 			});
@@ -117,7 +131,10 @@ export default function instanceCreation (): void {
 					clearTimeout: sinon.spy(),
 				};
 
-				const ticker = new Ticker(100, noop, false, timeoutObject);
+				const ticker = new Ticker(100, noop, {
+					tickOnStart: false,
+					timeoutObj: timeoutObject,
+				});
 
 				ticker.start();
 				expect(timeoutObject.setTimeout.callCount, 'setTimeout.callCount').to.equal(1);
@@ -131,7 +148,10 @@ export default function instanceCreation (): void {
 					clearTimeout: sinon.spy(),
 				};
 
-				const ticker = new Ticker(100, noop, false, timeoutObject);
+				const ticker = new Ticker(100, noop, {
+					tickOnStart: false,
+					timeoutObj: timeoutObject,
+				});
 
 				ticker.start();
 				ticker.stop().reset();

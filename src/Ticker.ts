@@ -8,11 +8,26 @@ import {
 } from './private-methods';
 
 const MIN_INTERVAL = 50;
-const DEFAULT_INTERVAL = 500;
+const DEFAULT_INTERVAL = 1000;
+
+type TickerOptions = {
+	tickOnStart ? : boolean;
+	timeoutObj ? : TimeoutObject;
+}
+
+type Interval = Milliseconds;
+type TickHandler = VoidFunction;
+
+type FirstArg = undefined | Milliseconds | TickHandler | TickerOptions;
+type SecondArg = TickHandler | TickerOptions;
+type ThirdArg = TickerOptions;
 
 
 export default class Ticker {
+	interval: Interval;
+	tickHandler: TickHandler;
 	isTicking: boolean = false;
+	tickOnStart: boolean;
 	remainder: number = 0;
 	nextTick: number = 0;
 	abortFn: VoidFunction | void; // TODO: type
@@ -21,19 +36,37 @@ export default class Ticker {
 		callback: VoidFunction
 	) => VoidFunction | void
 
+	constructor ();
+	constructor (interval: Interval);
+	constructor (tickHandler: TickHandler);
+	constructor (options: TickerOptions);
+	constructor (interval: Interval, tickHandler: TickHandler);
+	constructor (interval: Interval, options: TickerOptions);
+	constructor (tickHandler: TickHandler, options: TickerOptions);
+	constructor (interval: Interval, tickHandler: TickHandler, options: TickerOptions);
 	constructor (
-		public interval: Milliseconds = DEFAULT_INTERVAL,
-		public tickHandler?: VoidFunction,
-		public tickOnStart: boolean = true,
-		public timeoutObject: TimeoutObject = window,
+		firstArg?: FirstArg,
+		secondArg?: SecondArg,
+		thirdArg?: ThirdArg
 	) {
+		const [
+			interval,
+			tickHandler,
+			options,
+		] = resolveArgs(firstArg, secondArg, thirdArg);
+
 		interval && this.setInterval(interval);
 		tickHandler && this.onTick(tickHandler);
 
-		this.tickOnStart = tickOnStart;
+		this.tickOnStart = options.tickOnStart;
+
+		// this.tickOnStart = options?.tickOnStart || true;
+
 		this.abortFn = undefined; // TODO: null? but null is not void. make optional?
-		this.setTimeListener = createSetTimeListener(timeoutObject);
+		this.setTimeListener = createSetTimeListener(options.timeoutObj);
 	}
+
+
 
 	get timeToNextTick (): Milliseconds {
 		return this.isTicking
@@ -120,4 +153,35 @@ function validateTickHandler (tickHandler: VoidFunction) {
 	if (typeof tickHandler !== 'function') {
 		throw new Error('Ticker `tickHandler` must be a function');
 	}
+}
+
+function resolveArgs (
+	firstArg?: FirstArg,
+	secondArg?: SecondArg,
+	thirdArg?: ThirdArg
+): [Interval, TickHandler, TickerOptions] {
+
+	/* typesMap {
+		number?: Interval;
+		function?: TickHandler;
+		object?: TickerOptions;
+	} */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const typesMap: any = {};
+
+	typesMap[typeof firstArg] = firstArg;
+	typesMap[typeof secondArg] = secondArg;
+	typesMap[typeof thirdArg] = thirdArg; // TODO: better check object
+
+	const interval: Interval = typesMap.number || DEFAULT_INTERVAL;
+	const tickHandler: TickHandler = typesMap.function || (() => undefined);
+	const options: TickerOptions = {
+		...{
+			tickOnStart: true,
+			timeoutObj: window,
+		},
+		...(typesMap.object || {}),
+	};
+
+	return [interval, tickHandler, options];
 }
