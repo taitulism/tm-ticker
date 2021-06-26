@@ -1,33 +1,18 @@
 import { createSetTimeListener } from './set-time-listener';
-import { Milliseconds, TimeoutObject, Timestamp } from './types';
+import { Milliseconds, TimeoutObject, Timestamp, TickHandler, TickerOptions } from './types';
 import {
 	resume,
 	runTick,
 	setNextTick,
 	abort,
 } from './private-methods';
+import { noop } from './utils';
 
 const MIN_INTERVAL = 50;
 const DEFAULT_INTERVAL = 1000;
 
-type TickerOptions = {
-	tickOnStart ? : boolean;
-	timeoutObj ? : TimeoutObject;
-}
-
-type Interval = Milliseconds;
-type TickHandler = VoidFunction;
-
-type FirstArg = undefined | Milliseconds | TickHandler | TickerOptions;
-type SecondArg = TickHandler | TickerOptions;
-type ThirdArg = TickerOptions;
-
-
-export default class Ticker {
-	interval: Interval;
-	tickHandler: TickHandler;
+export class Ticker {
 	isTicking: boolean = false;
-	tickOnStart: boolean;
 	remainder: number = 0;
 	nextTick: number = 0;
 	abortFn: VoidFunction | void; // TODO: type
@@ -36,37 +21,26 @@ export default class Ticker {
 		callback: VoidFunction
 	) => VoidFunction | void
 
-	constructor ();
-	constructor (interval: Interval);
-	constructor (tickHandler: TickHandler);
-	constructor (options: TickerOptions);
-	constructor (interval: Interval, tickHandler: TickHandler);
-	constructor (interval: Interval, options: TickerOptions);
-	constructor (tickHandler: TickHandler, options: TickerOptions);
-	constructor (interval: Interval, tickHandler: TickHandler, options: TickerOptions);
-	constructor (
-		firstArg?: FirstArg,
-		secondArg?: SecondArg,
-		thirdArg?: ThirdArg
-	) {
-		const [
-			interval,
-			tickHandler,
-			options,
-		] = resolveArgs(firstArg, secondArg, thirdArg);
-
-		interval && this.setInterval(interval);
-		tickHandler && this.onTick(tickHandler);
-
-		this.tickOnStart = options.tickOnStart;
-
-		// this.tickOnStart = options?.tickOnStart || true;
-
-		this.abortFn = undefined; // TODO: null? but null is not void. make optional?
-		this.setTimeListener = createSetTimeListener(options.timeoutObj);
+	static create ({
+		interval,
+		tickHandler,
+		tickOnStart,
+		timeoutObj,
+	}: Partial<TickerOptions> = {}): Ticker {
+		return new Ticker(interval, tickHandler, tickOnStart, timeoutObj);
 	}
 
-
+	constructor (
+		public interval: Milliseconds = DEFAULT_INTERVAL,
+		public tickHandler: TickHandler = noop,
+		public tickOnStart: boolean = true,
+		public timeoutObj: TimeoutObject = globalThis,
+	) {
+		this.setInterval(interval);
+		this.onTick(tickHandler);
+		this.abortFn = undefined;
+		this.setTimeListener = createSetTimeListener(timeoutObj);
+	}
 
 	get timeToNextTick (): Milliseconds {
 		return this.isTicking
@@ -91,7 +65,7 @@ export default class Ticker {
 		return this;
 	}
 
-	set (interval: number, fn: VoidFunction): Ticker {
+	set (interval: Milliseconds, fn: VoidFunction): Ticker {
 		this.setInterval(interval);
 		this.onTick(fn);
 
@@ -155,33 +129,6 @@ function validateTickHandler (tickHandler: VoidFunction) {
 	}
 }
 
-function resolveArgs (
-	firstArg?: FirstArg,
-	secondArg?: SecondArg,
-	thirdArg?: ThirdArg
-): [Interval, TickHandler, TickerOptions] {
 
-	/* typesMap {
-		number?: Interval;
-		function?: TickHandler;
-		object?: TickerOptions;
-	} */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const typesMap: any = {};
-
-	typesMap[typeof firstArg] = firstArg;
-	typesMap[typeof secondArg] = secondArg;
-	typesMap[typeof thirdArg] = thirdArg; // TODO: better check object
-
-	const interval: Interval = typesMap.number || DEFAULT_INTERVAL;
-	const tickHandler: TickHandler = typesMap.function || (() => undefined);
-	const options: TickerOptions = {
-		...{
-			tickOnStart: true,
-			timeoutObj: window,
-		},
-		...(typesMap.object || {}),
-	};
-
-	return [interval, tickHandler, options];
-}
+Ticker.create({})
+new Ticker()
