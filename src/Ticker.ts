@@ -9,37 +9,32 @@ import {
 import { noop } from './utils';
 
 const MIN_INTERVAL = 50;
-const DEFAULT_INTERVAL = 1000;
 
 export class Ticker {
 	isTicking: boolean = false;
 	remainder: number = 0;
 	nextTick: number = 0;
-	abortFn: VoidFunction | void; // TODO: type
+	tickOnStart: boolean = true;
+	interval: Milliseconds = 0;
+	tickHandler: VoidFunction = noop;
+	abortFn: VoidFunction | void = undefined; // TODO: type
 	setTimeListener: (
 		target: Timestamp,
 		callback: VoidFunction
 	) => VoidFunction | void
 
-	static create ({
-		interval,
-		tickHandler,
-		tickOnStart,
-		timeoutObj,
-	}: Partial<TickerOptions> = {}): Ticker {
-		return new Ticker(interval, tickHandler, tickOnStart, timeoutObj);
-	}
+	constructor (opts: TickerOptions = {}) {
+		const {
+			interval,
+			tickHandler,
+			tickOnStart = true,
+			timeoutObj = globalThis,
+		} = opts;
 
-	constructor (
-		public interval: Milliseconds = DEFAULT_INTERVAL,
-		public tickHandler: TickHandler = noop,
-		public tickOnStart: boolean = true,
-		public timeoutObj: TimeoutObject = globalThis,
-	) {
-		this.setInterval(interval);
-		this.onTick(tickHandler);
-		this.abortFn = undefined;
-		this.setTimeListener = createSetTimeListener(timeoutObj);
+		interval && this.setInterval(interval);
+		tickHandler && this.onTick(tickHandler);
+		this.tickOnStart = tickOnStart;
+		this.setTimeListener = createSetTimeListener(timeoutObj); // TODO: validate timeoutObj
 	}
 
 	get timeToNextTick (): Milliseconds {
@@ -118,7 +113,9 @@ export class Ticker {
 }
 
 function validateInterval (interval: number) {
-	if (typeof interval !== 'number' || interval < MIN_INTERVAL) {
+	const intervalIsNotANumber = typeof interval !== 'number' || Number.isNaN(interval);
+
+	if (intervalIsNotANumber || interval < MIN_INTERVAL) {
 		throw new Error('Ticker interval should be a number greater than 50');
 	}
 }
@@ -128,7 +125,3 @@ function validateTickHandler (tickHandler: VoidFunction) {
 		throw new Error('Ticker `tickHandler` must be a function');
 	}
 }
-
-
-Ticker.create({})
-new Ticker()

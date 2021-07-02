@@ -11,8 +11,8 @@ export type TimeoutObject = {
 }
 
 export type TickerOptions = {
-	interval: Milliseconds;
-	tickHandler: TickHandler;
-	tickOnStart: boolean;
-	timeoutObj : TimeoutObject;
+	interval?: Milliseconds;
+	tickHandler?: TickHandler;
+	tickOnStart?: boolean;
+	timeoutObj? : TimeoutObject;
 }

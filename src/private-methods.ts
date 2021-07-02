@@ -1,5 +1,5 @@
 import { Timestamp } from './types';
-import type Ticker from './Ticker';
+import type {Ticker} from './Ticker';
 
 export function resume (ticker: Ticker, now: Timestamp): void {
 	setNextTick(ticker, now + ticker.remainder);

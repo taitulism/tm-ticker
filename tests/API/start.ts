@@ -4,7 +4,11 @@ import { ITestObj, Ticker } from '../common';
 export default function start (test: ITestObj): void {
 	describe('.start()', () => {
 		it('starts calling the `tickHandler` on every tick', () => {
-			test.ticker = new Ticker(100, test.spy, false);
+			test.ticker = new Ticker({
+				interval: 100,
+				tickHandler: test.spy,
+				tickOnStart: false,
+			});
 
 			expect(test.spy.callCount).to.equal(0);
 
@@ -19,7 +23,11 @@ export default function start (test: ITestObj): void {
 		});
 
 		it('returns a `Ticker` instance', () => {
-			test.ticker = new Ticker(100, test.spy, false);
+			test.ticker = new Ticker({
+				interval: 100,
+				tickHandler: test.spy,
+				tickOnStart: false,
+			});
 			const ticker = test.ticker.start();
 
 			expect(ticker instanceof Ticker).to.be.true;
@@ -29,7 +37,11 @@ export default function start (test: ITestObj): void {
 
 		describe('when called after .stop()', () => {
 			it('resumes from the stopping point', () => {
-				test.ticker = new Ticker(100, test.spy, false);
+				test.ticker = new Ticker({
+					interval: 100,
+					tickHandler: test.spy,
+					tickOnStart: false,
+				});
 
 				test.ticker.start();
 				test.clock.tick(100);

@@ -5,7 +5,11 @@ export default function reset (test: ITestObj): void {
 	describe('.reset()', () => {
 		describe('when called while running', () => {
 			it('does not stop ticking', () => {
-				test.ticker = new Ticker(100, test.spy, false);
+				test.ticker = new Ticker({
+					interval: 100,
+					tickHandler: test.spy,
+					tickOnStart: false,
+				});
 
 				test.ticker.start();
 
@@ -25,7 +29,11 @@ export default function reset (test: ITestObj): void {
 			});
 
 			it('sets a new starting point to calculate the interval from', () => {
-				test.ticker = new Ticker(100, test.spy, false);
+				test.ticker = new Ticker({
+					interval: 100,
+					tickHandler: test.spy,
+					tickOnStart: false,
+				});
 
 				expect(test.spy.callCount).to.equal(0);
 				test.ticker.start();
@@ -49,7 +57,11 @@ export default function reset (test: ITestObj): void {
 			it('sets `timeToNextTick` to the interval value', () => {
 				const INTERVAL = 100;
 
-				test.ticker = new Ticker(INTERVAL, test.spy, false);
+				test.ticker = new Ticker({
+					interval: INTERVAL,
+					tickHandler: test.spy,
+					tickOnStart: false,
+				});
 
 				test.ticker.start();
 				test.clock.tick(90);
@@ -64,7 +76,11 @@ export default function reset (test: ITestObj): void {
 
 			describe('with start-tick flag', () => {
 				it('ticks on call', () => {
-					test.ticker = new Ticker(100, test.spy, true);
+					test.ticker = new Ticker({
+						interval: 100,
+						tickHandler: test.spy,
+						tickOnStart: true,
+					});
 
 					test.ticker.start();
 					expect(test.spy.callCount).to.equal(1);
@@ -82,7 +98,11 @@ export default function reset (test: ITestObj): void {
 
 			describe('without start-tick flag', () => {
 				it('doesn\'t tick on call', () => {
-					test.ticker = new Ticker(100, test.spy, false);
+					test.ticker = new Ticker({
+						interval: 100,
+						tickHandler: test.spy,
+						tickOnStart: false,
+					});
 
 					test.ticker.start();
 					expect(test.spy.callCount).to.equal(0);
@@ -100,7 +120,11 @@ export default function reset (test: ITestObj): void {
 
 		describe('when called after .stop()', () => {
 			it('resets to zero the remaining ms to next tick', () => {
-				test.ticker = new Ticker(100, test.spy, false);
+				test.ticker = new Ticker({
+					interval: 100,
+					tickHandler: test.spy,
+					tickOnStart: false,
+				});
 
 				test.ticker.start();
 				test.clock.tick(90);

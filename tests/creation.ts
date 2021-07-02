@@ -1,48 +1,31 @@
 import sinon from 'sinon';
 import {expect} from 'chai';
-import { Ticker, noop } from './common';
+import { noop } from '../src/utils';
+import { Ticker } from '../src/Ticker'; // TODO: like this in all test files
 
 export default function instanceCreation (): void {
-	describe.only('Constructor', () => {
+	describe('Constructor', () => {
 		describe('with no arguments', () => {
-			it('is ok', () => {
-				function wrapper () {
-					return new Ticker();
-				}
-
-				expect(wrapper).to.not.throw(Error);
-			});
-
-			it('returns a `Ticker` instance', () => {
+			it('sets default values', () => {
 				const ticker = new Ticker();
 
-				expect(ticker instanceof Ticker).to.be.true;
-			});
-
-			it('uses the default interval - 1000 ', () => {
-				const ticker = new Ticker();
-
-				expect(ticker.interval).to.equal(1000);
+				expect(ticker.interval).to.equal(0);
+				expect(ticker.tickHandler).to.equal(noop);
+				expect(ticker.tickOnStart).to.be.true;
 			});
 		});
 
-		describe('with first argument `interval`', () => {
-			it('returns a `Ticker` instance', () => {
-				const ticker = new Ticker(100);
-
-				expect(ticker instanceof Ticker).to.be.true;
-			});
-
+		describe('{interval: number}', () => {
 			it('if valid - sets the `interval` value', () => {
-				const ticker = new Ticker(100);
+				const ticker = new Ticker({interval: 100});
 
 				expect(ticker.interval).to.equal(100);
 			});
 
 			it('if invalid type - throws an error', () => {
 				function wrapper () {
-					// @ts-expect-error test errors
-					new Ticker('not a number');
+					// @ts-expect-error test type validation
+					new Ticker({interval: 'not a number'});
 				}
 
 				expect(wrapper).to.throw(Error);
@@ -50,92 +33,53 @@ export default function instanceCreation (): void {
 
 			it('if lower than 50 - throws an error', () => {
 				function wrapper () {
-					new Ticker(49);
+					new Ticker({interval: 49});
 				}
 
 				expect(wrapper).to.throw(Error);
 			});
 		});
 
-		describe('with first argument `tickHandler`', () => {
-			it('returns a `Ticker` instance', () => {
-				const ticker = new Ticker(noop);
-
-				expect(ticker instanceof Ticker).to.be.true;
-			});
-		});
-
-		describe('with 2 arguments `interval` & `tickHandler`', () => {
-			it('returns a `Ticker` instance', () => {
-				const ticker = new Ticker(100, noop);
-
-				expect(ticker instanceof Ticker).to.be.true;
-			});
-
-			it('if valid - sets the `tickHandler` value', () => {
-				const ticker = new Ticker(100, noop);
+		describe('{tickHandler: function}', () => {
+			it('if valid - sets the `interval` value', () => {
+				const ticker = new Ticker({tickHandler: noop});
 
 				expect(ticker.tickHandler).to.equal(noop);
 			});
 
-			it('if invalid - throws an error', () => {
+			it('if invalid type - throws an error', () => {
 				function wrapper () {
-					// @ts-expect-error test errors
-					new Ticker(100, 'not a function');
+					// @ts-expect-error test type validation
+					new Ticker({tickHandler: 'not a function'});
 				}
 
 				expect(wrapper).to.throw(Error);
 			});
 		});
 
-		describe('with `tickOnStart = false`', () => {
-			it('returns a `Ticker` instance', () => {
-				const ticker = new Ticker(100, noop, {tickOnStart: false});
+		describe('{tickOnStart: boolean}', () => {
+			it('sets the `tickOnStart` flag', () => {
+				const tickerWithTrue = new Ticker({ tickOnStart: true });
+				const tickerWithFalse = new Ticker({ tickOnStart: false });
 
-				expect(ticker instanceof Ticker).to.be.true;
-			});
-
-			it('sets `tickOnStart` to `false`', () => {
-				const ticker = new Ticker(100, noop, {tickOnStart: false});
-
-				expect(ticker.tickOnStart).to.be.false;
+				expect(tickerWithTrue.tickOnStart).to.be.true;
+				expect(tickerWithFalse.tickOnStart).to.be.false;
 			});
 		});
 
-		describe('with `tickOnStart = true`', () => {
-			it('returns a `Ticker` instance', () => {
-				const ticker = new Ticker(100, noop, {tickOnStart: true});
-
-				expect(ticker instanceof Ticker).to.be.true;
-			});
-
-			it('sets `tickOnStart` to `true`', () => {
-				const ticker = new Ticker(100, noop, {tickOnStart: true});
-
-				expect(ticker.tickOnStart).to.be.true;
-			});
-		});
-
-		describe('without `tickOnStart`', () => {
-			it('sets `tickOnStart` to `true` by default', () => {
-				const ticker = new Ticker(100, noop);
-
-				expect(ticker.tickOnStart).to.be.true;
-			});
-		});
-
-		describe('with `timeoutObject`', () => {
+		describe('{timeoutObject: {setTimeout, clearTimeout}}', () => {
 			it('uses the given `setTimeout` method', () => {
 				const timeoutObject = {
 					setTimeout: sinon.spy(),
 					clearTimeout: sinon.spy(),
 				};
 
-				const ticker = new Ticker(100, noop, {
-					tickOnStart: false,
+				const ticker = new Ticker({
+					interval: 100,
 					timeoutObj: timeoutObject,
 				});
 
+				expect(timeoutObject.setTimeout.callCount, 'setTimeout.callCount').to.equal(0);
 				ticker.start();
 				expect(timeoutObject.setTimeout.callCount, 'setTimeout.callCount').to.equal(1);
 
@@ -148,21 +92,23 @@ export default function instanceCreation (): void {
 					clearTimeout: sinon.spy(),
 				};
 
-				const ticker = new Ticker(100, noop, {
-					tickOnStart: false,
+				const ticker = new Ticker({
+					interval: 100,
 					timeoutObj: timeoutObject,
 				});
 
 				ticker.start();
-				ticker.stop().reset();
-				expect(timeoutObject.clearTimeout.callCount, 'clearTimeout.callCount').to.equal(1);
-			});
-		});
 
-		describe('without `timeoutObject`', () => {
-			it('uses `window.setTimeout` method by default', () => {
-				const ticker = new Ticker(100, noop, false);
-				const spy = sinon.spy(window, 'setTimeout');
+				expect(timeoutObject.clearTimeout.callCount, 'clearTimeout.callCount').to.equal(0);
+				ticker.stop();
+				expect(timeoutObject.clearTimeout.callCount, 'clearTimeout.callCount').to.equal(1);
+
+				ticker.reset();
+			});
+
+			it('uses the global\'s `setTimeout` method by default', () => {
+				const spy = sinon.spy(globalThis, 'setTimeout');
+				const ticker = new Ticker({ interval: 100 });
 
 				expect(spy.callCount, 'setTimeout.callCount').to.equal(0);
 				ticker.start();
@@ -172,15 +118,17 @@ export default function instanceCreation (): void {
 				spy.restore();
 			});
 
-			it('uses `window.clearTimeout` method by default', () => {
-				const ticker = new Ticker(100, noop, false);
-				const spy = sinon.spy(window, 'clearTimeout');
+			it('uses the global\'s `clearTimeout` method by default', () => {
+				const spy = sinon.spy(globalThis, 'clearTimeout');
+				const ticker = new Ticker({ interval: 100 });
+
+				ticker.start();
 
 				expect(spy.callCount, 'clearTimeout.callCount').to.equal(0);
-				ticker.start();
-				expect(spy.callCount, 'clearTimeout.callCount').to.equal(0);
-				ticker.stop().reset();
+				ticker.stop();
 				expect(spy.callCount, 'clearTimeout.callCount').to.equal(1);
+
+				ticker.reset();
 				spy.restore();
 			});
 		});

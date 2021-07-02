@@ -1,12 +1,21 @@
 import {expect} from 'chai';
-import { Ticker, noop } from './common';
+import { Ticker } from './common';
+import { noop } from '../src/utils';
 
 export default function publicAPI (): void {
 	describe('Instance', () => {
 		let ticker: Ticker;
 
-		before(() => { ticker = new Ticker(100, noop); });
-		after(() => { ticker.stop().reset(); });
+		before(() => {
+			ticker = new Ticker({
+				interval: 100,
+				tickHandler: noop,
+			});
+		});
+
+		after(() => {
+			ticker.stop().reset();
+		});
 
 		describe('Props', () => {
 			it('isTicking: boolean', () => {

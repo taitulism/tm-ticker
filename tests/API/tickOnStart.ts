@@ -4,7 +4,11 @@ import { ITestObj, Ticker } from '../common';
 export default function tickOnStart (test: ITestObj): void {
 	describe('.tickOnStart', () => {
 		it('when set to `true` - first tick is right on start', function () {
-			test.ticker = new Ticker(100, test.spy, undefined);
+			test.ticker = new Ticker({
+				interval: 100,
+				tickHandler: test.spy,
+				tickOnStart: undefined,
+			});
 
 			test.ticker.tickOnStart = true;
 
@@ -16,7 +20,11 @@ export default function tickOnStart (test: ITestObj): void {
 		});
 
 		it('when set to `false` - first tick is after first interval', function () {
-			test.ticker = new Ticker(100, test.spy, undefined);
+			test.ticker = new Ticker({
+				interval: 100,
+				tickHandler: test.spy,
+				tickOnStart: undefined,
+			});
 
 			test.ticker.tickOnStart = false;
 
@@ -28,7 +36,11 @@ export default function tickOnStart (test: ITestObj): void {
 		});
 
 		it('default is `true`', function () {
-			test.ticker = new Ticker(100, test.spy, undefined);
+			test.ticker = new Ticker({
+				interval: 100,
+				tickHandler: test.spy,
+				tickOnStart: undefined,
+			});
 
 			// `true` by default
 			// test.ticker.tickOnStart = true;
