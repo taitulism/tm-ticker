@@ -2,7 +2,6 @@ import sinon from 'sinon';
 
 import timeToNextTick from './timeToNextTick';
 import tickOnStart from './tickOnStart';
-import set from './set';
 import setInterval from './setInterval';
 import onTick from './onTick';
 import start from './start';
@@ -31,7 +30,6 @@ export default function usage (): void {
 		});
 
 		tickOnStart(testObj);
-		set(testObj);
 		setInterval(testObj);
 		onTick(testObj);
 		start(testObj);

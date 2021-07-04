@@ -50,21 +50,15 @@ A Ticker instance won't tick unless it has an interval and a tick Handler.
 &nbsp;
 
 It is also possible to instantiate a Ticker with no arguments and set them later using the following methods:
-* `.set(interval, tickHandler)`
 * `.setInterval(interval)`
 * `.onTick(tickHandler)`
 
 ```js
 const myTicker = new Ticker();
 
-myTicker.set(interval, tickHandler)
-```
-or separately:
-```js
-const myTicker = new Ticker();
-
-myTicker.setInterval(interval);
-myTicker.onTick(tickHandler);
+myTicker
+	.setInterval(interval)
+	.onTick(tickHandler)
 ```
 
 > There can be only one `tickHandler`. Setting a new handler by calling `.onTick(tickHandler)` again will override the previous one.

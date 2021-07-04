@@ -1,7 +1,6 @@
 export type Milliseconds = number;
 export type Timestamp = number;
 export type TimeoutRef = number;
-export type TickHandler = VoidFunction;
 
 type TimeoutCallback = (...args: Array<unknown>) => void;
 
@@ -12,7 +11,7 @@ export type TimeoutObject = {
 
 export type TickerOptions = {
 	interval?: Milliseconds;
-	tickHandler?: TickHandler;
+	tickHandler?: VoidFunction;
 	tickOnStart?: boolean;
 	timeoutObj? : TimeoutObject;
 }

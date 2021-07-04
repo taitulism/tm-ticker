@@ -13,10 +13,6 @@ export default function instancePublicMembers (): void {
 			expect(ticker.timeToNextTick).to.be.a('number');
 		});
 
-		it('.set()', () => {
-			expect(ticker.set).to.be.a('function');
-		});
-
 		it('.setInterval()', () => {
 			expect(ticker.setInterval).to.be.a('function');
 		});

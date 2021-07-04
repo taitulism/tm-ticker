@@ -1,5 +1,5 @@
 import { createSetTimeListener } from './set-time-listener';
-import { Milliseconds, TimeoutObject, Timestamp, TickHandler, TickerOptions } from './types';
+import { Milliseconds, Timestamp, TickerOptions } from './types';
 import {
 	resume,
 	runTick,
@@ -56,13 +56,6 @@ export class Ticker {
 		validateTickHandler(fn);
 
 		this.tickHandler = fn;
-
-		return this;
-	}
-
-	set (interval: Milliseconds, fn: VoidFunction): Ticker {
-		this.setInterval(interval);
-		this.onTick(fn);
 
 		return this;
 	}
