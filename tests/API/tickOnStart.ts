@@ -3,10 +3,13 @@ import { ITestObj, Ticker } from '../common';
 
 export default function tickOnStart (test: ITestObj): void {
 	describe('.tickOnStart', () => {
-		it('when set to `true` - first tick is right on start', function () {
-			test.ticker = new Ticker(100, test.spy, undefined);
+		it('when `true` - first tick is right on start', function () {
+			test.ticker = new Ticker({
+				interval: 100,
+				tickHandler: test.spy,
+			});
 
-			test.ticker.tickOnStart = true;
+			// test.ticker.tickOnStart = true; // default
 
 			expect(test.spy.callCount).to.equal(0);
 			test.ticker.start();
@@ -15,8 +18,11 @@ export default function tickOnStart (test: ITestObj): void {
 			expect(test.spy.callCount).to.equal(2);
 		});
 
-		it('when set to `false` - first tick is after first interval', function () {
-			test.ticker = new Ticker(100, test.spy, undefined);
+		it('when `false` - first tick is after first interval', function () {
+			test.ticker = new Ticker({
+				interval: 100,
+				tickHandler: test.spy,
+			});
 
 			test.ticker.tickOnStart = false;
 
@@ -25,19 +31,6 @@ export default function tickOnStart (test: ITestObj): void {
 			expect(test.spy.callCount).to.equal(0);
 			test.clock.tick(100);
 			expect(test.spy.callCount).to.equal(1);
-		});
-
-		it('default is `true`', function () {
-			test.ticker = new Ticker(100, test.spy, undefined);
-
-			// `true` by default
-			// test.ticker.tickOnStart = true;
-
-			expect(test.spy.callCount).to.equal(0);
-			test.ticker.start();
-			expect(test.spy.callCount).to.equal(1);
-			test.clock.tick(100);
-			expect(test.spy.callCount).to.equal(2);
 		});
 	});
 }

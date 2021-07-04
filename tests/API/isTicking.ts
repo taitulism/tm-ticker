@@ -4,7 +4,10 @@ import { ITestObj, Ticker } from '../common';
 export default function tickOnStart (test: ITestObj): void {
 	describe('.isTicking', () => {
 		it('toggles on start/stop', function () {
-			test.ticker = new Ticker(100, test.spy);
+			test.ticker = new Ticker({
+				interval: 100,
+				tickHandler: test.spy,
+			});
 
 			expect(test.ticker.isTicking, 'before start').to.be.false;
 			test.ticker.start();

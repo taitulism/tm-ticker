@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 
 import { Milliseconds, TimeoutObject, TimeoutRef, Timestamp } from './types';
-import {memoize} from './utils';
 
 // TODO: better type
 // https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
@@ -26,8 +25,7 @@ const MIN_TIME_LEFT = (META_TICK / 4); // 3
 // eslint-disable-next-line no-empty-function
 const noop: VoidFunction = () => {};
 
-// TODO: memoize could be huge over time when using non-ticking timeouts (reminders?)
-const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
+const calcTimeoutMs = (timeLeft: Milliseconds): Milliseconds => {
 	// A great delay
 	if (timeLeft <= MIN_TIME_LEFT) {
 		return TIME_PASSED;
@@ -41,7 +39,7 @@ const calcTimeoutMs = memoize((timeLeft: Milliseconds): Milliseconds => {
 
 	// Miror the delay
 	return timeLeft - delay;
-});
+};
 
 export function createSetTimeListener (timeoutObject: TimeoutObject = window): (
 	target: Timestamp,

@@ -1,9 +1,9 @@
 import creation from './creation';
-import publicAPI from './public-API';
+import instancePublicMembers from './instance-public-members';
 import usage from './API/usage';
 
 describe('Ticker', () => {
 	creation();
-	publicAPI();
+	instancePublicMembers();
 	usage();
 });

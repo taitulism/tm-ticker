@@ -1,38 +1,40 @@
 import { createSetTimeListener } from './set-time-listener';
-import { Milliseconds, TimeoutObject, Timestamp } from './types';
+import { Milliseconds, TimeoutObject, Timestamp, TickHandler, TickerOptions } from './types';
 import {
 	resume,
 	runTick,
 	setNextTick,
 	abort,
 } from './private-methods';
+import { noop } from './utils';
 
 const MIN_INTERVAL = 50;
-const DEFAULT_INTERVAL = 500;
 
-
-export default class Ticker {
+export class Ticker {
 	isTicking: boolean = false;
 	remainder: number = 0;
 	nextTick: number = 0;
-	abortFn: VoidFunction | void; // TODO: type
+	tickOnStart: boolean = true;
+	interval: Milliseconds = 0;
+	tickHandler: VoidFunction = noop;
+	abortFn: VoidFunction | void = undefined; // TODO: type
 	setTimeListener: (
 		target: Timestamp,
 		callback: VoidFunction
 	) => VoidFunction | void
 
-	constructor (
-		public interval: Milliseconds = DEFAULT_INTERVAL,
-		public tickHandler?: VoidFunction,
-		public tickOnStart: boolean = true,
-		public timeoutObject: TimeoutObject = window,
-	) {
+	constructor (opts: TickerOptions = {}) {
+		const {
+			interval,
+			tickHandler,
+			tickOnStart = true,
+			timeoutObj = globalThis,
+		} = opts;
+
 		interval && this.setInterval(interval);
 		tickHandler && this.onTick(tickHandler);
-
 		this.tickOnStart = tickOnStart;
-		this.abortFn = undefined; // TODO: null? but null is not void. make optional?
-		this.setTimeListener = createSetTimeListener(timeoutObject);
+		this.setTimeListener = createSetTimeListener(timeoutObj); // TODO: validate timeoutObj
 	}
 
 	get timeToNextTick (): Milliseconds {
@@ -58,7 +60,7 @@ export default class Ticker {
 		return this;
 	}
 
-	set (interval: number, fn: VoidFunction): Ticker {
+	set (interval: Milliseconds, fn: VoidFunction): Ticker {
 		this.setInterval(interval);
 		this.onTick(fn);
 
@@ -111,7 +113,9 @@ export default class Ticker {
 }
 
 function validateInterval (interval: number) {
-	if (typeof interval !== 'number' || interval < MIN_INTERVAL) {
+	const intervalIsNotANumber = typeof interval !== 'number' || Number.isNaN(interval);
+
+	if (intervalIsNotANumber || interval < MIN_INTERVAL) {
 		throw new Error('Ticker interval should be a number greater than 50');
 	}
 }

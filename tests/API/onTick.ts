@@ -1,5 +1,6 @@
 import {expect} from 'chai';
-import { ITestObj, noop, Ticker } from '../common';
+import { ITestObj, Ticker } from '../common';
+import { noop } from '../../src/utils';
 
 export default function onTick (test: ITestObj): void {
 	describe('.onTick(fn)', () => {
