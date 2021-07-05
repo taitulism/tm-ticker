@@ -33,9 +33,9 @@ export default function usage (): void {
 		setInterval(testObj);
 		onTick(testObj);
 		start(testObj);
+		isTicking(testObj);
 		timeToNextTick(testObj);
 		stop(testObj);
 		reset(testObj);
-		isTicking(testObj);
 	});
 }

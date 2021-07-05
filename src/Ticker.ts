@@ -10,12 +10,18 @@ import { noop } from './utils';
 
 const MIN_INTERVAL = 50;
 
+/* eslint-disable max-len */
+const CANNOT_START_WITHOUT_INTERVAL = 'Ticker cannot be started without an interval. Call `.setInterval(ms)`.';
+const INVALID_INTERVAL = `Ticker interval should be a number greater than ${MIN_INTERVAL}`;
+const INVALID_TICK_HANDLER = 'Ticker `tickHandler` must be a function';
+/* eslint-enable max-len */
+
 export class Ticker {
+	interval?: Milliseconds;
 	isTicking: boolean = false;
 	remainder: number = 0;
 	nextTick: number = 0;
 	tickOnStart: boolean = true;
-	interval: Milliseconds = 0;
 	tickHandler: VoidFunction = noop;
 	abortFn: VoidFunction | void = undefined; // TODO: type
 	setTimeListener: (
@@ -61,6 +67,7 @@ export class Ticker {
 	}
 
 	start (now = Date.now()): Ticker {
+		if (!this.interval) throw new Error(CANNOT_START_WITHOUT_INTERVAL);
 		if (this.isTicking) return this;
 
 		this.isTicking = true;
@@ -109,12 +116,12 @@ function validateInterval (interval: number) {
 	const intervalIsNotANumber = typeof interval !== 'number' || Number.isNaN(interval);
 
 	if (intervalIsNotANumber || interval < MIN_INTERVAL) {
-		throw new Error('Ticker interval should be a number greater than 50');
+		throw new Error(INVALID_INTERVAL);
 	}
 }
 
 function validateTickHandler (tickHandler: VoidFunction) {
 	if (typeof tickHandler !== 'function') {
-		throw new Error('Ticker `tickHandler` must be a function');
+		throw new Error(INVALID_TICK_HANDLER);
 	}
 }

@@ -9,7 +9,7 @@ export default function instanceCreation (): void {
 			it('sets default values', () => {
 				const ticker = new Ticker();
 
-				expect(ticker.interval).to.equal(0);
+				expect(ticker.interval).to.be.undefined;
 				expect(ticker.tickHandler).to.equal(noop);
 				expect(ticker.tickOnStart).to.be.true;
 			});

@@ -24,6 +24,18 @@ export default function start (test: ITestObj): void {
 			expect(test.ticker.start()).to.deep.equal(test.ticker);
 		});
 
+		it('throws if called with no interval', () => {
+			test.ticker = new Ticker();
+
+			function wrapper () {
+				// TODO: ts error when removing the comment
+				// @ts-expect-error test errors
+				test.ticker.start();
+			}
+
+			expect(wrapper).to.throw('cannot be started without an interval');
+		});
+
 		describe('when called after .stop()', () => {
 			it('resumes from the stopping point', () => {
 				test.ticker = new Ticker({

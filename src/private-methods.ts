@@ -19,20 +19,20 @@ export function setNextTick (ticker: Ticker, nextTarget: Timestamp): void {
 
 export function runTick (ticker: Ticker, currentTarget: Timestamp): void {
 	const {interval} = ticker;
-	let nextTarget: Timestamp = currentTarget + interval;
+	let nextTarget: Timestamp = currentTarget + interval!;
 
 	const now = Date.now();
 	const delay = now - currentTarget;
 
-	if (delay > interval) {
+	if (delay > interval!) {
 		while (now > nextTarget) {
-			nextTarget += interval;
+			nextTarget += interval!;
 		}
 	}
 
 	setNextTick(ticker, nextTarget);
 
-	ticker.tickHandler?.();
+	ticker.tickHandler();
 }
 
 export function abort (ticker: Ticker): void {
