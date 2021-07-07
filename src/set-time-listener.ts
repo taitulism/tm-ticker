@@ -1,5 +1,7 @@
 /* eslint-disable max-lines-per-function */
 
+import { noop } from './common';
+import { INVALID_TIMEOUT_OBJECT } from './errors';
 import { Milliseconds, TimeoutObject, TimeoutRef, Timestamp } from './types';
 
 // TODO: better type
@@ -22,9 +24,6 @@ const META_THRESHOLD = (META_TICK * 2) + TIME_MARGIN; // 26
 const MIN_TIME_LEFT = (META_TICK / 4); // 3
 /* eslint-enable no-magic-numbers */
 
-// eslint-disable-next-line no-empty-function
-const noop: VoidFunction = () => {};
-
 const calcTimeoutMs = (timeLeft: Milliseconds): Milliseconds => {
 	// A great delay
 	if (timeLeft <= MIN_TIME_LEFT) {
@@ -41,20 +40,30 @@ const calcTimeoutMs = (timeLeft: Milliseconds): Milliseconds => {
 	return timeLeft - delay;
 };
 
-export function createSetTimeListener (timeoutObject: TimeoutObject = window): (
+
+function validateTimeoutObj (timeoutObj: TimeoutObject) {
+	// eslint-disable-next-line max-len
+	if (typeof timeoutObj.setTimeout !== 'function' || typeof timeoutObj.clearTimeout !== 'function') {
+		throw new Error(INVALID_TIMEOUT_OBJECT);
+	}
+}
+
+export function createSetTimeListener (timeoutObj: TimeoutObject = window): (
 	target: Timestamp,
 	callback: VoidFunction
 ) => VoidFunction | void {
+	validateTimeoutObj(timeoutObj);
+
 	function setMetaTick (target: Timestamp, callback: VoidFunction, timeLeft: Milliseconds) {
 		let ref: ClearTimeoutRef;
 		const ms = timeLeft - META_TICK;
 
-		ref = timeoutObject.setTimeout(() => {
+		ref = timeoutObj.setTimeout(() => {
 			ref = runMetaTick(target, callback);
 		}, ms);
 
 		return function clearTimeListener () {
-			timeoutObject.clearTimeout(ref as number);
+			timeoutObj.clearTimeout(ref as number);
 		};
 	}
 
@@ -69,7 +78,7 @@ export function createSetTimeListener (timeoutObject: TimeoutObject = window): (
 		}
 
 		// TODO: This setTimeout cannot be cleared (time scope)
-		return timeoutObject.setTimeout(() => {
+		return timeoutObj.setTimeout(() => {
 			callback();
 		}, ms);
 	}
@@ -93,7 +102,7 @@ export function createSetTimeListener (timeoutObject: TimeoutObject = window): (
 			// No time for a metaTick. Just pad and run.
 			const ms = timeLeft - TIME_MARGIN;
 
-			ref = timeoutObject.setTimeout(() => {
+			ref = timeoutObj.setTimeout(() => {
 				callback();
 			}, ms);
 		}
@@ -106,7 +115,7 @@ export function createSetTimeListener (timeoutObject: TimeoutObject = window): (
 				ref();
 			}
 			else {
-				timeoutObject.clearTimeout(ref);
+				timeoutObj.clearTimeout(ref);
 			}
 		};
 	};

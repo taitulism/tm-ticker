@@ -1,6 +1,7 @@
 import {expect} from 'chai';
-import { ITestObj, Ticker } from '../common';
-import { noop } from '../../src/utils';
+import { Ticker } from '../../src/Ticker';
+import { ITestObj } from '../common';
+import { noop } from '../../src/common';
 
 export default function onTick (test: ITestObj): void {
 	describe('.onTick(fn)', () => {
@@ -12,9 +13,9 @@ export default function onTick (test: ITestObj): void {
 		});
 
 		it('if invalid - throws an error', function () {
-			test.ticker = new Ticker();
-
 			function wrapper () {
+				test.ticker = new Ticker();
+
 				// @ts-expect-error test errors
 				test.ticker.onTick('not a function');
 			}

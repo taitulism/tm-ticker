@@ -1,20 +1,13 @@
 import { createSetTimeListener } from './set-time-listener';
 import { Milliseconds, Timestamp, TickerOptions } from './types';
+import { MIN_INTERVAL, noop } from './common';
+import { CANNOT_START_WITHOUT_INTERVAL, INVALID_INTERVAL, INVALID_TICK_HANDLER } from './errors';
 import {
 	resume,
 	runTick,
 	setNextTick,
 	abort,
 } from './private-methods';
-import { noop } from './utils';
-
-const MIN_INTERVAL = 50;
-
-/* eslint-disable max-len */
-const CANNOT_START_WITHOUT_INTERVAL = 'Ticker cannot be started without an interval. Call `.setInterval(ms)`.';
-const INVALID_INTERVAL = `Ticker interval should be a number greater than ${MIN_INTERVAL}`;
-const INVALID_TICK_HANDLER = 'Ticker `tickHandler` must be a function';
-/* eslint-enable max-len */
 
 export class Ticker {
 	interval?: Milliseconds;
@@ -40,7 +33,7 @@ export class Ticker {
 		interval && this.setInterval(interval);
 		tickHandler && this.onTick(tickHandler);
 		this.tickOnStart = tickOnStart;
-		this.setTimeListener = createSetTimeListener(timeoutObj); // TODO: validate timeoutObj
+		this.setTimeListener = createSetTimeListener(timeoutObj);
 	}
 
 	get timeToNextTick (): Milliseconds {

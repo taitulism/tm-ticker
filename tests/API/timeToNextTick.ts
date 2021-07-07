@@ -1,5 +1,6 @@
 import {expect} from 'chai';
-import { ITestObj, Ticker } from '../common';
+import { Ticker } from '../../src/Ticker';
+import { ITestObj } from '../common';
 
 export default function timeToNextTick (test: ITestObj): void {
 	describe('.timeToNextTick', () => {

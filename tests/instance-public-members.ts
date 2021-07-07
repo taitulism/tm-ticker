@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { Ticker } from './common';
+import { Ticker } from '../src/Ticker';
 
 export default function instancePublicMembers (): void {
 	describe('Instance Public Members', () => {

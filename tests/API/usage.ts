@@ -27,6 +27,7 @@ export default function usage (): void {
 		afterEach(() => {
 			testObj.clock.restore();
 			testObj.ticker?.stop().reset();
+			testObj.ticker = null;
 		});
 
 		tickOnStart(testObj);

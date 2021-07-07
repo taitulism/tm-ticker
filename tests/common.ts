@@ -1,7 +1,5 @@
 import { SinonFakeTimers, SinonSpy } from 'sinon';
-
-import {Ticker} from '../src/Ticker';
-export {Ticker};
+import type {Ticker} from '../src/Ticker';
 
 export interface ITestObj {
 	ticker: Ticker | null,

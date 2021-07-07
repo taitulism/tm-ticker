@@ -1,7 +1,8 @@
 import sinon from 'sinon';
 import {expect} from 'chai';
-import { noop } from '../src/utils';
-import { Ticker } from '../src/Ticker'; // TODO: like this in all test files
+
+import { Ticker } from '../src/Ticker';
+import { noop } from '../src/common';
 
 export default function instanceCreation (): void {
 	describe('Constructor', () => {
@@ -130,6 +131,15 @@ export default function instanceCreation (): void {
 
 				ticker.reset();
 				spy.restore();
+			});
+
+			it('if invalid - throws an error', () => {
+				function wrapper () {
+					// @ts-expect-error test type validation
+					new Ticker({timeoutObj: 'not a timeout object'});
+				}
+
+				expect(wrapper).to.throw('both `setTimeout` and `clearTimeout`');
 			});
 		});
 	});

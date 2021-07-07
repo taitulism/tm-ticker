@@ -1,5 +1,6 @@
 import {expect} from 'chai';
-import { ITestObj, Ticker } from '../common';
+import { Ticker } from '../../src/Ticker';
+import { ITestObj } from '../common';
 
 export default function start (test: ITestObj): void {
 	describe('.start()', () => {
@@ -25,11 +26,8 @@ export default function start (test: ITestObj): void {
 		});
 
 		it('throws if called with no interval', () => {
-			test.ticker = new Ticker();
-
 			function wrapper () {
-				// TODO: ts error when removing the comment
-				// @ts-expect-error test errors
+				test.ticker = new Ticker();
 				test.ticker.start();
 			}
 
