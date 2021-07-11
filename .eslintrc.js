@@ -153,7 +153,7 @@ module.exports = {
 		'no-mixed-operators': 'error',
 		'no-mixed-requires': 'error',
 		'no-multi-assign': 'error',
-		'no-multi-spaces': 'error',
+		'no-multi-spaces': ['error', {ignoreEOLComments: true}],
 		'no-multi-str': 'error',
 		'no-multiple-empty-lines': [
 			'error', {

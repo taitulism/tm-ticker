@@ -6,7 +6,6 @@ import {
 	resume,
 	runTick,
 	setNextTick,
-	abort,
 } from './private-methods';
 
 export class Ticker {
@@ -16,11 +15,12 @@ export class Ticker {
 	nextTick: number = 0;
 	tickOnStart: boolean = true;
 	tickHandler: VoidFunction = noop;
-	abortFn: VoidFunction | void = undefined; // TODO: type
+	_abort: VoidFunction = noop;
+
 	setTimeListener: (
 		target: Timestamp,
 		callback: VoidFunction
-	) => VoidFunction | void
+	) => VoidFunction;
 
 	constructor (opts: TickerOptions = {}) {
 		const {
@@ -83,7 +83,7 @@ export class Ticker {
 
 		this.isTicking = false;
 
-		abort(this);
+		this._abort();
 
 		this.remainder = this.nextTick - now;
 
@@ -91,7 +91,7 @@ export class Ticker {
 	}
 
 	reset (now = Date.now()): Ticker {
-		abort(this);
+		this._abort();
 
 		this.remainder = 0;
 		this.nextTick = 0;

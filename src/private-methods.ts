@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { Timestamp } from './types';
 import type {Ticker} from './Ticker';
 
@@ -10,7 +11,7 @@ export function resume (ticker: Ticker, now: Timestamp): void {
 export function setNextTick (ticker: Ticker, nextTarget: Timestamp): void {
 	ticker.nextTick = nextTarget;
 
-	ticker.abortFn = ticker.setTimeListener(nextTarget, () => {
+	ticker._abort = ticker.setTimeListener(nextTarget, () => {
 		if (ticker.isTicking) {
 			runTick(ticker, nextTarget);
 		}
@@ -33,11 +34,4 @@ export function runTick (ticker: Ticker, currentTarget: Timestamp): void {
 	setNextTick(ticker, nextTarget);
 
 	ticker.tickHandler();
-}
-
-export function abort (ticker: Ticker): void {
-	if (ticker.abortFn) {
-		ticker.abortFn();
-		ticker.abortFn = undefined;
-	}
 }
