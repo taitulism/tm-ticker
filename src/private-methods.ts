@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { Timestamp } from './types';
 import type {Ticker} from './Ticker';
 

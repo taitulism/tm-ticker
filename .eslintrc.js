@@ -93,7 +93,7 @@ module.exports = {
 		'max-depth': 'error',
 		'max-len': [
 			'error', {
-				code: 100,
+				code: 120,
 				tabWidth: 4,
 				ignoreComments: true,
 			},
@@ -148,7 +148,7 @@ module.exports = {
 		'no-lone-blocks': 'error',
 		'no-lonely-if': 'error',
 		'no-loop-func': 'error',
-		'no-magic-numbers': ['error', {ignore: [0]}],
+		// 'no-magic-numbers': ['off', {ignore: [0]}],
 		'no-misleading-character-class': 'error',
 		'no-mixed-operators': 'error',
 		'no-mixed-requires': 'error',
@@ -202,6 +202,7 @@ module.exports = {
 		'no-underscore-dangle': [
 			'error', {
 				allowAfterThis: true,
+				allow: ['_abort'],
 			},
 		],
 		'no-unmodified-loop-condition': 'error',

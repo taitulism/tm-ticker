@@ -35,7 +35,6 @@ return function setTimeListener (
 	}
 	else {
 		// No time for setTimeout, run callback now.
-		// eslint-disable-next-line callback-return
 		callback();
 
 		ref = noop;

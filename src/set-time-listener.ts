@@ -1,6 +1,3 @@
-/* eslint-disable no-magic-numbers, max-lines-per-function */
-// TODO: eslint
-
 import { INVALID_TIMEOUT_OBJECT } from './errors';
 import { TimeoutObject, TimeoutRef, Timestamp } from './types';
 
@@ -64,7 +61,6 @@ function runMetaTick (
 
 
 function validateTimeoutObj (timeoutObj: TimeoutObject) {
-	// eslint-disable-next-line max-len
 	if (typeof timeoutObj.setTimeout !== 'function' || typeof timeoutObj.clearTimeout !== 'function') {
 		throw new Error(INVALID_TIMEOUT_OBJECT);
 	}

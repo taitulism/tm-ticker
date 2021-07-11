@@ -1,6 +1,5 @@
 import { MIN_INTERVAL } from './common';
 
-/* eslint-disable max-len */
 export const CANNOT_START_WITHOUT_INTERVAL = 'Ticker cannot be started without an interval. Call `.setInterval(ms)`.';
 export const INVALID_INTERVAL = `Ticker interval should be a number greater than ${MIN_INTERVAL}`;
 export const INVALID_TICK_HANDLER = 'Ticker `tickHandler` must be a function';

@@ -1,8 +1,4 @@
-/* eslint-disable
-	no-console,
-	max-statements,
-	capitalized-comments,
-*/
+/* eslint-disable */
 
 const Ticker = require('..');
 

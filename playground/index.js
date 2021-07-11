@@ -1,4 +1,4 @@
-/* eslint-disable no-console, max-statements */
+/* eslint-disable */
 
 const setIntervalTest = require('./setInterval-test');
 const setTimeoutTest = require('./setTimeout-test');
