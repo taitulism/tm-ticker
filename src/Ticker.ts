@@ -8,6 +8,8 @@ import {
 	setNextTick,
 } from './private-methods';
 
+export * from './types';
+
 export class Ticker {
 	interval?: Milliseconds;
 	isTicking: boolean = false;
