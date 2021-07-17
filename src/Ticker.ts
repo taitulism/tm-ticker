@@ -2,22 +2,18 @@ import { createSetTimeListener } from './set-time-listener';
 import { Milliseconds, Timestamp, TickerOptions } from './types';
 import { MIN_INTERVAL, noop } from './common';
 import { CANNOT_START_WITHOUT_INTERVAL, INVALID_INTERVAL, INVALID_TICK_HANDLER } from './errors';
-import {
-	resume,
-	runTick,
-	setNextTick,
-} from './private-methods';
 
 export * from './types';
 
 export class Ticker {
-	interval?: Milliseconds;
-	isTicking: boolean = false;
-	remainder: number = 0;
-	nextTick: number = 0;
-	tickOnStart: boolean = true;
-	tickHandler: VoidFunction = noop;
-	_abort: VoidFunction = noop;
+	public interval?: Milliseconds;
+	public isTicking: boolean = false;
+	public tickOnStart: boolean = true;
+	public tickHandler: VoidFunction = noop;
+
+	private remainder: number = 0;
+	private nextTick: number = 0;
+	private abort: VoidFunction = noop;
 
 	setTimeListener: (
 		target: Timestamp,
@@ -67,17 +63,46 @@ export class Ticker {
 
 		this.isTicking = true;
 
-		if (this.remainder) {
-			resume(this, now);
+		if (this.remainder) { // resume
+			this.setNextTick(now + this.remainder);
+
+			this.remainder = 0;
 		}
 		else if (this.tickOnStart) {
-			runTick(this, now);
+			this.runTick(now);
 		}
 		else {
-			setNextTick(this, now + this.interval);
+			this.setNextTick(now + this.interval);
 		}
 
 		return this;
+	}
+
+	private setNextTick (nextTarget: Timestamp): void {
+		this.nextTick = nextTarget;
+
+		this.abort = this.setTimeListener(nextTarget, () => {
+			if (this.isTicking) {
+				this.runTick(nextTarget);
+			}
+		});
+	}
+
+	private runTick (currentTarget: Timestamp): void {
+		const {interval} = this;
+		let nextTarget: Timestamp = currentTarget + interval!;
+
+		const now = Date.now();
+		const delay = now - currentTarget;
+
+		if (delay > interval!) {
+			while (now > nextTarget) {
+				nextTarget += interval!;
+			}
+		}
+
+		this.setNextTick(nextTarget);
+		this.tickHandler();
 	}
 
 	stop (now = Date.now()): Ticker {
@@ -85,7 +110,7 @@ export class Ticker {
 
 		this.isTicking = false;
 
-		this._abort();
+		this.abort();
 
 		this.remainder = this.nextTick - now;
 
@@ -93,7 +118,7 @@ export class Ticker {
 	}
 
 	reset (now = Date.now()): Ticker {
-		this._abort();
+		this.abort();
 
 		this.remainder = 0;
 		this.nextTick = 0;

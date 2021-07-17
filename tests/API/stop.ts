@@ -35,8 +35,12 @@ export default function stop (test: ITestObj): void {
 			test.ticker.start();
 			test.clock.tick(130);
 
+			// @ts-expect-error private member
 			expect(test.ticker.remainder).to.equal(0);
+
 			test.ticker.stop();
+
+			// @ts-expect-error private member
 			expect(test.ticker.remainder).to.equal(70);
 		});
 
