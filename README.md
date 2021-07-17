@@ -276,9 +276,19 @@ const myTicker = new Ticker({
 
 &nbsp;
 
-## Playground / benchmark
--------------------------
-Compares Ticker with using vanilla `setTimeout` & `setInterval`
+## Benchmark
+------------
+Compares TM-Ticker against vanilla `setTimeout` / `setInterval`
+
+> Run "`npm run dev`" first.
+
+```sh
+$ npm run benchmark
+```
+
+## Playground
+-------------
+> Run "`npm run dev`" first.
 ```sh
 $ npm run playground
 ```

@@ -6,8 +6,7 @@ const AFSetTimeoutTest = require('./autofixing-setTimeout-test');
 const tickerTest = require('./Ticker-test');
 const logTable = require('./log-table');
 
-// Config here
-const TICK = 100;
+const INTERVAL = 100;
 const TICKS_PER_TEST = 25;
 
 const SECOND = 1000;
@@ -32,10 +31,8 @@ const testFns = [
 	tickerTest,
 ];
 
-let currentTestIndex = 0;
-// ------------------
-
 let stopCurrentTest;
+let currentTestIndex = 0;
 let ticksCount = 0;
 
 runNextTest();
@@ -59,11 +56,11 @@ function runTest (testName, testFn) {
 
 	logTable.head(testName, startingAt);
 
-	stopCurrentTest = testFn(startingAt, TICK, tickFn);
+	stopCurrentTest = testFn(startingAt, INTERVAL, tickHandler);
 }
 
 
-function tickFn (startTime) {
+function tickHandler (startTime) {
 	ticksCount++;
 
 	logTick(startTime, ticksCount);
@@ -85,7 +82,7 @@ const truncateMs = ms => String(ms).substr(TRUNCATED_TIMESTAMP_LENGTH);
 function logTick (startTime) {
 	const now = Date.now();
 
-	const target = startTime + (TICK * ticksCount); // Ideal timestamp
+	const target = startTime + (INTERVAL * ticksCount); // target timestamp
 
 	let diff;
 
@@ -120,5 +117,5 @@ function logTick (startTime) {
 }
 
 function shouldPad (num) {
-	return num < 10; // eslint-disable-line no-magic-numbers
+	return num < 10;
 }

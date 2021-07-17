@@ -8,7 +8,7 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Launch Program",
-			"program": "${workspaceFolder}/playground/index.js"
+			"program": "${workspaceFolder}/dev-bundles/playground.js"
 		}
 	]
 }

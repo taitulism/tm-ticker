@@ -1,9 +1,9 @@
 module.exports = startSetIntervalTest;
 
-function startSetIntervalTest (startTime, TICK, tickFn) {
+function startSetIntervalTest (startTime, interval, tickHandler) {
 	const ref = setInterval(() => {
-		tickFn(startTime);
-	}, TICK);
+		tickHandler(startTime);
+	}, interval);
 
 	return function stop () {
 		clearInterval(ref);

@@ -1,17 +1,17 @@
 module.exports = startSetTimeoutTest;
 
-function startSetTimeoutTest (startTime, TICK, tickFn) {
+function startSetTimeoutTest (startTime, interval, tickHandler) {
 	let ref;
 	let isStopped = false;
 
 	function setNextTick () {
 		ref = setTimeout(() => {
-			tickFn(startTime);
+			tickHandler(startTime);
 
 			if (!isStopped) {
 				setNextTick();
 			}
-		}, TICK);
+		}, interval);
 	}
 
 	setNextTick();

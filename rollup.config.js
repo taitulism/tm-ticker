@@ -7,17 +7,30 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 export default [{
 	input: 'src/Ticker.ts',
 	plugins: [nodeResolve(), typescript()],
-	output: {
+	output: [{
 		file: 'dev-bundles/tm-ticker.js',
-		format: 'iife',
+		format: 'cjs',
 		sourcemap: true,
-		name: 'Ticker',
-	},
+		name: 'TickerModule',
+	}],
 }, {
 	input: 'tests/index.spec.ts',
 	plugins: [nodeResolve(), commonjs(), typescript()],
 	output: {
-		file: 'dev-bundles/tm-ticker-spec.ts',
+		file: 'dev-bundles/tm-ticker-spec.js',
+		sourcemap: true,
+		format: 'iife',
+	},
+	onwarn (warning, rollupWarn) {
+		if (warning.code !== 'CIRCULAR_DEPENDENCY' && warning.code !== 'EVAL') {
+			rollupWarn(warning);
+		}
+	},
+}, {
+	input: 'playground/playground.ts',
+	plugins: [nodeResolve(), commonjs(), typescript()],
+	output: {
+		file: 'dev-bundles/playground.js',
 		sourcemap: true,
 		format: 'iife',
 	},

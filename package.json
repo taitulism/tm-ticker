@@ -19,7 +19,8 @@
 		"karma": "npm run test -- --no-single-run --auto-watch",
 		"lint": "eslint ./src/**/*.ts ./tests/**/*.ts",
 		"check": "npm run lint && npm test",
-		"play": "node ./playground/play.js",
+		"playground": "node ./dev-bundles/playground.js",
+		"benchmark": "node ./benchmark/benchmark.js",
 		"prepublishOnly": "npm run build",
 		"preversion": "npm run check",
 		"postversion": "git push && git push --tags"
