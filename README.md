@@ -9,8 +9,8 @@ An accurate interval ticker class.
 ## TL;DR
 ```js
 const myTicker = new Ticker({
-	interval: 1000,
-	tickHandler: () => console.log('Tick.')
+    interval: 1000,
+    tickHandler: () => console.log('Tick.')
 });
 
 myTicker.start();
@@ -90,8 +90,8 @@ and two *readOnly* properties:
 For the following examples we'll use the same ticker that logs the word `"tick"` every second.
 ```js
 const myTicker = new Ticker({
-	interval: 1000,
-	tickHandler: sayTick,
+    interval: 1000,
+    tickHandler: sayTick,
 })
 ```
 
@@ -220,11 +220,11 @@ That is the timestamp to be considered as the method's execution time. You can p
 For example, let's say we're building a stopwatch module that is based on `Ticker`. Its `startCounting` method could be something like:
 ```js
 FancyStopWatch.startCounting = () => {
-	const startedAt = Date.now();
+    const startedAt = Date.now();
 
-	// doing stuff that takes 50 milliseconds to complete...
+    // doing stuff that takes 50 milliseconds to complete...
 
-	myTicker.start(startedAt);
+    myTicker.start(startedAt);
 }
 ```
 Without passing the `startedAt` timestamp we would loose those 50ms and the first tick would happen 1000 + 50 ms after the user clicked that imaginery `START` button.
@@ -240,22 +240,22 @@ You can provide an object that implements those two methods ([with the same argu
 For example, let's say we want to use some kind of a `setTimeout-logger` that logs every timeout that the ticker sets. It looks like this:
 ```js
 const myTimeoutLogger = {
-	setTimeout (callback, ms, ...callbackArgs) {
-		const ref = window.setTimeout(callback, ms, ...callbackArgs);
+    setTimeout (callback, ms, ...callbackArgs) {
+        const ref = window.setTimeout(callback, ms, ...callbackArgs);
 
-		console.log('Timeout is set');
+        console.log('Timeout is set');
 
-		return ref;
-	},
+        return ref;
+    },
 
-	clearTimeout: window.clearTimeout
+    clearTimeout: window.clearTimeout
 }
 ```
 
 To create a Ticker that uses our timeout-logger object we use the constructor's `timeoutObj` option:
 ```js
 const myTicker = new Ticker({
-	timeoutObj: myTimeoutLogger
+    timeoutObj: myTimeoutLogger
 });
 ```
 
@@ -270,7 +270,7 @@ import { timeoutWorker } from 'set-timeout-worker';
 timeoutWorker.start();
 
 const myTicker = new Ticker({
-	timeoutObj: timeoutWorker
+    timeoutObj: timeoutWorker
 });
 ```
 
