@@ -8,6 +8,7 @@ import start from './start';
 import stop from './stop';
 import reset from './reset';
 import isTicking from './isTicking';
+import isPaused from './isPaused';
 import { ITestObj } from '../common';
 
 export default function usage (): void {
@@ -35,6 +36,7 @@ export default function usage (): void {
 		onTick(testObj);
 		start(testObj);
 		isTicking(testObj);
+		isPaused(testObj);
 		timeToNextTick(testObj);
 		stop(testObj);
 		reset(testObj);

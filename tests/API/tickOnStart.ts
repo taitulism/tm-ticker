@@ -8,9 +8,8 @@ export default function tickOnStart (test: ITestObj): void {
 			test.ticker = new Ticker({
 				interval: 100,
 				tickHandler: test.spy,
+				tickOnStart: true,
 			});
-
-			// test.ticker.tickOnStart = true; // default
 
 			expect(test.spy.callCount).to.equal(0);
 			test.ticker.start();
@@ -23,9 +22,8 @@ export default function tickOnStart (test: ITestObj): void {
 			test.ticker = new Ticker({
 				interval: 100,
 				tickHandler: test.spy,
+				tickOnStart: false,
 			});
-
-			test.ticker.tickOnStart = false;
 
 			expect(test.spy.callCount).to.equal(0);
 			test.ticker.start();

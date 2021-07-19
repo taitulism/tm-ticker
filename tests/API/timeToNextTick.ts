@@ -9,7 +9,6 @@ export default function timeToNextTick (test: ITestObj): void {
 
 			test.ticker = new Ticker({
 				interval: INTERVAL,
-				tickHandler: test.spy,
 				tickOnStart: false,
 			});
 
@@ -35,6 +34,24 @@ export default function timeToNextTick (test: ITestObj): void {
 
 			test.clock.tick(50);
 			expect(test.ticker.timeToNextTick).to.equal(0);
+
+			test.ticker.start();
+			test.clock.tick(51);
+			expect(test.ticker.timeToNextTick).to.equal(49);
+			test.clock.tick(49);
+			expect(test.ticker.timeToNextTick).to.equal(INTERVAL);
+
+			test.ticker.reset();
+			expect(test.ticker.timeToNextTick).to.equal(INTERVAL);
+
+			test.clock.tick(32);
+			expect(test.ticker.timeToNextTick).to.equal(68);
+
+			test.clock.tick(68);
+			expect(test.ticker.timeToNextTick).to.equal(INTERVAL);
+
+			test.ticker.stop();
+			expect(test.ticker.timeToNextTick).to.equal(INTERVAL);
 		});
 	});
 }

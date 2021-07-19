@@ -37,11 +37,13 @@ export default function stop (test: ITestObj): void {
 
 			// @ts-expect-error private member
 			expect(test.ticker.remainder).to.equal(0);
+			expect(test.ticker.timeToNextTick, 'before stop').to.equal(70);
 
 			test.ticker.stop();
 
 			// @ts-expect-error private member
-			expect(test.ticker.remainder).to.equal(70);
+			expect(test.ticker.timeToNextTick).to.equal(test.ticker.remainder);
+			expect(test.ticker.timeToNextTick, 'after stop').to.equal(70);
 		});
 
 		it('returns the `Ticker` instance', () => {

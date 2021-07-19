@@ -81,8 +81,9 @@ You have three main methods:
 * `.stop()`
 * `.reset()`
 
-and two *readOnly* properties:
+and three *readOnly* properties:
 * `isTicking`
+* `isPaused`
 * `timeToNextTick`
 
 &nbsp;
@@ -191,6 +192,27 @@ console.log(myTicker.isTicking) // true
 myTicker.stop()
 
 console.log(myTicker.isTicking) // false
+```
+
+&nbsp;
+
+### `.isPaused`
+ReadOnly boolean.  
+"Paused" means the ticker is stopped but hasn't been reset. 
+```js
+console.log(myTicker.isPaused) // false
+
+myTicker.start()
+
+console.log(myTicker.isPaused) // false
+
+myTicker.stop()
+
+console.log(myTicker.isPaused) // true
+
+myTicker.reset()
+
+console.log(myTicker.isPaused) // false
 ```
 
 &nbsp;

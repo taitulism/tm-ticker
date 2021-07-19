@@ -9,6 +9,10 @@ export default function instancePublicMembers (): void {
 			expect(ticker.isTicking).to.be.a('boolean');
 		});
 
+		it('.isPaused', () => {
+			expect(ticker.isPaused).to.be.a('boolean');
+		});
+
 		it('.timeToNextTick', () => {
 			expect(ticker.timeToNextTick).to.be.a('number');
 		});

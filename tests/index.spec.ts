@@ -3,7 +3,7 @@ import instancePublicMembers from './instance-public-members';
 import usage from './API/usage';
 
 describe('Ticker', () => {
-	creation();
 	instancePublicMembers();
+	creation();
 	usage();
 });

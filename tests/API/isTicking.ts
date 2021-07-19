@@ -2,13 +2,10 @@ import {expect} from 'chai';
 import { Ticker } from '../../src/Ticker';
 import { ITestObj } from '../common';
 
-export default function tickOnStart (test: ITestObj): void {
+export default function isTicking (test: ITestObj): void {
 	describe('.isTicking', () => {
 		it('toggles on start/stop', function () {
-			test.ticker = new Ticker({
-				interval: 100,
-				tickHandler: test.spy,
-			});
+			test.ticker = new Ticker({ interval: 100 });
 
 			expect(test.ticker.isTicking, 'before start').to.be.false;
 			test.ticker.start();

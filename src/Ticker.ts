@@ -41,6 +41,11 @@ export class Ticker {
 		;
 	}
 
+	get isPaused (): boolean {
+		// paused = stopped but not reset
+		return !this.isTicking && this.remainder > 0;
+	}
+
 	setInterval (interval: Milliseconds): Ticker {
 		validateInterval(interval);
 
