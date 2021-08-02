@@ -8,14 +8,28 @@ An accurate interval ticker class.
 
 ## TL;DR
 ```js
+const interval = 1000;
+const tickHandler = () => console.log('Tick.');
+
+// create a simple ticker
+const myTicker = Ticker.create(interval, tickHandler);
+
+// or construct with more options
 const myTicker = new Ticker({
-    interval: 1000,
-    tickHandler: () => console.log('Tick.')
+	interval,
+    tickHandler,
+	tickOnStart: false,
+	timeoutObj: {setTimeoutAlternative, clearTimeoutAlternative}
 });
 
+// use
 myTicker.start();
 myTicker.stop();
 myTicker.reset();
+
+myTicker.isTicking // boolean
+myTicker.isPaused  // boolean
+myTicker.timeToNextTick // ms
 ```
 
 &nbsp;
@@ -26,22 +40,24 @@ $ npm install tm-ticker
 ```
 ```js
 import {Ticker} from 'tm-ticker';
-// or
-const {Ticker} = require('tm-ticker');
 ```
 
 &nbsp;
 
 ## Creation
-### Constructor
+Using the creator function:
 ```js
-const myTicker = new Ticker(options = {});
+const myTicker = Ticker.create(interval?, tickHndler?);
+```
+Using the constructor:
+```js
+const myTicker = new Ticker(options?);
 ```
 
 ### `options`
 Type: `TickerOptions`
 
-An object with the following properties:
+The constructor accepts an optional object with the following properties:
 
 * `interval: number` (optional)  
 Milliseconds between ticks. **Must be greater than 50.**
@@ -124,7 +140,7 @@ tick
 &nbsp;
 
 ### `.stop()`
-Pause ticking. Saves the interval remainder so the next call to `.start()` will continue from where it stopped.
+Stop ticking (pause). Saves the interval remainder so the next call to `.start()` will continue from where it stopped.
 
 ```js
 myTicker.start()
@@ -255,9 +271,9 @@ If, for whatever reason, we don't want to loose those precious milliseconds we c
 &nbsp;
 
 ## `timeoutObj`
-By default, `Ticker` internally uses the global object's `setTimeout` and `clearTimeout` methods but sometimes we would want to use alternative methods.
+By default, `Ticker` internally uses the global object's `setTimeout` and `clearTimeout` methods but sometimes we might want to use alternative methods.
 
-You can provide an object that implements those two methods ([with the same argument signatures](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout)) and be used by the ticker.
+You can provide an object that implements those two methods ([with the same argument signatures](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout)) to be used by the ticker.
 
 For example, let's say we want to use some kind of a `setTimeout-logger` that logs every timeout that the ticker sets. It looks like this:
 ```js
@@ -274,7 +290,7 @@ const myTimeoutLogger = {
 }
 ```
 
-To create a Ticker that uses our timeout-logger object we use the constructor's `timeoutObj` option:
+To create a Ticker that uses our made up timeout-logger object we use the constructor's `timeoutObj` option:
 ```js
 const myTicker = new Ticker({
     timeoutObj: myTimeoutLogger
@@ -283,11 +299,10 @@ const myTicker = new Ticker({
 
 &nbsp;
 
-<!-- TODO: link, new name -->
-Check out "`set-timeout-worker`". This npm module utilizes a dedicated web-worker for setting (and clearing) timeouts on a separate process. This makes timeouts more accurate and steady.
+Check out "`timeout-worker`". [This npm module](https://www.npmjs.com/package/timeout-worker) utilizes a dedicated web-worker for setting timeouts on a separate process. This makes timeouts more accurate and steady:
 
 ```js
-import { timeoutWorker } from 'set-timeout-worker';
+import { timeoutWorker } from 'timeout-worker';
 
 timeoutWorker.start();
 
@@ -300,17 +315,10 @@ const myTicker = new Ticker({
 
 ## Benchmark
 ------------
-Compares TM-Ticker against vanilla `setTimeout` / `setInterval`
+Compare TM-Ticker against vanilla `setTimeout` / `setInterval`
 
 > Run "`npm run dev`" first.
 
 ```sh
 $ npm run benchmark
-```
-
-## Playground
--------------
-> Run "`npm run dev`" first.
-```sh
-$ npm run playground
 ```
