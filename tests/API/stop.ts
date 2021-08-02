@@ -5,10 +5,7 @@ import { ITestObj } from '../common';
 export default function stop (test: ITestObj): void {
 	describe('.stop()', () => {
 		it('stops ticking', () => {
-			test.ticker = new Ticker({
-				interval: 100,
-				tickHandler: test.spy,
-			});
+			test.ticker = Ticker.create(100, test.spy);
 
 			expect(test.spy.callCount).to.equal(0);
 
@@ -30,7 +27,7 @@ export default function stop (test: ITestObj): void {
 		});
 
 		it('sets the remainder', () => {
-			test.ticker = new Ticker({ interval: 100 });
+			test.ticker = Ticker.create(100);
 
 			test.ticker.start();
 			test.clock.tick(130);
@@ -47,7 +44,7 @@ export default function stop (test: ITestObj): void {
 		});
 
 		it('returns the `Ticker` instance', () => {
-			test.ticker = new Ticker({ interval: 100 });
+			test.ticker = Ticker.create(100);
 
 			test.ticker.start();
 			test.clock.tick(200);

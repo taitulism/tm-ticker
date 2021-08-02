@@ -5,6 +5,39 @@ import { Ticker } from '../src/Ticker';
 import { noop } from '../src/common';
 
 export default function instanceCreation (): void {
+	describe('Static Creator function', () => {
+		it('returns a ticker instance', () => {
+			const ticker = Ticker.create();
+
+			expect(ticker.interval).to.be.undefined;
+			expect(ticker.tickHandler).to.equal(noop);
+		});
+
+		it('create(interval)', () => {
+			const ticker = Ticker.create(100);
+
+			expect(ticker.interval).to.equal(100);
+			expect(ticker.tickHandler).to.equal(noop);
+		});
+
+		it('create(tickHandler)', () => {
+			// test overload: not using noop because it could pass where tickHandler fails
+			const tickHandler = () => console.log(1);
+			const ticker = Ticker.create(tickHandler);
+
+			expect(ticker.interval).to.be.undefined;
+			expect(ticker.tickHandler).to.equal(tickHandler);
+		});
+
+		it('create(interval, tickHandler)', () => {
+			const tickHandler = () => console.log(1);
+			const ticker = Ticker.create(100, tickHandler);
+
+			expect(ticker.interval).to.equal(100);
+			expect(ticker.tickHandler).to.equal(tickHandler);
+		});
+	});
+
 	describe('Constructor', () => {
 		describe('with no arguments', () => {
 			it('sets default values', () => {

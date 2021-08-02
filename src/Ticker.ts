@@ -7,13 +7,19 @@ export * from './types';
 
 export class Ticker {
 	public interval?: Milliseconds;
+	public tickHandler: VoidFunction = noop;
 	public isTicking: boolean = false;
 	public tickOnStart: boolean = true;
-	public tickHandler: VoidFunction = noop;
 
 	private remainder: number = 0;
 	private nextTick: number = 0;
 	private abort: VoidFunction = noop;
+
+	static create (intervalOrTickHandler?: Milliseconds | VoidFunction, tickHandler?: VoidFunction): Ticker {
+		return typeof intervalOrTickHandler === 'number'
+			? new Ticker({interval: intervalOrTickHandler, tickHandler})
+			: new Ticker({interval: undefined, tickHandler: intervalOrTickHandler});
+	}
 
 	setTimeListener: (
 		target: Timestamp,

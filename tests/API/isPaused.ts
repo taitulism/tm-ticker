@@ -7,7 +7,7 @@ export default function isPaused (test: ITestObj): void {
 		it('is true when ticker is stopped but not reset', function () {
 			const INTERVAL = 100;
 
-			test.ticker = new Ticker({ interval: INTERVAL });
+			test.ticker = Ticker.create(INTERVAL);
 
 			expect(test.ticker.isPaused, 'before start').to.be.false;
 			test.ticker.start();

@@ -45,10 +45,7 @@ export default function reset (test: ITestObj): void {
 			});
 
 			it('sets a new starting point to calculate the interval from', () => {
-				test.ticker = new Ticker({
-					interval: 100,
-					tickHandler: test.spy,
-				});
+				test.ticker = Ticker.create(100, test.spy);
 
 				test.ticker.start();
 				expect(test.spy.callCount).to.equal(1);
