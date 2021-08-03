@@ -8,6 +8,7 @@
 		"src",
 		"dist"
 	],
+	"types": "./dist/Ticker.d.ts",
 	"homepage": "https://github.com/taitulism/tm-ticker#readme",
 	"repository": "github:taitulism/tm-ticker",
 	"bugs": "https://github.com/taitulism/tm-ticker/issues",
